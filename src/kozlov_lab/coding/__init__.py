@@ -58,14 +58,42 @@ from __future__ import annotations
 
 from .equivalence import (
     DEFAULT_SEARCH_BUDGET,
+    GEOMETRIC_ROUTE_DEPENDENCIES,
     AffineEquivalenceResult,
     KozlovCodeEquivalence,
     affine_equivalent_exact,
+    brute_force_bijection,
     codes_equivalent_exact,
     codes_equivalent_numeric,
     cross_check_exact,
+    entries_touching,
     find_bijection,
     images_equivalent_by_code_exact,
+    kozlov_codes_equivalent,
+    refine_colours,
+)
+from .geometric import (
+    AffineEquivalenceVerdict,
+    GeometricWitness,
+    check_geometric_equivalence,
+    find_exact_affine_witness,
+    solve_affine_from_three,
+)
+from .lazy import (
+    IndexedRatioView,
+    KozlovImageCodeLazy,
+    build_kozlov_image_code_lazy_exact,
+    build_kozlov_image_code_lazy_numeric,
+    entry_count_formula,
+)
+from .recognition import (
+    NUMERIC_DEFAULT_TOLERANCE,
+    EvidenceKind,
+    InternalConsistencyError,
+    RecognitionResult,
+    RecognitionStatus,
+    recognize_affine_exact,
+    recognize_affine_numeric,
 )
 from .exact import (
     DEFAULT_MAX_ENTRIES,
@@ -77,6 +105,8 @@ from .exact import (
 )
 from .model import (
     CODE_FORMAT_VERSION,
+    ArithmeticMode,
+    ModeMismatchError,
     DOMAIN_CODE_UNDEFINED,
     DOMAIN_GENERAL_POSITION,
     DOMAIN_TWO_PARALLEL_LINES,
@@ -108,6 +138,8 @@ from .validation import (
 __all__ = [
     # model
     "CODE_FORMAT_VERSION",
+    "ArithmeticMode",
+    "ModeMismatchError",
     "Triple",
     "RatioEntry",
     "KozlovImageCode",
@@ -139,7 +171,32 @@ __all__ = [
     "TooFewPointsError",
     "CollinearImageError",
     "TheoremDomainError",
+    # lazy representation
+    "IndexedRatioView",
+    "KozlovImageCodeLazy",
+    "build_kozlov_image_code_lazy_exact",
+    "build_kozlov_image_code_lazy_numeric",
+    "entry_count_formula",
+    # geometric oracle (independent of the code layer)
+    "GeometricWitness",
+    "AffineEquivalenceVerdict",
+    "find_exact_affine_witness",
+    "check_geometric_equivalence",
+    "solve_affine_from_three",
+    # recognition
+    "RecognitionStatus",
+    "EvidenceKind",
+    "RecognitionResult",
+    "InternalConsistencyError",
+    "recognize_affine_exact",
+    "recognize_affine_numeric",
+    "NUMERIC_DEFAULT_TOLERANCE",
     # equivalence
+    "kozlov_codes_equivalent",
+    "entries_touching",
+    "refine_colours",
+    "brute_force_bijection",
+    "GEOMETRIC_ROUTE_DEPENDENCIES",
     "KozlovCodeEquivalence",
     "AffineEquivalenceResult",
     "codes_equivalent_exact",

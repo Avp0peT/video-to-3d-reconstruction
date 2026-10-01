@@ -1,8 +1,8 @@
 {
   "provenance": {
-    "timestamp_utc": "2026-10-01T07:08:20+00:00",
+    "timestamp_utc": "2026-10-01T08:16:51+00:00",
     "package_version": "0.2.0",
-    "git_commit": "4a4a7f2931ccfffed106d953bc93a80d27121de1",
+    "git_commit": "055542e3d3b5e60eb1975974351f0912d22796b8",
     "git_dirty": true,
     "git_branch": "master",
     "python_version": "3.13.14",
@@ -21,14 +21,14 @@
       "TEACHING_CODE_DECIMALS": 9
     },
     "experiment_config": {
-      "quick": true
+      "quick": false
     }
   },
   "files": {
     "phase2_gate.json": {
-      "bytes": 3237,
+      "bytes": 3239,
       "lines": 102,
-      "sha256": "2ece6a2a967bb70893351678d3dbc958eee8197b699b8a39ef2729ab82807431"
+      "sha256": "ca660e026412136b7d401572be9757d4117bfda97c118422758a417c8634c7c4"
     },
     "invariant_matrix.csv": {
       "bytes": 37751,
@@ -46,9 +46,19 @@
       "sha256": "5c7a5035e20bd2b7bbf03b8ca0071404f03e696359ced5f7d0b63c87f4623c69"
     },
     "official_code_definition.json": {
-      "bytes": 7380,
+      "bytes": 7381,
       "lines": 233,
-      "sha256": "39c914aedfd173e14ce09d4b1df84e22a70cb46932a37693cca44efac5fc4e00"
+      "sha256": "480f3895529013c81e5906703406dec904b206de65c498f9a5f974e32cca6610"
+    },
+    "phase4_scaling.csv": {
+      "bytes": 2330,
+      "lines": 14,
+      "sha256": "9e0b7e0d358a2a78c223ca325af2e7258c44afb76313fa148d43fe48fea6fb5d"
+    },
+    "phase4_differential.json": {
+      "bytes": 1959,
+      "lines": 72,
+      "sha256": "f744aa5e8aa3857d3bd936c95533e0def20e00a8d5254e772660195a62abc527"
     }
   },
   "required": [
@@ -56,7 +66,9 @@
     "invariant_matrix.csv",
     "precision_stress.csv",
     "shape_generalization.csv",
-    "official_code_definition.json"
+    "official_code_definition.json",
+    "phase4_scaling.csv",
+    "phase4_differential.json"
   ],
   "missing": [],
   "empty": [],
@@ -65,6 +77,9 @@
     "invariant_matrix_summary.meta.json",
     "official_code_definition.meta.json",
     "phase2_gate.meta.json",
+    "phase4_differential.meta.json",
+    "phase4_scaling.meta.json",
+    "phase4_scaling_summary.meta.json",
     "precision_stress.meta.json",
     "shape_generalization.meta.json",
     "shape_generalization_summary.meta.json"

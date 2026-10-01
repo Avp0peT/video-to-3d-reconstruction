@@ -36,6 +36,8 @@ SCRIPTS: tuple[tuple[str, str], ...] = (
     ("precision_stress", "exp_precision_stress.py"),
     ("shape_generalization", "exp_shape_generalization.py"),
     ("official_code_definition", "exp_official_code_definition.py"),
+    ("phase4_scaling", "exp_phase4_scaling.py"),
+    ("phase4_differential", "exp_phase4_differential.py"),
 )
 
 #: Required result files (Sprint 3E names them explicitly).
@@ -47,11 +49,16 @@ REQUIRED = (
     # Q1 evidence: verifies the *definition* of the formal code.  Deliberately a
     # result file rather than a module — Phase 3 is gated on G3.1.
     "official_code_definition.json",
+    # phase 4: the O(n^6) structure and the differential gate
+    "phase4_scaling.csv",
+    "phase4_differential.json",
 )
 
 QUICK_FLAGS: dict[str, tuple[str, ...]] = {
     "exp_phase2_gate.py": ("--n", "200", "--falsifiability-n", "100"),
     "exp_shape_generalization.py": ("--repetitions", "3"),
+    "exp_phase4_scaling.py": ("--max-n", "12", "--entry-cap", "60000"),
+    "exp_phase4_differential.py": ("--cases", "600"),
 }
 
 

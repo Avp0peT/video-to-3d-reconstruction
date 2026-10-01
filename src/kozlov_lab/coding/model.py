@@ -51,6 +51,7 @@ from __future__ import annotations
 import hashlib
 from collections import Counter
 from dataclasses import dataclass, field
+from enum import Enum
 import json
 from fractions import Fraction
 from typing import Any, Iterable, Mapping, Sequence
@@ -62,7 +63,41 @@ __all__ = [
     "DomainVerdict",
     "CODE_FORMAT_VERSION",
     "triple_key",
+    "ArithmeticMode",
+    "ModeMismatchError",
 ]
+
+#: Which arithmetic a code was built with.  An ``Enum`` rather than a bare ``bool`` so
+#: that mixing the two is a *type-level* mistake rather than a silent coercion: a
+#: ``Fraction`` silently becoming a ``float`` is exactly how an "exact" verdict turns
+#: into an approximate one without anyone noticing.  (``KozlovImageCode.exact`` is kept
+#: for compatibility; it is derived from this.)
+class ArithmeticMode(str, Enum):
+    EXACT = "exact"
+    NUMERIC = "numeric"
+
+    def __str__(self) -> str:  # pragma: no cover - cosmetic
+        return self.value
+
+
+class ModeMismatchError(TypeError):
+    """Raised when an exact code and a numeric code are compared against each other.
+
+    Deliberately an error instead of a coercion.  ``codes_equivalent_*`` cannot answer
+    "are these equivalent" across modes without either inventing precision or discarding
+    it, and either choice would make the verdict's meaning depend on an implicit
+    conversion.  The caller must convert explicitly, and thereby state the tolerance.
+    """
+
+    def __init__(self, left: "ArithmeticMode", right: "ArithmeticMode", operation: str) -> None:
+        self.left = left
+        self.right = right
+        self.operation = operation
+        super().__init__(
+            f"{operation}: refusing to mix arithmetic modes ({left.value} vs {right.value}). "
+            "An exact code and a numeric code cannot be compared without an explicit "
+            "conversion, because either direction silently changes what the verdict means."
+        )
 
 #: An unordered triple of labels — order inside a triple is irrelevant by definition.
 Triple = frozenset[int]
@@ -182,6 +217,16 @@ class KozlovImageCode:
     warnings: tuple[str, ...] = field(default=())
 
     # -- basic ----------------------------------------------------------- #
+    @property
+    def mode(self) -> ArithmeticMode:
+        """Which arithmetic produced this code."""
+        return ArithmeticMode.EXACT if self.exact else ArithmeticMode.NUMERIC
+
+    def require_same_mode(self, other: "KozlovImageCode", operation: str) -> None:
+        """Raise :class:`ModeMismatchError` unless both codes use the same arithmetic."""
+        if self.mode != other.mode:
+            raise ModeMismatchError(self.mode, other.mode, operation)
+
     def __len__(self) -> int:
         return len(self.entries)
 

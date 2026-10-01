@@ -215,7 +215,13 @@ def test_code_classes_are_defined_only_in_the_two_expected_places():
 
 
 def test_coding_module_layout_matches_the_specification():
-    """The five prescribed modules, and nothing that duplicates one of them."""
+    """The prescribed modules and sprint-4 additions — and no accidental duplicates.
+
+    Sprint 3's five modules, plus the three Sprint 4 mandates: the independent geometric
+    oracle (``geometric``), the lazy representation (``lazy``) and the recognition pipeline
+    (``recognition``).  Listing the set explicitly means a new module has to be a decision
+    rather than an accident.
+    """
     names = {path.name for path in _python_sources(CODING_DIR)}
     assert names == {
         "__init__.py",
@@ -224,6 +230,9 @@ def test_coding_module_layout_matches_the_specification():
         "numeric.py",
         "validation.py",
         "equivalence.py",
+        "geometric.py",
+        "lazy.py",
+        "recognition.py",
     }, names
 
 

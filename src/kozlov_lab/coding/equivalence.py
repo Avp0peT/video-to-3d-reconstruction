@@ -40,6 +40,7 @@ from typing import Any, Iterable, Iterator, Mapping, Sequence
 
 from .model import (
     KozlovImageCode,
+    ModeMismatchError,
     RatioEntry,
     Triple,
 )
@@ -48,6 +49,11 @@ from .validation import ExactPoints, _as_exact_points
 
 __all__ = [
     "KozlovCodeEquivalence",
+    "kozlov_codes_equivalent",
+    "entries_touching",
+    "refine_colours",
+    "brute_force_bijection",
+    "GEOMETRIC_ROUTE_DEPENDENCIES",
     "AffineEquivalenceResult",
     "find_bijection",
     "codes_equivalent_exact",
@@ -175,109 +181,299 @@ def _verify_bijection(
     return True
 
 
+def entries_touching(code: KozlovImageCode) -> dict[int, list[RatioEntry]]:
+    """For each label, the entries in whose numerator or denominator it appears.
+
+    Built once and reused: the alternative — scanning all of ``T_A`` per label — turns the
+    refinement into ``O(n |T_A|)`` with a large constant, and the indexing is the same
+    information the definition already carries.
+    """
+    groups: dict[int, list[RatioEntry]] = {label: [] for label in code.labels}
+    for entry in code.entries:
+        for label in entry.numerator:
+            groups[label].append(entry)
+        for label in entry.denominator:
+            if label not in entry.numerator:
+                groups[label].append(entry)
+    return groups
+
+
+def _value_key(value: Any, tolerance: float | None) -> str:
+    """A value's contribution to a colour, quantised when a tolerance is in force.
+
+    For exact codes the exact spelling is used: ``str(Fraction(1, 2))`` is ``"1/2"`` and
+    identical rationals give identical strings.
+
+    For **numeric** codes the value must *not* be used verbatim.  Two equivalent images whose
+    float codes differ in the last bit would then land in different colour classes, the prune
+    would exclude the true correspondence, and the engine would report a false negative —
+    the prune itself becoming the bug.  Quantising to the comparison's own tolerance keeps
+    the colour consistent with what the comparison is willing to accept.
+    """
+    if tolerance is None:
+        return str(value)
+    if tolerance <= 0:
+        return str(value)
+    return repr(round(float(value) / tolerance))
+
+
+def _digest(value: Any) -> str:
+    """Fixed-size, content-addressed colour identifier.
+
+    **Why this is not a detail.**  A first version stored the refined colour as the nested
+    tuple itself and stringified it again on the next round.  Each round then embedded the
+    previous round's *entire* colour (itself of size ``O(|T_A|)``) once per incident entry, so
+    the object grew like ``O(|T_A|^2) = O(n^12)``.  Measured: 1.2 s at ``n = 5`` and **110 s at
+    ``n = 6``** — an algorithm that was correct and unusable.
+
+    Hashing each colour to 8 bytes keeps every round ``O(incident entries)`` and keeps the
+    identifiers *content-based*, so equal colours get equal digests in both codes without any
+    shared registry.  A collision would only merge two colour classes, which makes the prune
+    weaker (more candidates) and never unsound, because the full verification still decides.
+    """
+    import hashlib
+
+    return hashlib.blake2b(repr(value).encode("utf-8"), digest_size=8).hexdigest()
+
+
+def refine_colours(
+    code: KozlovImageCode, *, rounds: int = 1, tolerance: float | None = None
+) -> dict[int, str]:
+    """Iterative colour refinement of the labels — a **co-invariant** of the code.
+
+    "Co-invariant" is the property that makes the pruning legitimate: if ``psi`` is a valid
+    equivalence then ``colour_A(i) == colour_B(psi(i))`` for every ``i``, so labels of
+    different colours can never correspond.  The refinement therefore only ever *shrinks the
+    candidate set*; it never decides anything.
+
+    Round 0 — the label's own fingerprint: the multiset of ``(role, value)`` over the entries
+    it takes part in.
+
+    Round *r* — ``(previous colour, multiset over entries of (role, value, sorted previous
+    colours of the other labels in that entry))``.  Using the other labels' *colours* rather
+    than their names is what keeps the quantity invariant under relabelling.
+
+    Each round's colour is reduced to a :func:`_digest`, so cost is ``O(rounds * incident
+    entries)`` rather than growing with the size of the previous colour.
+    """
+    groups = entries_touching(code)
+    colours: dict[int, str] = {}
+    for label in code.labels:
+        terms = []
+        for entry in groups[label]:
+            role = ("n" if label in entry.numerator else "") + ("d" if label in entry.denominator else "")
+            terms.append((role, _value_key(entry.value, tolerance)))
+        terms.sort()
+        colours[label] = _digest(tuple(terms))
+
+    for _ in range(rounds):
+        refined: dict[int, str] = {}
+        for label in code.labels:
+            terms = []
+            for entry in groups[label]:
+                role = ("n" if label in entry.numerator else "") + ("d" if label in entry.denominator else "")
+                others = tuple(
+                    sorted(colours[other] for other in (entry.numerator | entry.denominator) if other != label)
+                )
+                terms.append((role, _value_key(entry.value, tolerance), others))
+            terms.sort()
+            refined[label] = _digest(tuple(terms))
+        colours = refined
+    return colours
+
+
 def find_bijection(
     a: KozlovImageCode,
     b: KozlovImageCode,
     *,
     tolerance: float | None = None,
     budget: int = DEFAULT_SEARCH_BUDGET,
+    refinement_rounds: int = 1,
 ) -> tuple[Mapping[int, int] | None, str, int, bool]:
-    """Search for the renumbering :math:`\\psi` making the two codes correspond.
+    r"""Search for the renumbering :math:`\psi` making the two codes correspond.
 
-    Returns ``(bijection_or_None, reason, candidates_examined, undecided)``.
+    Returns ``(bijection_or_None, reason, nodes_examined, undecided)``.
 
-    The search is pruned by :meth:`KozlovImageCode.signature_classes`: a label's
-    role/value fingerprint is invariant under any :math:`\\psi` that preserves the
-    code, so labels can only correspond within equal fingerprint classes.  For
-    general-position images those classes are singletons and the search is immediate;
-    for highly symmetric ones the class sizes grow, which is exactly when the budget
-    cap matters.
+    The search is a backtracking assignment pruned by :func:`refine_colours`, with a
+    partial-consistency check after every assignment: whenever the last unassigned label of
+    an entry gets a value, that entry's image must already exist in the other code with an
+    equal value.  A mismatch prunes the branch immediately, instead of being discovered at
+    the end of a completed permutation.
+
+    ``n!`` is never enumerated.  For small ``n`` there *is* a brute-force routine —
+    :func:`brute_force_bijection` — but its role is to be the oracle this function is tested
+    against, not the production path.
     """
     if len(a.labels) != len(b.labels):
         return None, f"label set sizes differ: {len(a.labels)} vs {len(b.labels)}", 0, False
     if a.domain != b.domain:
         # An affine map preserves collinearity and the two-parallel-lines property, so the
-        # domain class is itself an affine invariant — this is a legitimate necessary
-        # condition, not a shortcut.
+        # domain class is itself an affine invariant — a legitimate necessary condition.
         return (
             None,
-            f"the two images are in different domain classes ({a.domain} vs {b.domain}); "
-            "the domain class is an affine invariant, so they cannot correspond",
+            f"the two images are in different domain classes ({a.domain} vs {b.domain}); the "
+            "domain class is an affine invariant, so they cannot correspond",
             0,
             False,
         )
     if len(a.entries) != len(b.entries):
         return (
             None,
-            f"|T_A| differs: {len(a.entries)} vs {len(b.entries)} — a bijection must "
-            "preserve every indexed ratio, so this alone refutes equivalence",
+            f"|T_A| differs: {len(a.entries)} vs {len(b.entries)} — a bijection must preserve "
+            "every indexed ratio, so this alone refutes equivalence",
             0,
             False,
         )
+    a.require_same_mode(b, "find_bijection")
 
-    # Cheap necessary condition — *only* admissible for exact values.  With floats the
-    # last-bit differences would reject genuinely equivalent images, i.e. the prune
-    # itself would become the bug.
-    if a.exact and b.exact:
-        if a.value_multiset() != b.value_multiset():
-            return None, "the multisets of rho values differ (necessary condition fails)", 0, False
+    # Cheap necessary condition — admissible only for exact values, because with floats the
+    # last-bit differences would reject genuinely equivalent images (the prune itself would
+    # become the bug).
+    if a.exact and b.exact and a.value_multiset() != b.value_multiset():
+        return None, "the multisets of rho values differ (necessary condition fails)", 0, False
 
-    classes_a = a.signature_classes()
-    classes_b = b.signature_classes()
-    if sorted(len(v) for v in classes_a.values()) != sorted(len(v) for v in classes_b.values()):
-        return (
-            None,
-            "the label signature classes have different size profiles; no bijection can "
-            "preserve the indexed ratios",
-            0,
-            False,
+    colours_a = refine_colours(a, rounds=refinement_rounds, tolerance=tolerance)
+    colours_b = refine_colours(b, rounds=refinement_rounds, tolerance=tolerance)
+    groups: dict[Any, tuple[list[int], list[int]]] = {}
+    for label in sorted(a.labels):
+        groups.setdefault(colours_a[label], ([], []))[0].append(label)
+    for label in sorted(b.labels):
+        if colours_b[label] not in groups:
+            return None, "a label colour class is missing from the other code", 0, False
+        groups[colours_b[label]][1].append(label)
+    for colour, (left, right) in groups.items():
+        if len(left) != len(right):
+            return (
+                None,
+                f"colour class sizes differ ({len(left)} vs {len(right)}); no bijection can "
+                "preserve the indexed ratios",
+                0,
+                False,
+            )
+
+    index_b = {(entry.numerator, entry.denominator): entry for entry in b.entries}
+    touching_a = entries_touching(a)
+
+    def _agrees(entry: RatioEntry, psi: Mapping[int, int]) -> bool:
+        mapped = (
+            frozenset(psi[label] for label in entry.numerator),
+            frozenset(psi[label] for label in entry.denominator),
         )
+        target = index_b.get(mapped)
+        if target is None:
+            return False
+        if tolerance is None:
+            return entry.value == target.value
+        return abs(float(entry.value) - float(target.value)) <= tolerance
 
-    # label -> its signature class key, so the enumeration can be organised per class
-    key_of_a = {label: key for key, labels in classes_a.items() for label in labels}
-    groups: list[tuple[list[int], list[int]]] = []
-    for key, labels_a in classes_a.items():
-        labels_b = classes_b.get(key)
-        if labels_b is None:
-            return None, f"signature class missing in B: {key[:2]}...", 0, False
-        groups.append((sorted(labels_a), sorted(labels_b)))
+    # Most constrained first: smallest colour class, then the label with the most entries.
+    ordered_groups = sorted(
+        groups.values(), key=lambda pair: (len(pair[0]), -max(len(touching_a[i]) for i in pair[0]))
+    )
+    psi: dict[int, int] = {}
+    nodes = 0
 
-    candidate_count = 1
-    for labels_a, labels_b in groups:
-        candidate_count *= _factorial(len(labels_a))
-    if candidate_count > budget:
+    def recurse(position: int) -> bool:
+        nonlocal nodes
+        if position == len(ordered_groups):
+            return True
+        sources, targets = ordered_groups[position]
+        for permutation in itertools.permutations(targets):
+            if nodes >= budget:
+                return False
+            nodes += 1
+            added = list(zip(sources, permutation))
+            for source, target in added:
+                psi[source] = target
+            ok = True
+            for source, _ in added:
+                for entry in touching_a[source]:
+                    labels = entry.numerator | entry.denominator
+                    if all(label in psi for label in labels) and not _agrees(entry, psi):
+                        ok = False
+                        break
+                if not ok:
+                    break
+            if ok and recurse(position + 1):
+                return True
+            for source, _ in added:
+                psi.pop(source, None)
+        return False
+
+    found = recurse(0)
+    if nodes >= budget and not found:
         return (
             None,
-            f"{candidate_count} candidate bijections exceed the budget {budget} "
-            "(the image has large symmetry classes)",
-            0,
+            f"search budget exhausted ({budget} partial assignments): cannot decide, which is "
+            "different from 'not equivalent'",
+            nodes,
             True,
         )
-
-    examined = 0
-    for combination in _product_of_permutations(groups):
-        examined += 1
-        psi = dict(combination)
-        if _verify_bijection(a, b, psi, tolerance):
-            return psi, "a bijection preserving every indexed ratio was found", examined, False
-
+    if found:
+        return dict(psi), "a bijection preserving every indexed ratio was found", nodes, False
     return (
         None,
-        "no bijection preserves the indexed ratios (all candidates were verified)",
-        examined,
+        "no bijection preserves the indexed ratios (the backtracking search was exhaustive "
+        "within the budget)",
+        nodes,
         False,
     )
+
+
+def brute_force_bijection(
+    a: KozlovImageCode, b: KozlovImageCode, *, tolerance: float | None = None, max_n: int = 8
+) -> tuple[Mapping[int, int] | None, int]:
+    """``n!`` oracle for small codes — the thing the pruned search is tested against.
+
+    Deliberately dumb and deliberately bounded: ``n!`` is fine as a *reference* for
+    ``n <= 8`` and unacceptable as a production algorithm, and keeping the honest version
+    around is how one knows the clever version is right.
+    """
+    labels_a = sorted(a.labels)
+    if len(labels_a) != len(b.labels):
+        return None, 0
+    if len(labels_a) > max_n:
+        raise ValueError(
+            f"brute-force enumeration is capped at n = {max_n}; got {len(labels_a)}. The cap is "
+            "the point: n! is an oracle, not a production path."
+        )
+    if a.exact and b.exact:
+        if a.value_multiset() != b.value_multiset():
+            return None, 0
+    index_b = {(entry.numerator, entry.denominator): entry for entry in b.entries}
+    examined = 0
+    for permutation in itertools.permutations(sorted(b.labels)):
+        examined += 1
+        psi = dict(zip(labels_a, permutation))
+        ok = True
+        for entry in a.entries:
+            mapped = (
+                frozenset(psi[label] for label in entry.numerator),
+                frozenset(psi[label] for label in entry.denominator),
+            )
+            target = index_b.get(mapped)
+            if target is None:
+                ok = False
+                break
+            if tolerance is None:
+                if entry.value != target.value:
+                    ok = False
+                    break
+            elif abs(float(entry.value) - float(target.value)) > tolerance:
+                ok = False
+                break
+        if ok:
+            return psi, examined
+    return None, examined
 
 
 def codes_equivalent_exact(
     a: KozlovImageCode, b: KozlovImageCode, *, budget: int = DEFAULT_SEARCH_BUDGET
 ) -> KozlovCodeEquivalence:
     """Decide code equivalence for two exact codes."""
-    if not (a.exact and b.exact):
-        raise TypeError(
-            "codes_equivalent_exact needs exact codes; use codes_equivalent_numeric for "
-            "float codes (the tolerance is the difference between the two)"
-        )
+    a.require_same_mode(b, "codes_equivalent_exact")
+    if not (a.exact and b.exact):  # pragma: no cover - require_same_mode already refused
+        raise ModeMismatchError(a.mode, b.mode, "codes_equivalent_exact")
     psi, reason, examined, undecided = find_bijection(a, b, tolerance=None, budget=budget)
     return KozlovCodeEquivalence(
         equivalent=psi is not None,
@@ -299,8 +495,9 @@ def codes_equivalent_numeric(
     budget: int = DEFAULT_SEARCH_BUDGET,
 ) -> KozlovCodeEquivalence:
     """Decide code equivalence for two float codes with a stated tolerance."""
-    if a.exact or b.exact:
-        raise TypeError("codes_equivalent_numeric expects float codes")
+    a.require_same_mode(b, "codes_equivalent_numeric")
+    if a.exact or b.exact:  # pragma: no cover - require_same_mode already refused
+        raise ModeMismatchError(a.mode, b.mode, "codes_equivalent_numeric")
     if tolerance <= 0:
         raise ValueError("tolerance must be > 0")
     psi, reason, examined, undecided = find_bijection(a, b, tolerance=tolerance, budget=budget)
@@ -540,3 +737,84 @@ def _product_of_permutations(
             yield from recurse(position + 1, accumulated + list(zip(labels_a, permutation)))
 
     yield from recurse(0, [])
+
+
+# --------------------------------------------------------------------------- #
+# the named formal engine
+# --------------------------------------------------------------------------- #
+#: What the geometric route is allowed to import from this package.  Recorded as data so a
+#: later refactor that quietly makes the two routes share machinery fails a test instead of
+#: silently destroying the cross-check.
+GEOMETRIC_ROUTE_DEPENDENCIES = (
+    "kozlov_lab.geometry.affine_frame.signed_double_area",
+    "kozlov_lab.coding.validation._as_exact_points",
+)
+
+
+def kozlov_codes_equivalent(
+    code_x: KozlovImageCode,
+    code_y: KozlovImageCode,
+    *,
+    tolerance: float | None = None,
+    budget: int = DEFAULT_SEARCH_BUDGET,
+    refinement_rounds: int = 1,
+) -> KozlovCodeEquivalence:
+    """Formal code equivalence: does a renumbering ``psi`` preserve every indexed ratio?
+
+    This is the single entry point for the definition (4D).  Both thin wrappers
+    (:func:`codes_equivalent_exact`, :func:`codes_equivalent_numeric`) delegate here, so
+    there is one implementation of the search rather than two.
+
+    ``tolerance`` must be ``None`` for exact codes and a positive float for numeric ones —
+    a single parameter whose *value* states which question is being asked, instead of two
+    functions that could drift apart.
+    """
+    code_x.require_same_mode(code_y, "kozlov_codes_equivalent")
+    if code_x.exact and tolerance is not None:
+        raise ValueError(
+            "an exact code comparison must use tolerance=None: with exact values there is "
+            "nothing to tolerate, and accepting a tolerance would let a rounding difference "
+            "be reported as an equivalence"
+        )
+    if not code_x.exact and tolerance is None:
+        raise ValueError(
+            "a numeric code comparison needs an explicit tolerance; there is no defensible "
+            "default, and inventing one would hide the choice that makes the verdict meaningful"
+        )
+
+    psi, reason, nodes, undecided = find_bijection(
+        code_x, code_y, tolerance=tolerance, budget=budget, refinement_rounds=refinement_rounds
+    )
+    return KozlovCodeEquivalence(
+        equivalent=psi is not None,
+        undecided=undecided,
+        reason=reason,
+        bijection=psi,
+        candidates_examined=nodes,
+        n_entries_a=len(code_x.entries),
+        n_entries_b=len(code_y.entries),
+        tolerance=tolerance,
+    )
+
+
+def affine_equivalent_exact(x: Any, y: Any) -> "AffineEquivalenceResult":
+    """Geometric route, delegating to :mod:`kozlov_lab.coding.geometric`.
+
+    Kept as a forwarding function so existing callers keep working while the implementation
+    lives in a module that imports nothing from the code layer.  The distinction is the whole
+    point of the cross-check, so it is enforced by
+    ``tests/test_kozlov_equivalence.py::test_geometric_route_dependencies``.
+    """
+    from .geometric import check_geometric_equivalence
+
+    verdict = check_geometric_equivalence(x, y)
+    witness = verdict.witness
+    return AffineEquivalenceResult(
+        equivalent=verdict.equivalent,
+        undecided=verdict.undecided,
+        reason=verdict.reason,
+        matrix=witness.matrix if witness else None,
+        translation=witness.translation if witness else None,
+        control_triple=None if witness is None else (frozenset(witness.control_triples[0]), frozenset(witness.control_triples[1])),
+        point_mapping=None if witness is None else witness.point_mapping,
+    )

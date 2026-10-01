@@ -15,6 +15,7 @@ distinction cannot be lost.
 from __future__ import annotations
 
 from fractions import Fraction
+import itertools
 
 import numpy as np
 import pytest
@@ -71,6 +72,47 @@ def test_too_few_points_gets_its_own_error():
 # --------------------------------------------------------------------------- #
 # layer 2: the theorem's own hypothesis
 # --------------------------------------------------------------------------- #
+def test_domain_classification_is_relabelling_invariant():
+    """A domain class is a property of the point **set**, so relabelling must not change it.
+
+    This is the regression guard for a real defect found by exactly this check: the
+    classifier used to take its candidate direction from ``sorted(triple)[:2]``, which is a
+    labelling-dependent *choice of pair*, so the same four geometric points were reported
+    ``general_position`` in one ordering and ``two_parallel_lines`` in another.
+
+    The example below is the one that exposed it: ``(0,0), (2,0), (0,2), (1,1)`` lies on
+    ``x + y = 0`` and ``x + y = 2``, which are parallel — so ``two_parallel_lines`` is the
+    correct verdict, and the old code got the original ordering wrong.
+    """
+    images = [
+        [[0, 0], [2, 0], [0, 2], [1, 1]],           # two parallel lines
+        GENERAL_POSITION,                            # general position
+        [[0, 0], [3, 7], [6, 14], [1, 0]],          # one collinear triple
+    ]
+    for points in images:
+        base, evidence = classify_domain_exact(points)
+        for permutation in itertools.permutations(range(len(points))):
+            relabelled = [points[i] for i in permutation]
+            verdict, _ = classify_domain_exact(relabelled)
+            assert verdict == base, (points, permutation, verdict, base)
+        # non-vacuity: the classifier must not be constant across the family
+        del evidence
+    verdicts = {classify_domain_exact(points)[0] for points in images}
+    assert len(verdicts) >= 2, "the guard would be vacuous if every image classified alike"
+
+
+def test_the_two_parallel_example_really_is_on_two_parallel_lines():
+    """The verdict above is checked geometrically rather than taken on trust."""
+    from fractions import Fraction as F
+
+    points = [(F(0), F(0)), (F(2), F(0)), (F(0), F(2)), (F(1), F(1))]
+    offsets = sorted({x + y for x, y in points})
+    assert offsets == [F(0), F(2)], (
+        "x + y takes exactly two values, so the points occupy the two parallel lines "
+        "x + y = 0 and x + y = 2"
+    )
+
+
 def test_two_parallel_lines_is_computable_but_outside_the_theorem():
     """**The distinction the specification insists on.**
 

@@ -315,17 +315,31 @@ def classify_domain_exact(points: Any) -> tuple[DomainVerdict, dict[str, Any]]:
             "n_degenerate_triples": len(areas),
         }
 
-    # "no three collinear" was already ruled out above; now test the stronger
-    # hypothesis: do all points lie on at most two parallel lines?
+    # "no three collinear" was already ruled out above; now test the stronger hypothesis:
+    # do all points lie on at most two parallel lines?
+    #
+    # The candidate directions are enumerated over **all pairs** of points, not over one
+    # distinguished pair per triple.  A first version took the direction from
+    # ``sorted(triple)[:2]``, which is a *labelling-dependent choice of pair*: the same three
+    # geometric points carry different index orders after a relabelling, so the direction
+    # examined was not the same, and the classifier could return ``general_position`` for an
+    # image and ``two_parallel_lines`` for a relabelled copy of it.  A domain class is a
+    # property of the point *set*, so it must be invariant under relabelling — the test
+    # ``test_domain_classification_is_relabelling_invariant`` pins that.
+    #
+    # Completeness is preserved: if every point lies on at most two lines of direction ``d``,
+    # then some pair of points determines ``d``, and that pair is enumerated.
     best: dict[str, Any] | None = None
-    for triple in non_degenerate:
-        i, j, k = sorted(triple)
+    n = len(exact)
+    for i, j in itertools.combinations(range(n), 2):
         dx, dy = exact[j][0] - exact[i][0], exact[j][1] - exact[i][1]
+        if dx == 0 and dy == 0:
+            continue  # duplicate coordinates; not a direction
         offsets = _exact_offsets(exact, (dx, dy))
         distinct = sorted(set(offsets))
         if len(distinct) <= 2:
             best = {
-                "direction_from_triple": [i, j, k],
+                "direction_from_pair": [i, j],
                 "n_distinct_offsets": len(distinct),
                 "witness_lines": len(distinct),
             }
@@ -380,11 +394,11 @@ def classify_domain_numeric(
     if loosest <= 0.0:
         return DOMAIN_CODE_UNDEFINED, {"reason": "every triple is degenerate", "n_points": n}
 
+    # Candidate directions come from **all pairs** for the same reason as in the exact
+    # classifier: a direction chosen from a triple's sorted indices is labelling-dependent,
+    # and the domain class must be a property of the point set.
     best: dict[str, Any] | None = None
-    for triple in itertools.combinations(range(n), 3):
-        i, j, k = triple
-        if triangle_flatness(matrix[i], matrix[j], matrix[k]) <= tol:
-            continue
+    for i, j in itertools.combinations(range(n), 2):
         direction = matrix[j] - matrix[i]
         norm = float(math.hypot(direction[0], direction[1]))
         if norm <= 0:
@@ -400,7 +414,7 @@ def classify_domain_numeric(
                 clustered.append(value)
         if len(clustered) <= 2:
             best = {
-                "direction_from_triple": [int(i), int(j), int(k)],
+                "direction_from_pair": [int(i), int(j)],
                 "n_distinct_offsets": len(clustered),
                 "tolerance": tol,
                 "scale": diameter,

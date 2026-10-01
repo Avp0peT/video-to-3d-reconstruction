@@ -1,9 +1,9 @@
 {
   "name": "phase2_gate",
   "provenance": {
-    "timestamp_utc": "2026-10-01T07:07:54+00:00",
+    "timestamp_utc": "2026-10-01T08:13:49+00:00",
     "package_version": "0.2.0",
-    "git_commit": "4a4a7f2931ccfffed106d953bc93a80d27121de1",
+    "git_commit": "055542e3d3b5e60eb1975974351f0912d22796b8",
     "git_dirty": true,
     "git_branch": "master",
     "python_version": "3.13.14",
@@ -28,57 +28,57 @@
         3,
         5
       ],
-      "n_transforms": 200,
+      "n_transforms": 1000,
       "max_condition_budget": 50.0,
       "required_accuracy": 1e-09,
-      "falsifiability_n": 100,
+      "falsifiability_n": 500,
       "order_trials": 25
     }
   },
   "experiment": "phase2_gate",
   "title": "Phase 2 acceptance gate (Experiment A)",
   "main_arm": {
-    "n_transforms": 200,
+    "n_transforms": 1000,
     "seed": 20261001,
     "max_condition_budget": 50.0,
-    "max_delta": 1.2212453270876722e-14,
+    "max_delta": 2.2426505097428162e-14,
     "median_delta": 6.661338147750939e-16,
-    "p99_delta": 8.248957072964883e-15,
+    "p99_delta": 9.561240688071836e-15,
     "condition_number_min": 3.369924076215481,
-    "condition_number_median": 4.5219519261320995,
-    "condition_number_max": 79.0343574829536,
-    "worst_error_over_bound": 0.012212453270876722
+    "condition_number_median": 4.356304589497711,
+    "condition_number_max": 116.45627188156743,
+    "worst_error_over_bound": 0.014488410471358293
   },
   "falsifiability_arm": [
     {
       "flatness": 1e-06,
       "condition_number": 1999999.9999994999,
-      "condition_number_after_isometry_max": 2000000.000990027,
-      "max_delta": 1.5327350499916292e-10,
+      "condition_number_after_isometry_max": 2000000.0011566477,
+      "max_delta": 1.7382163812188664e-10,
       "reported_bound": 2.84217094303969e-08,
       "exceeds_required_1e_9": false,
       "within_reported_bound": true,
-      "n_transforms": 100
+      "n_transforms": 500
     },
     {
       "flatness": 1e-08,
       "condition_number": 199999999.99999997,
-      "condition_number_after_isometry_max": 200000008.34233662,
-      "max_delta": 1.3376395657793694e-08,
+      "condition_number_after_isometry_max": 200000010.71125847,
+      "max_delta": 1.3512788443748036e-08,
       "reported_bound": 2.8421709430404003e-06,
       "exceeds_required_1e_9": true,
       "within_reported_bound": true,
-      "n_transforms": 100
+      "n_transforms": 500
     },
     {
       "flatness": 5e-09,
       "condition_number": 399999999.99999994,
-      "condition_number_after_isometry_max": 400000034.85424703,
-      "max_delta": 1.0376054613675027e-08,
+      "condition_number_after_isometry_max": 400000042.2443513,
+      "max_delta": 1.391044459627275e-08,
       "reported_bound": 5.684341886080801e-06,
       "exceeds_required_1e_9": true,
       "within_reported_bound": true,
-      "n_transforms": 100
+      "n_transforms": 500
     }
   ],
   "order_independence_arm": {

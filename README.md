@@ -23,15 +23,32 @@ $$
 | 1 | 有限点集 + 几何变换 | ✅ 完成 |
 | 2 | 内部仿射坐标（**项目核心**） | ✅ 完成，**Gate 通过** |
 | 3 | 图像代码（正式，`coding/`） | ✅ **完成**（Phase 3 已解锁 2026-10-01） |
-| 4 | 仿射等价识别 | ⛔ 仍锁定（依赖 Phase 3 的官方测试全通过；代码等价判定本轮已可用） |
+| 4 | 仿射等价识别（正式，`recognition.py`） | ✅ **完成**（Gate G4.1–G4.10 全通过） |
 | 5 | 信息压缩 | ⛔ 阻塞（Phase 4） |
 | 6 | 立体视觉 | ⛔ 阻塞（未决问题 Q4） |
-| 7 | Streamlit Web UI（M1/M2/M3/M4/M5/M6） | ✅ 完成 6 页（含正式编码页） |
+| 7 | Streamlit Web UI（M1–M7） | ✅ 完成 7 页（含正式编码页与识别页） |
 | 8 | 多形状不变量验证 + 统一可复现产物 | ✅ 完成 |
 | 9 | 完整报告 + 答辩 Demo | ⏳ 阶段报告 |
 | 10 | 2026 扩展模块 E1–E5 | ⛔ 未开始 |
 
-**测试**：415 passed ｜ **实验**：5 个可复现实验全部通过 ｜ **教学型编码**：✅ ｜ **正式编码**：✅
+**测试**：460 passed ｜ **实验**：7 个可复现实验全部通过 ｜ **教学型编码 / 正式编码 / 正式识别**：✅✅✅
+
+### ★ Phase 4 结果
+
+| Gate | 内容 | 结果 |
+|---|---|---|
+| G4.1 | 代码等价与数学定义一致 | ✅ 逐条比对 `brute_force_bijection` |
+| G4.2 | 重编号测试全通过 | ✅ 含**适用域分类的重编号不变性**（一个真实缺陷由此发现，见规格 §13.7） |
+| G4.3 | 几何 oracle 独立实现 | ✅ `geometric.py` 仅依赖 geometry 层，由导入扫描测试强制 |
+| G4.4 | 适用域差分测试 0 处未解释分歧 | ✅ **9 796 例，0 处未解释分歧** |
+| G4.5 | ≥10 000 个精确随机用例 | ✅ 请求 10 000，实际 9 796（204 例因退化被跳过） |
+| G4.6 | $n=3$ / 共线 / 两平行线 / 重复点都有明确语义 | ✅ |
+| G4.7 | 精确/数值不发生静默混合 | ✅ `ModeMismatchError` |
+| G4.8 | lazy 与 materialized 逻辑一致 | ✅ $n=4,5,6,7,8$ 逐条核对 |
+| G4.9 | 性能报告完成并记录 $O(n^6)$ | ✅ [`docs/theory/complexity.md`](docs/theory/complexity.md) |
+| G4.10 | UI 可展示实际 affine witness | ✅ `07_Official_Recognition.py`：`M`、`t`、`det M`、点对应 ψ、X / T(X) / Y 三联图 |
+
+**Phase 4 ✅ ⇒ Phase 5 解锁条件满足**（是否进入 Phase 5 待你确认）。
 
 ### ★ Q1 已结案：Phase 3 解锁
 
@@ -145,7 +162,11 @@ kozlov-visual-lab/
 │   │   ├── shapes.py             图形注册表（triangle/star/grid/…）
 │   │   └── corpus.py             实验数据集 A–E（非对称性**实测**）
 │   ├── teaching/                 ✅ 教学型编码（Pedagogical Extension，与正式实现隔离）
-│   ├── coding/                   ✅ 正式编码（model/exact/numeric/validation/equivalence）
+│   ├── coding/                   ✅ 正式编码 + 识别
+│   │   ├── model.py exact.py numeric.py validation.py equivalence.py
+│   │   ├── geometric.py          独立的精确几何 oracle（不依赖代码层）
+│   │   ├── lazy.py               O(n^3) 内存的 lazy 表示（IndexedRatioView）
+│   │   └── recognition.py        RecognitionResult + 两条识别流水线
 │   ├── recognition/              ⛔ Phase 4
 │   ├── compression/              ⛔ Phase 5
 │   └── stereo/                   ⛔ Phase 6
@@ -158,7 +179,9 @@ kozlov-visual-lab/
 │       ├── 03_Affine_Coordinates.py  M3 内部仿射坐标（核心）
 │       ├── 04_Teaching_Code.py   M4 教学型编码（Pedagogical construction）
 │       ├── 05_Kozlov_Official_Code.py  M5 正式图像代码（Козлов 2009）
-│       └── 06_Invariants.py      M6 不变量实验中心
+│       ├── 05_Kozlov_Official_Code.py  M5 正式图像代码
+│       ├── 06_Invariants.py      M6 不变量实验中心
+│       └── 07_Official_Recognition.py  M7 正式仿射识别
 ├── tests/                        343 个测试
 ├── experiments/                  可执行实验与演示
 │   └── results/                  5 个统一可复现产物 + MANIFEST.json
@@ -239,6 +262,7 @@ UI 层**不得**重新实现任何数学算法（README 第 18 节）。
 | 想了解 | 看 |
 |---|---|
 | 数学主线与"为什么" | [`docs/theory/pipeline.md`](docs/theory/pipeline.md) |
+| 形式代码的规模与实测增长（$O(n^6)$） | [`docs/theory/complexity.md`](docs/theory/complexity.md) |
 | 精度边界与已知失效 | [`docs/theory/numerical_limits.md`](docs/theory/numerical_limits.md) |
 | 各模块的数学规格与验收条件 | [`docs/specs/`](docs/specs/README.md) |
 | 实验证据 | [`docs/experiments/`](docs/experiments/README.md) |

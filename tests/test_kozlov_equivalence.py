@@ -192,7 +192,7 @@ def test_geometric_route_abstains_on_a_degenerate_image():
     collinear = np.array([[0, 0], [1, 1], [2, 2], [3, 3]])
     result = affine_equivalent_exact(collinear, collinear)
     assert result.undecided is True
-    assert "collinear" in result.reason
+    assert "degenerate" in result.reason or "collinear" in result.reason
 
 
 # --------------------------------------------------------------------------- #
@@ -243,12 +243,21 @@ def test_numeric_codes_compare_with_a_stated_tolerance():
 
 
 def test_the_two_layers_cannot_be_mixed_by_accident():
+    """Sprint 4L: mixing modes raises ``ModeMismatchError``, a ``TypeError`` subclass.
+
+    Keeping it a ``TypeError`` means existing callers that caught ``TypeError`` still work,
+    while the new name says *why* the operation was refused.
+    """
+    from kozlov_lab.coding import ModeMismatchError
+
     exact = build_kozlov_image_code_exact(IMAGE)
     numeric = build_kozlov_image_code_numeric(IMAGE)
-    with pytest.raises(TypeError, match="exact codes"):
+    with pytest.raises(ModeMismatchError):
         codes_equivalent_exact(numeric, numeric)
-    with pytest.raises(TypeError, match="float codes"):
+    with pytest.raises(ModeMismatchError):
         codes_equivalent_numeric(exact, exact, tolerance=1e-9)
+    # and it is still a TypeError for backwards compatibility
+    assert issubclass(ModeMismatchError, TypeError)
 
 
 def test_comparison_describes_itself_for_a_report():
@@ -280,3 +289,39 @@ def test_a_one_point_change_breaks_equivalence():
 
 def test_default_budget_is_finite():
     assert 0 < DEFAULT_SEARCH_BUDGET < 10**9
+
+
+def test_geometric_route_dependencies():
+    """The cross-check is only a cross-check if the two routes share no machinery.
+
+    Checked on the parsed imports of ``geometric.py``: it may use the geometry layer and the
+    coordinate coercion, and nothing else from this package.
+    """
+    import ast
+    import pathlib as _pathlib
+
+    import kozlov_lab.coding
+
+    source = _pathlib.Path(kozlov_lab.coding.geometric.__file__).read_text(encoding="utf-8")
+    tree = ast.parse(source)
+    imported: set[str] = set()
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Import):
+            imported.update(alias.name for alias in node.names)
+        elif isinstance(node, ast.ImportFrom):
+            base = ("." * node.level) + (node.module or "")
+            imported.add(base)
+            imported.update(f"{base}.{alias.name}" for alias in node.names)
+
+    forbidden = {
+        "exact",
+        "numeric",
+        "model",
+        "equivalence",
+        "recognition",
+        "lazy",
+    }
+    offenders = {name for name in imported if name.strip(".").split(".")[-1] in forbidden}
+    assert not offenders, f"the geometric oracle must not import {offenders}"
+    assert any("geometry" in name for name in imported), "it should use the geometry layer"
+    assert any("validation" in name for name in imported), "one shared coordinate coercion"

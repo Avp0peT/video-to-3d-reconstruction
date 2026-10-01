@@ -43,6 +43,7 @@ PAGES = {
     "m3_affine_coordinates": APP_DIR / "pages" / "03_Affine_Coordinates.py",
     "m4_teaching_code": APP_DIR / "pages" / "04_Teaching_Code.py",
     "m5_official_code": APP_DIR / "pages" / "05_Kozlov_Official_Code.py",
+    "m7_official_recognition": APP_DIR / "pages" / "07_Official_Recognition.py",
     "m6_invariants": APP_DIR / "pages" / "06_Invariants.py",
 }
 
@@ -266,7 +267,7 @@ def test_m4_shows_quality_before_the_conclusion():
 # --------------------------------------------------------------------------- #
 # M6 — theory, measurement, error and control, plus the discrepancy banner
 # --------------------------------------------------------------------------- #
-def test_m6_shows_theory_measurement_and_error():
+def test_m7_shows_theory_measurement_and_error():
     text = _all_text(_run("m6_invariants"))
     assert "理论预测" in text
     assert "实测" in text
@@ -444,3 +445,40 @@ def test_m5_labels_the_numeric_layer_as_a_strategy():
     # the exact layer is the default, so the strategy note appears only when selected;
     # the page must at least offer the switch
     assert "整数" in text and "浮点" in text
+
+
+# --------------------------------------------------------------------------- #
+# M7 — official recognition
+# --------------------------------------------------------------------------- #
+def test_m7_answers_every_required_question_separately():
+    text = _all_text(_run("m7_official_recognition"))
+    for question in ("代码是否可定义", "定理 1 是否适用", "算术模式", "代码等价", "几何 witness"):
+        assert question in text, question
+    assert "final status" in text
+
+
+def test_m7_documents_the_status_vocabulary():
+    text = _all_text(_run("m7_official_recognition"))
+    for status in (
+        "EXACT_AFFINE_EQUIVALENT",
+        "EXACT_NOT_AFFINE_EQUIVALENT",
+        "CODE_EQUIVALENT_THEOREM_NOT_APPLICABLE",
+        "NUMERIC_AFFINE_MATCH",
+        "NUMERIC_NON_MATCH",
+        "NUMERIC_INDETERMINATE",
+        "CODE_UNDEFINED",
+        "INVALID_INPUT",
+    ):
+        assert status in text, status
+
+
+def test_m7_shows_the_map_and_the_three_plots():
+    text = _all_text(_run("m7_official_recognition"))
+    assert "T(X)" in text and "det M" in text
+    assert "点对应" in text
+
+
+def test_m7_distinguishes_the_three_constructions():
+    text = _all_text(_run("m7_official_recognition"))
+    assert "M4" in text and "M5" in text
+    assert "教学" in text and "正式" in text
