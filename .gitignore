@@ -12,3 +12,6 @@ experiments/results/*_20*/
 build/
 dist/
 .DS_Store
+
+# local run logs (the full suite takes ~15 min here, so these accumulate)
+*.log

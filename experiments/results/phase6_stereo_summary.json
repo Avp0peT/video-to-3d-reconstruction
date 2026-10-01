@@ -1,0 +1,50 @@
+{
+  "name": "phase6_stereo_summary",
+  "provenance": {
+    "timestamp_utc": "2026-10-01T16:05:22+00:00",
+    "package_version": "0.2.0",
+    "git_commit": "f2ed5e79572d8b790ae2e69d04ddbbbddfc30d21",
+    "git_dirty": true,
+    "git_branch": "master",
+    "python_version": "3.13.14",
+    "numpy_version": "2.5.3",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "cpu_count": 32,
+    "seed": 20261007,
+    "tolerances": {
+      "FLOAT_TOL": 1e-12,
+      "COLLINEAR_TOL": 1e-09,
+      "MATCH_TOL": 1e-09,
+      "SIGNATURE_DECIMALS": 9,
+      "MAX_CONDITION_NUMBER": 1000000.0,
+      "UNUSABLE_CONDITION_NUMBER": 1000000000000.0,
+      "UNUSABLE_ACCURACY": 0.001,
+      "TEACHING_CODE_DECIMALS": 9
+    },
+    "experiment_config": {
+      "quick": false
+    }
+  },
+  "experiment": "phase6_stereo",
+  "title": "stereo experiments S1-S8",
+  "s1_worst_relative_3d_error": 5.189380497961699e-16,
+  "s1_passed": true,
+  "s2_pruned_returned_a_non_optimum": 0,
+  "s2_true_correspondence_not_an_optimum": 0,
+  "s7_configurations_with_multiple_optima": 4,
+  "s7_optimum_answers": 202,
+  "s7_invalid_answers": 193,
+  "s6_taxonomy_mismatches": 0,
+  "outcome_partition_incomplete_rows": 0,
+  "s3_repeats_per_point": 9,
+  "s3_residual_non_monotone_steps": 1,
+  "s3_pointwise_3d_non_monotone_steps": 2,
+  "s8_valid_reconstructions": 10,
+  "s8_invalid_reconstructions": 193,
+  "s8_invalid_separated_by_the_invariant": 191,
+  "s8_invalid_missed_by_the_invariant": 2,
+  "s8_false_alarms_on_valid_reconstructions": 0,
+  "rows": 290,
+  "elapsed_seconds": 44.52244339999993,
+  "note": "the sanity rule is asserted first: a known-correspondence, zero-noise, well-conditioned configuration must reconstruct at machine precision before any correspondence result is interpreted; the optimum-set composition is reported instead of the engine's pick because the pick is float-noise dependent"
+}

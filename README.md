@@ -25,13 +25,13 @@ $$
 | 3 | 图像代码（正式，`coding/`） | ✅ **完成**（Phase 3 已解锁 2026-10-01） |
 | 4 | 仿射等价识别（正式，`recognition.py`） | ✅ **完成**（Gate G4.1–G4.10 全通过） |
 | 5 | 信息压缩（`compression/`） | ✅ **完成**（G5.1–G5.10 全通过；见 `docs/reports/phase5_gate.md`） |
-| 6 | 立体视觉 | ⛔ 阻塞（未决问题 Q4） |
-| 7 | Streamlit Web UI（M1–M8） | ✅ 完成 8 页（含编码、识别、压缩实验室） |
+| 6 | 立体视觉（`stereo/`） | ✅ **完成**（G6 Gate 通过；`AlgT'`/`AlgSo` 未实现，已登记；见 `docs/reports/phase6_gate.md`） |
+| 7 | Streamlit Web UI（M1–M8） | ✅ 完成 9 页（含编码、识别、压缩实验室、立体视觉实验室） |
 | 8 | 多形状不变量验证 + 统一可复现产物 | ✅ 完成 |
 | 9 | 完整报告 + 答辩 Demo | ⏳ 阶段报告 |
 | 10 | 2026 扩展模块 E1–E5 | ⛔ 未开始 |
 
-**测试**：528 passed ｜ **实验**：7 个可复现实验全部通过 ｜ **教学型编码 / 正式编码 / 正式识别**：✅✅✅
+**测试**：561 passed ｜ **实验**：10 个可复现实验全部通过 ｜ **教学型编码 / 正式编码 / 正式识别**：✅✅✅
 
 ### ★ Phase 4 结果
 
@@ -48,7 +48,8 @@ $$
 | G4.9 | 性能报告完成并记录 $O(n^6)$ | ✅ [`docs/theory/complexity.md`](docs/theory/complexity.md) |
 | G4.10 | UI 可展示实际 affine witness | ✅ `07_Official_Recognition.py`：`M`、`t`、`det M`、点对应 ψ、X / T(X) / Y 三联图 |
 
-**Phase 4 ✅ ⇒ Phase 5 解锁条件满足**（是否进入 Phase 5 待你确认）。
+**Phase 4 ✅ ⇒ Phase 5 ✅ ⇒ Phase 6 ✅**（各阶段 Gate 报告在 `docs/reports/`；
+Phase 6 的 `AlgT'`/`AlgSo` 算法层未通过 Gate，已显式登记，见 `docs/reports/phase6_gate.md` §5）。
 
 ### ★ Q1 已结案：Phase 3 解锁
 
@@ -168,9 +169,7 @@ kozlov-visual-lab/
 │   │   ├── geometric.py          独立的精确几何 oracle（不依赖代码层）
 │   │   ├── lazy.py               O(n^3) 内存的 lazy 表示（IndexedRatioView）
 │   │   └── recognition.py        RecognitionResult + 两条识别流水线
-│   ├── recognition/              ⛔ Phase 4
-│   ├── compression/              ⛔ Phase 5
-│   └── stereo/                   ⛔ Phase 6
+│   └── stereo/                   ✅ 立体视觉（official 模型层 · baseline 多视图几何 · experimental 对应搜索）
 ├── app/                          Streamlit 界面
 │   ├── Home.py                   演示故事线 + 状态
 │   ├── _shared.py                共享 UI 组件（figures / 三态结论 / 精度块）
@@ -180,13 +179,13 @@ kozlov-visual-lab/
 │       ├── 03_Affine_Coordinates.py  M3 内部仿射坐标（核心）
 │       ├── 04_Teaching_Code.py   M4 教学型编码（Pedagogical construction）
 │       ├── 05_Kozlov_Official_Code.py  M5 正式图像代码（Козлов 2009）
-│       ├── 05_Kozlov_Official_Code.py  M5 正式图像代码
 │       ├── 06_Invariants.py      M6 不变量实验中心
 │       ├── 07_Official_Recognition.py  M7 正式仿射识别
-│       └── 08_Compression_Lab.py  M8 压缩实验室
-├── tests/                        343 个测试
+│       ├── 08_Compression_Lab.py  M8 压缩实验室
+│       └── 09_Stereo_Lab.py      M8 立体视觉实验室（Phase 6）
+├── tests/                        561 个测试
 ├── experiments/                  可执行实验与演示
-│   └── results/                  5 个统一可复现产物 + MANIFEST.json
+│   └── results/                  统一可复现产物 + MANIFEST.json（含 SHA-256）
 ├── examples/                     9 个教材示例 JSON
 ├── docs/
 │   ├── specs/                    数学规格（带 status 与来源等级）

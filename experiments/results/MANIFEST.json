@@ -1,8 +1,8 @@
 {
   "provenance": {
-    "timestamp_utc": "2026-10-01T08:16:51+00:00",
+    "timestamp_utc": "2026-10-01T16:06:09+00:00",
     "package_version": "0.2.0",
-    "git_commit": "055542e3d3b5e60eb1975974351f0912d22796b8",
+    "git_commit": "f2ed5e79572d8b790ae2e69d04ddbbbddfc30d21",
     "git_dirty": true,
     "git_branch": "master",
     "python_version": "3.13.14",
@@ -21,14 +21,15 @@
       "TEACHING_CODE_DECIMALS": 9
     },
     "experiment_config": {
-      "quick": false
+      "quick": false,
+      "verify_only": true
     }
   },
   "files": {
     "phase2_gate.json": {
       "bytes": 3239,
       "lines": 102,
-      "sha256": "ca660e026412136b7d401572be9757d4117bfda97c118422758a417c8634c7c4"
+      "sha256": "6a5e655a37a824e3fa5dd0ac195d8ddf61120a297d33399530e76453bc4bff18"
     },
     "invariant_matrix.csv": {
       "bytes": 37751,
@@ -48,17 +49,37 @@
     "official_code_definition.json": {
       "bytes": 7381,
       "lines": 233,
-      "sha256": "480f3895529013c81e5906703406dec904b206de65c498f9a5f974e32cca6610"
+      "sha256": "526e827d6663fcb090a4c16c10642d4d6ec9787ce94f2016716513c43579920d"
     },
     "phase4_scaling.csv": {
-      "bytes": 2330,
+      "bytes": 2328,
       "lines": 14,
-      "sha256": "9e0b7e0d358a2a78c223ca325af2e7258c44afb76313fa148d43fe48fea6fb5d"
+      "sha256": "e7d9ab2cf920cf5480ca1f9e1d94bcf3ebd1e474ac178b9a1473a41b029408f4"
     },
     "phase4_differential.json": {
-      "bytes": 1959,
-      "lines": 72,
-      "sha256": "f744aa5e8aa3857d3bd936c95533e0def20e00a8d5254e772660195a62abc527"
+      "bytes": 2208,
+      "lines": 81,
+      "sha256": "eb2ae7b0f458cecfc8fcdc0527249b045213f55751eb9d915609f31c7894f6eb"
+    },
+    "phase5_equivariance.csv": {
+      "bytes": 79593,
+      "lines": 799,
+      "sha256": "ad849790d8e90481062dac2e33638e191f593308f57b878759114ccf94d2d618"
+    },
+    "phase5_recognition.csv": {
+      "bytes": 143538,
+      "lines": 796,
+      "sha256": "f620d89526c691a1898ebe357def5071d65aea09c37f9106239c6ef70602b908"
+    },
+    "phase5_hand_trace.json": {
+      "bytes": 2090,
+      "lines": 107,
+      "sha256": "689b5d68e788a30ac7034dd0ced515d98a07cf62c5620d6fc304a76e2df49d50"
+    },
+    "phase6_stereo.csv": {
+      "bytes": 66965,
+      "lines": 291,
+      "sha256": "507a98c102fa2d45596eb6ea59ec30bbc7b67965bc49cf7280ca5efcf269cb08"
     }
   },
   "required": [
@@ -68,7 +89,11 @@
     "shape_generalization.csv",
     "official_code_definition.json",
     "phase4_scaling.csv",
-    "phase4_differential.json"
+    "phase4_differential.json",
+    "phase5_equivariance.csv",
+    "phase5_recognition.csv",
+    "phase5_hand_trace.json",
+    "phase6_stereo.csv"
   ],
   "missing": [],
   "empty": [],
@@ -80,6 +105,12 @@
     "phase4_differential.meta.json",
     "phase4_scaling.meta.json",
     "phase4_scaling_summary.meta.json",
+    "phase5_compression_summary.meta.json",
+    "phase5_equivariance.meta.json",
+    "phase5_recognition.meta.json",
+    "phase5_sanity.meta.json",
+    "phase6_stereo.meta.json",
+    "phase6_stereo_summary.meta.json",
     "precision_stress.meta.json",
     "shape_generalization.meta.json",
     "shape_generalization_summary.meta.json"

@@ -13,6 +13,7 @@ Run::
 
     python experiments/run_all.py
     python experiments/run_all.py --quick        # smaller sample sizes
+    python experiments/run_all.py --verify-only  # reuse artifacts, rewrite the manifest only
 """
 
 from __future__ import annotations
@@ -40,6 +41,7 @@ SCRIPTS: tuple[tuple[str, str], ...] = (
     ("phase4_differential", "exp_phase4_differential.py"),
     ("phase5_compression", "exp_phase5_compression.py"),
     ("phase5_sanity", "exp_phase5_sanity.py"),
+    ("phase6_stereo", "exp_phase6_stereo.py"),
 )
 
 #: Required result files (Sprint 3E names them explicitly).
@@ -58,6 +60,8 @@ REQUIRED = (
     "phase5_equivariance.csv",
     "phase5_recognition.csv",
     "phase5_hand_trace.json",
+    # phase 6: the sanity rule, the optimum-set composition, the degeneracy taxonomy
+    "phase6_stereo.csv",
 )
 
 QUICK_FLAGS: dict[str, tuple[str, ...]] = {
@@ -66,6 +70,7 @@ QUICK_FLAGS: dict[str, tuple[str, ...]] = {
     "exp_phase4_scaling.py": ("--max-n", "12", "--entry-cap", "60000"),
     "exp_phase4_differential.py": ("--accepted", "600"),
     "exp_phase5_compression.py": ("--quick",),
+    "exp_phase6_stereo.py": ("--quick",),
 }
 
 
@@ -76,12 +81,26 @@ def _digest(path: Path) -> str:
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--quick", action="store_true", help="smaller sample sizes")
+    parser.add_argument(
+        "--verify-only",
+        action="store_true",
+        help=(
+            "do not run the experiment scripts; only re-verify the artifacts already on disk "
+            "and rewrite MANIFEST.json.  Needed where a wall-clock cap kills the process: the "
+            "full suite takes ~15 minutes end to end (phase5_compression alone is 8.5), so the "
+            "scripts can be run one at a time and the manifest built afterwards.  Because this "
+            "mode does not re-run anything, MANIFEST.json records it: a digest written by "
+            "--verify-only attests to what is on disk, not to a fresh execution."
+        ),
+    )
     args = parser.parse_args(argv)
 
     RESULTS_ROOT.mkdir(parents=True, exist_ok=True)
     failures: list[str] = []
 
-    for name, script in SCRIPTS:
+    if args.verify_only:
+        print_header("skipping execution (--verify-only): verifying artifacts on disk")
+    for name, script in (() if args.verify_only else SCRIPTS):
         extra = QUICK_FLAGS.get(script, ()) if args.quick else ()
         command = [sys.executable, str(HERE / script), *extra]
         print_header(f"running {script}")
@@ -95,7 +114,7 @@ def main(argv: list[str] | None = None) -> int:
 
     print_header("verification")
     manifest: dict[str, object] = {
-        "provenance": provenance(config={"quick": args.quick}),
+        "provenance": provenance(config={"quick": args.quick, "verify_only": args.verify_only}),
         "files": {},
         "required": list(REQUIRED),
         "missing": [],

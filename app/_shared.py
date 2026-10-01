@@ -219,6 +219,76 @@ def point_figure(
     return figure
 
 
+def body_figure(
+    points: Any,
+    *,
+    title: str,
+    colour: str = ACCENT,
+    height: int = 420,
+    cameras: Sequence[Sequence[float]] | None = None,
+) -> go.Figure:
+    """Scatter plot of a **3D** point set, with optional camera centres marked.
+
+    Presentation only, like :func:`point_figure`: the page supplies points that came from
+    ``kozlov_lab``, and nothing here computes geometry.  The camera centres are drawn so that the
+    degeneracy the page is about — a body point sitting *on* the baseline, or two points sharing a
+    ray — is visible rather than only asserted.
+    """
+    array = np.asarray(points, dtype=float).reshape(-1, 3)
+    figure = go.Figure()
+    figure.add_trace(
+        go.Scatter3d(
+            x=array[:, 0], y=array[:, 1], z=array[:, 2],
+            mode="markers+text",
+            text=[str(i) for i in range(len(array))],
+            textposition="top center",
+            textfont=dict(size=10, color=INK_SOFT),
+            marker=dict(size=5, color=colour, symbol="circle"),
+            name=title,
+            hovertemplate="%{text}<br>(%{x:.3f}, %{y:.3f}, %{z:.3f})<extra></extra>",
+        )
+    )
+    if cameras is not None:
+        centers = np.asarray(cameras, dtype=float).reshape(-1, 3)
+        figure.add_trace(
+            go.Scatter3d(
+                x=centers[:, 0], y=centers[:, 1], z=centers[:, 2],
+                mode="markers+text",
+                text=["L", "R"][: len(centers)],
+                textposition="bottom center",
+                textfont=dict(size=13, color=FRAME),
+                marker=dict(size=6, color=FRAME, symbol="diamond"),
+                name="camera",
+                hoverinfo="skip",
+            )
+        )
+        if len(centers) >= 2:
+            figure.add_trace(
+                go.Scatter3d(
+                    x=centers[:, 0], y=centers[:, 1], z=centers[:, 2],
+                    mode="lines",
+                    line=dict(color=FRAME, width=4, dash="dot"),
+                    name="baseline",
+                    hoverinfo="skip",
+                )
+            )
+    figure.update_layout(
+        title=dict(text=title, font=dict(size=14, color=INK_SOFT)),
+        height=height,
+        margin=dict(l=0, r=0, t=36, b=0),
+        paper_bgcolor="white",
+        showlegend=False,
+        font=dict(color=INK),
+        scene=dict(
+            xaxis=dict(gridcolor=LINE, zerolinecolor=LINE, title=dict(text="x", font=dict(size=11))),
+            yaxis=dict(gridcolor=LINE, zerolinecolor=LINE, title=dict(text="y", font=dict(size=11))),
+            zaxis=dict(gridcolor=LINE, zerolinecolor=LINE, title=dict(text="z", font=dict(size=11))),
+            aspectmode="data",
+        ),
+    )
+    return figure
+
+
 def side_by_side(
     left: np.ndarray,
     right: np.ndarray,

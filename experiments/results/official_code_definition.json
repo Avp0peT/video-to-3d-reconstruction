@@ -1,9 +1,9 @@
 {
   "name": "official_code_definition",
   "provenance": {
-    "timestamp_utc": "2026-10-01T08:14:10+00:00",
+    "timestamp_utc": "2026-10-01T15:41:52+00:00",
     "package_version": "0.2.0",
-    "git_commit": "055542e3d3b5e60eb1975974351f0912d22796b8",
+    "git_commit": "f2ed5e79572d8b790ae2e69d04ddbbbddfc30d21",
     "git_dirty": true,
     "git_branch": "master",
     "python_version": "3.13.14",
@@ -229,5 +229,5 @@
     "authoritative_tests": "tests/test_kozlov_exact_oracle.py, test_kozlov_domain_and_validation.py, test_kozlov_equivalence.py",
     "note": "This script produces gate evidence (G3.6, G3.7) by calling the Phase 3 library. It contains no implementation of the definition: two implementations of one definition would eventually diverge, and the library plus tests/test_kozlov_exact_oracle.py are the single source of truth."
   },
-  "elapsed_seconds": 0.02758880000328645
+  "elapsed_seconds": 0.03746890000002168
 }

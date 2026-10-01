@@ -45,6 +45,7 @@ PAGES = {
     "m5_official_code": APP_DIR / "pages" / "05_Kozlov_Official_Code.py",
     "m7_official_recognition": APP_DIR / "pages" / "07_Official_Recognition.py",
     "compression_lab": APP_DIR / "pages" / "08_Compression_Lab.py",
+    "stereo_lab": APP_DIR / "pages" / "09_Stereo_Lab.py",
     "m6_invariants": APP_DIR / "pages" / "06_Invariants.py",
 }
 
@@ -520,3 +521,61 @@ def test_compression_lab_shows_the_identity_control():
     """5J requires the identity control to be visible: it is what makes the harness falsifiable."""
     text = _all_text(_run("compression_lab"))
     assert "IdentityCompressor" in text
+
+
+# --------------------------------------------------------------------------- #
+# 6R — stereo laboratory
+# --------------------------------------------------------------------------- #
+def test_stereo_lab_labels_the_three_source_layers():
+    """G6.9: the page must not blur the author's content with standard multi-view geometry."""
+    text = _all_text(_run("stereo_lab"))
+    for token in ("SOURCE-EXACT", "BASELINE", "EXPERIMENTAL"):
+        assert token in text, token
+    for phrase in ("平行投影", "pinhole"):
+        assert phrase in text, phrase
+
+
+def test_stereo_lab_puts_the_sanity_rule_before_the_correspondence_section():
+    """The phase's ordering rule, enforced in the page's own numbering.
+
+    The sanity rule ("can it be recovered at all") must be read before "who corresponds to whom";
+    a page that inverted them would be studying the second while the first was still unknown.
+    """
+    text = _all_text(_run("stereo_lab"))
+    assert "③" in text and "④" in text
+    assert text.index("③") < text.index("④"), "the sanity rule must precede the correspondence"
+    assert "PASS" in text, "the sanity check must report its verdict, not just its method"
+
+
+def test_stereo_lab_refuses_to_name_a_reconstruction_algorithm_after_the_author():
+    """The 6A gate: AlgT'/AlgSo were never extracted, so nothing may carry their name."""
+    text = _all_text(_run("stereo_lab"))
+    assert "AlgT'" in text and "AlgSo" in text
+    assert "未实现" in text
+
+
+def test_stereo_lab_names_the_degeneracy_categories_including_the_new_ones():
+    """D7/D8 had to be added; a taxonomy that cannot name its own findings mis-attributes them."""
+    text = _all_text(_run("stereo_lab"))
+    for token in (
+        "D3_POINT_NEAR_EPIPOLE",
+        "D6_SYMMETRIC_OBJECT",
+        "D7_COINCIDENT_RAYS",
+        "D8_EPIPOLAR_PLANE_MULTIPLICITY",
+    ):
+        assert token in text, token
+
+
+def test_stereo_lab_states_that_a_zero_residual_does_not_imply_a_correct_correspondence():
+    """The phase's headline: the page must say it, not merely compute it."""
+    text = _all_text(_run("stereo_lab"))
+    assert "零重投影误差不蕴含对应正确" in text
+    assert "INVALID_RECONSTRUCTION" in text
+    assert "零代价解" in text
+
+
+def test_stereo_lab_reports_the_invariant_as_a_detector_with_a_miss_rate():
+    """The honest statement: the sorted profile is not a criterion, and the page must not imply it."""
+    text = _all_text(_run("stereo_lab"))
+    assert "不变量漏掉" in text
+    assert "检测器" in text

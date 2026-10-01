@@ -1,5 +1,18 @@
 # 项目报告
 
+> ⚠️ **本文件已过时（最后更新于 Phase 0–2 + Sprint 3）。** Phase 3–6 已完成，
+> 权威结论在**各阶段的 Gate 报告**里，本文件**不再复述**它们：
+>
+> | 阶段 | 权威文档 |
+> |---|---|
+> | Phase 3（正式图像代码） | [`specs/official_image_code.md`](specs/official_image_code.md) |
+> | Phase 4（仿射识别） | [`theory/complexity.md`](theory/complexity.md) + `experiments/results/phase4_*.json` |
+> | Phase 5（压缩） | [`reports/phase5_gate.md`](reports/phase5_gate.md) |
+> | Phase 6（立体视觉） | [`reports/phase6_gate.md`](reports/phase6_gate.md) |
+>
+> 下表与正文只描述 **Phase 0–2 + Sprint 3** 的状态，其后各阶段的数字**不在本文件内**。
+> 完整「最终项目报告」按 README 第 10 项须在 Phase 10 之后写。
+
 > **状态：阶段报告（Phase 0–2 + Sprint 3A–3E 完成）**
 > README 交付清单第 10 项要求「最终项目报告」。完整版必须在 Phase 10 之后才能写，
 > 因为它需要 Phase 3–6 的结果。本文件是**阶段报告**，明确区分
