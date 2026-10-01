@@ -1,0 +1,126 @@
+dataset,dataset_zh,n_points,is_asymmetric,family,kind,repetition,case,equivalent,weak_evidence,reason,n_frames_x,n_frames_y,n_collinear_triples,decimals,recommended_decimals,quantization_is_safe,worst_condition_number,digest_x,digest_y,max_condition_budget
+A,非对称三角形 + 内部点,9,True,translation,translation,0,affine_image,True,False,equal,82,82,2,6,7,True,133.21273130523232,bdbae2eac4098859,bdbae2eac4098859,20.0
+A,非对称三角形 + 内部点,9,True,translation,translation,1,affine_image,True,False,equal,82,82,2,6,7,True,133.21273130523232,bdbae2eac4098859,bdbae2eac4098859,20.0
+A,非对称三角形 + 内部点,9,True,translation,translation,2,affine_image,True,False,equal,82,82,2,6,7,True,133.21273130523232,bdbae2eac4098859,bdbae2eac4098859,20.0
+A,非对称三角形 + 内部点,9,True,rotation,rotation,0,affine_image,True,False,equal,82,82,2,6,7,True,133.21273130523232,bdbae2eac4098859,bdbae2eac4098859,20.0
+A,非对称三角形 + 内部点,9,True,rotation,rotation,1,affine_image,True,False,equal,82,82,2,6,7,True,133.21273130523232,bdbae2eac4098859,bdbae2eac4098859,20.0
+A,非对称三角形 + 内部点,9,True,rotation,rotation,2,affine_image,True,False,equal,82,82,2,6,7,True,133.21273130523232,bdbae2eac4098859,bdbae2eac4098859,20.0
+A,非对称三角形 + 内部点,9,True,reflection,reflection,0,affine_image,True,False,equal,82,82,2,6,7,True,133.21273130523232,bdbae2eac4098859,bdbae2eac4098859,20.0
+A,非对称三角形 + 内部点,9,True,reflection,reflection,1,affine_image,True,False,equal,82,82,2,6,7,True,133.21273130523232,bdbae2eac4098859,bdbae2eac4098859,20.0
+A,非对称三角形 + 内部点,9,True,reflection,reflection,2,affine_image,True,False,equal,82,82,2,6,7,True,133.21273130523232,bdbae2eac4098859,bdbae2eac4098859,20.0
+A,非对称三角形 + 内部点,9,True,similarity,similarity,0,affine_image,True,False,equal,82,82,2,6,7,True,133.21273130523232,bdbae2eac4098859,bdbae2eac4098859,20.0
+A,非对称三角形 + 内部点,9,True,similarity,similarity,1,affine_image,True,False,equal,82,82,2,6,7,True,133.21273130523232,bdbae2eac4098859,bdbae2eac4098859,20.0
+A,非对称三角形 + 内部点,9,True,similarity,similarity,2,affine_image,True,False,equal,82,82,2,6,7,True,133.21273130523232,bdbae2eac4098859,bdbae2eac4098859,20.0
+A,非对称三角形 + 内部点,9,True,scale_nonuniform,affine,0,affine_image,True,False,equal,82,82,2,6,7,True,133.21273130523232,bdbae2eac4098859,bdbae2eac4098859,20.0
+A,非对称三角形 + 内部点,9,True,scale_nonuniform,affine,1,affine_image,True,False,equal,82,82,2,6,7,True,133.21273130523232,bdbae2eac4098859,bdbae2eac4098859,20.0
+A,非对称三角形 + 内部点,9,True,scale_nonuniform,affine,2,affine_image,True,False,equal,82,82,2,6,7,True,133.21273130523232,bdbae2eac4098859,bdbae2eac4098859,20.0
+A,非对称三角形 + 内部点,9,True,shear,affine,0,affine_image,True,False,equal,82,82,2,6,7,True,133.21273130523232,bdbae2eac4098859,bdbae2eac4098859,20.0
+A,非对称三角形 + 内部点,9,True,shear,affine,1,affine_image,True,False,equal,82,82,2,6,7,True,133.21273130523232,bdbae2eac4098859,bdbae2eac4098859,20.0
+A,非对称三角形 + 内部点,9,True,shear,affine,2,affine_image,True,False,equal,82,82,2,6,7,True,133.21273130523232,bdbae2eac4098859,bdbae2eac4098859,20.0
+A,非对称三角形 + 内部点,9,True,affine_general,affine,0,affine_image,True,False,equal,82,82,2,6,7,True,133.21273130523232,bdbae2eac4098859,bdbae2eac4098859,20.0
+A,非对称三角形 + 内部点,9,True,affine_general,affine,1,affine_image,True,False,equal,82,82,2,6,7,True,133.21273130523232,bdbae2eac4098859,bdbae2eac4098859,20.0
+A,非对称三角形 + 内部点,9,True,affine_general,affine,2,affine_image,True,False,equal,82,82,2,6,7,True,133.21273130523232,bdbae2eac4098859,bdbae2eac4098859,20.0
+A,非对称三角形 + 内部点,9,True,random,affine,0,affine_image,True,False,equal,82,82,2,6,7,True,133.21273130523232,bdbae2eac4098859,bdbae2eac4098859,20.0
+A,非对称三角形 + 内部点,9,True,random,affine,1,affine_image,True,False,equal,82,82,2,6,7,True,133.21273130523232,bdbae2eac4098859,bdbae2eac4098859,20.0
+A,非对称三角形 + 内部点,9,True,random,affine,2,affine_image,True,False,equal,82,82,2,6,7,True,133.21273130523232,bdbae2eac4098859,bdbae2eac4098859,20.0
+A,非对称三角形 + 内部点,9,True,UNRELATED_CONTROL,unrelated,0,control,False,False,"descriptor mismatch: same cardinality, different canonical form; first divergence at frame index 0",82,84,2,6,7,True,133.21273130523232,bdbae2eac4098859,c35f2c72e6a22dea,20.0
+B,非对称四边形（梯形，不等腰）,10,True,translation,translation,0,affine_image,True,False,equal,109,109,11,6,6,True,881.0302935366244,5e76081f9deb60e0,5e76081f9deb60e0,20.0
+B,非对称四边形（梯形，不等腰）,10,True,translation,translation,1,affine_image,True,False,equal,109,109,11,6,6,True,881.0302935366244,5e76081f9deb60e0,5e76081f9deb60e0,20.0
+B,非对称四边形（梯形，不等腰）,10,True,translation,translation,2,affine_image,True,False,equal,109,109,11,6,6,True,881.0302935366244,5e76081f9deb60e0,5e76081f9deb60e0,20.0
+B,非对称四边形（梯形，不等腰）,10,True,rotation,rotation,0,affine_image,True,False,equal,109,109,11,6,6,True,881.0302935366244,5e76081f9deb60e0,5e76081f9deb60e0,20.0
+B,非对称四边形（梯形，不等腰）,10,True,rotation,rotation,1,affine_image,True,False,equal,109,109,11,6,6,True,881.0302935366244,5e76081f9deb60e0,5e76081f9deb60e0,20.0
+B,非对称四边形（梯形，不等腰）,10,True,rotation,rotation,2,affine_image,True,False,equal,109,109,11,6,6,True,881.0302935366244,5e76081f9deb60e0,5e76081f9deb60e0,20.0
+B,非对称四边形（梯形，不等腰）,10,True,reflection,reflection,0,affine_image,True,False,equal,109,109,11,6,6,True,881.0302935366244,5e76081f9deb60e0,5e76081f9deb60e0,20.0
+B,非对称四边形（梯形，不等腰）,10,True,reflection,reflection,1,affine_image,True,False,equal,109,109,11,6,6,True,881.0302935366244,5e76081f9deb60e0,5e76081f9deb60e0,20.0
+B,非对称四边形（梯形，不等腰）,10,True,reflection,reflection,2,affine_image,True,False,equal,109,109,11,6,6,True,881.0302935366244,5e76081f9deb60e0,5e76081f9deb60e0,20.0
+B,非对称四边形（梯形，不等腰）,10,True,similarity,similarity,0,affine_image,True,False,equal,109,109,11,6,6,True,881.0302935366244,5e76081f9deb60e0,5e76081f9deb60e0,20.0
+B,非对称四边形（梯形，不等腰）,10,True,similarity,similarity,1,affine_image,True,False,equal,109,109,11,6,6,True,881.0302935366244,5e76081f9deb60e0,5e76081f9deb60e0,20.0
+B,非对称四边形（梯形，不等腰）,10,True,similarity,similarity,2,affine_image,True,False,equal,109,109,11,6,6,True,881.0302935366244,5e76081f9deb60e0,5e76081f9deb60e0,20.0
+B,非对称四边形（梯形，不等腰）,10,True,scale_nonuniform,affine,0,affine_image,True,False,equal,109,109,11,6,6,True,881.0302935366244,5e76081f9deb60e0,5e76081f9deb60e0,20.0
+B,非对称四边形（梯形，不等腰）,10,True,scale_nonuniform,affine,1,affine_image,True,False,equal,109,109,11,6,6,True,881.0302935366244,5e76081f9deb60e0,5e76081f9deb60e0,20.0
+B,非对称四边形（梯形，不等腰）,10,True,scale_nonuniform,affine,2,affine_image,True,False,equal,109,109,11,6,6,True,881.0302935366244,5e76081f9deb60e0,5e76081f9deb60e0,20.0
+B,非对称四边形（梯形，不等腰）,10,True,shear,affine,0,affine_image,True,False,equal,109,109,11,6,6,True,881.0302935366244,5e76081f9deb60e0,5e76081f9deb60e0,20.0
+B,非对称四边形（梯形，不等腰）,10,True,shear,affine,1,affine_image,True,False,equal,109,109,11,6,6,True,881.0302935366244,5e76081f9deb60e0,5e76081f9deb60e0,20.0
+B,非对称四边形（梯形，不等腰）,10,True,shear,affine,2,affine_image,True,False,equal,109,109,11,6,6,True,881.0302935366244,5e76081f9deb60e0,5e76081f9deb60e0,20.0
+B,非对称四边形（梯形，不等腰）,10,True,affine_general,affine,0,affine_image,True,False,equal,109,109,11,6,6,True,881.0302935366244,5e76081f9deb60e0,5e76081f9deb60e0,20.0
+B,非对称四边形（梯形，不等腰）,10,True,affine_general,affine,1,affine_image,True,False,equal,109,109,11,6,6,True,881.0302935366244,5e76081f9deb60e0,5e76081f9deb60e0,20.0
+B,非对称四边形（梯形，不等腰）,10,True,affine_general,affine,2,affine_image,True,False,equal,109,109,11,6,6,True,881.0302935366244,5e76081f9deb60e0,5e76081f9deb60e0,20.0
+B,非对称四边形（梯形，不等腰）,10,True,random,affine,0,affine_image,True,False,equal,109,109,11,6,6,True,881.0302935366244,5e76081f9deb60e0,5e76081f9deb60e0,20.0
+B,非对称四边形（梯形，不等腰）,10,True,random,affine,1,affine_image,True,False,equal,109,109,11,6,6,True,881.0302935366244,5e76081f9deb60e0,5e76081f9deb60e0,20.0
+B,非对称四边形（梯形，不等腰）,10,True,random,affine,2,affine_image,True,False,equal,109,109,11,6,6,True,881.0302935366244,5e76081f9deb60e0,5e76081f9deb60e0,20.0
+B,非对称四边形（梯形，不等腰）,10,True,UNRELATED_CONTROL,unrelated,0,control,False,False,"descriptor mismatch: same cardinality, different canonical form; first divergence at frame index 0",109,120,11,6,6,True,881.0302935366244,5e76081f9deb60e0,f88c0a0afa99471b,20.0
+C,不规则五边形,7,True,translation,translation,0,affine_image,True,False,equal,34,34,1,6,8,True,12.816135432769332,3317cafaa6562191,3317cafaa6562191,20.0
+C,不规则五边形,7,True,translation,translation,1,affine_image,True,False,equal,34,34,1,6,8,True,12.816135432769332,3317cafaa6562191,3317cafaa6562191,20.0
+C,不规则五边形,7,True,translation,translation,2,affine_image,True,False,equal,34,34,1,6,8,True,12.816135432769332,3317cafaa6562191,3317cafaa6562191,20.0
+C,不规则五边形,7,True,rotation,rotation,0,affine_image,True,False,equal,34,34,1,6,8,True,12.816135432769332,3317cafaa6562191,3317cafaa6562191,20.0
+C,不规则五边形,7,True,rotation,rotation,1,affine_image,True,False,equal,34,34,1,6,8,True,12.816135432769332,3317cafaa6562191,3317cafaa6562191,20.0
+C,不规则五边形,7,True,rotation,rotation,2,affine_image,True,False,equal,34,34,1,6,8,True,12.816135432769332,3317cafaa6562191,3317cafaa6562191,20.0
+C,不规则五边形,7,True,reflection,reflection,0,affine_image,True,False,equal,34,34,1,6,8,True,12.816135432769332,3317cafaa6562191,3317cafaa6562191,20.0
+C,不规则五边形,7,True,reflection,reflection,1,affine_image,True,False,equal,34,34,1,6,8,True,12.816135432769332,3317cafaa6562191,3317cafaa6562191,20.0
+C,不规则五边形,7,True,reflection,reflection,2,affine_image,True,False,equal,34,34,1,6,8,True,12.816135432769332,3317cafaa6562191,3317cafaa6562191,20.0
+C,不规则五边形,7,True,similarity,similarity,0,affine_image,True,False,equal,34,34,1,6,8,True,12.816135432769332,3317cafaa6562191,3317cafaa6562191,20.0
+C,不规则五边形,7,True,similarity,similarity,1,affine_image,True,False,equal,34,34,1,6,8,True,12.816135432769332,3317cafaa6562191,3317cafaa6562191,20.0
+C,不规则五边形,7,True,similarity,similarity,2,affine_image,True,False,equal,34,34,1,6,8,True,12.816135432769332,3317cafaa6562191,3317cafaa6562191,20.0
+C,不规则五边形,7,True,scale_nonuniform,affine,0,affine_image,True,False,equal,34,34,1,6,8,True,12.816135432769332,3317cafaa6562191,3317cafaa6562191,20.0
+C,不规则五边形,7,True,scale_nonuniform,affine,1,affine_image,True,False,equal,34,34,1,6,8,True,12.816135432769332,3317cafaa6562191,3317cafaa6562191,20.0
+C,不规则五边形,7,True,scale_nonuniform,affine,2,affine_image,True,False,equal,34,34,1,6,8,True,12.816135432769332,3317cafaa6562191,3317cafaa6562191,20.0
+C,不规则五边形,7,True,shear,affine,0,affine_image,True,False,equal,34,34,1,6,8,True,12.816135432769332,3317cafaa6562191,3317cafaa6562191,20.0
+C,不规则五边形,7,True,shear,affine,1,affine_image,True,False,equal,34,34,1,6,8,True,12.816135432769332,3317cafaa6562191,3317cafaa6562191,20.0
+C,不规则五边形,7,True,shear,affine,2,affine_image,True,False,equal,34,34,1,6,8,True,12.816135432769332,3317cafaa6562191,3317cafaa6562191,20.0
+C,不规则五边形,7,True,affine_general,affine,0,affine_image,True,False,equal,34,34,1,6,8,True,12.816135432769332,3317cafaa6562191,3317cafaa6562191,20.0
+C,不规则五边形,7,True,affine_general,affine,1,affine_image,True,False,equal,34,34,1,6,8,True,12.816135432769332,3317cafaa6562191,3317cafaa6562191,20.0
+C,不规则五边形,7,True,affine_general,affine,2,affine_image,True,False,equal,34,34,1,6,8,True,12.816135432769332,3317cafaa6562191,3317cafaa6562191,20.0
+C,不规则五边形,7,True,random,affine,0,affine_image,True,False,equal,34,34,1,6,8,True,12.816135432769332,3317cafaa6562191,3317cafaa6562191,20.0
+C,不规则五边形,7,True,random,affine,1,affine_image,True,False,equal,34,34,1,6,8,True,12.816135432769332,3317cafaa6562191,3317cafaa6562191,20.0
+C,不规则五边形,7,True,random,affine,2,affine_image,True,False,equal,34,34,1,6,8,True,12.816135432769332,3317cafaa6562191,3317cafaa6562191,20.0
+C,不规则五边形,7,True,UNRELATED_CONTROL,unrelated,0,control,False,False,"descriptor mismatch: same cardinality, different canonical form; first divergence at frame index 0",34,35,1,6,8,True,12.816135432769332,3317cafaa6562191,1f2d9e01d07589be,20.0
+D,非规则星形,8,True,translation,translation,0,affine_image,True,False,equal,55,55,1,6,8,True,56.27208126725567,477a307fbb8a6777,477a307fbb8a6777,20.0
+D,非规则星形,8,True,translation,translation,1,affine_image,True,False,equal,55,55,1,6,8,True,56.27208126725567,477a307fbb8a6777,477a307fbb8a6777,20.0
+D,非规则星形,8,True,translation,translation,2,affine_image,True,False,equal,55,55,1,6,8,True,56.27208126725567,477a307fbb8a6777,477a307fbb8a6777,20.0
+D,非规则星形,8,True,rotation,rotation,0,affine_image,True,False,equal,55,55,1,6,8,True,56.27208126725567,477a307fbb8a6777,477a307fbb8a6777,20.0
+D,非规则星形,8,True,rotation,rotation,1,affine_image,True,False,equal,55,55,1,6,8,True,56.27208126725567,477a307fbb8a6777,477a307fbb8a6777,20.0
+D,非规则星形,8,True,rotation,rotation,2,affine_image,True,False,equal,55,55,1,6,8,True,56.27208126725567,477a307fbb8a6777,477a307fbb8a6777,20.0
+D,非规则星形,8,True,reflection,reflection,0,affine_image,True,False,equal,55,55,1,6,8,True,56.27208126725567,477a307fbb8a6777,477a307fbb8a6777,20.0
+D,非规则星形,8,True,reflection,reflection,1,affine_image,True,False,equal,55,55,1,6,8,True,56.27208126725567,477a307fbb8a6777,477a307fbb8a6777,20.0
+D,非规则星形,8,True,reflection,reflection,2,affine_image,True,False,equal,55,55,1,6,8,True,56.27208126725567,477a307fbb8a6777,477a307fbb8a6777,20.0
+D,非规则星形,8,True,similarity,similarity,0,affine_image,True,False,equal,55,55,1,6,8,True,56.27208126725567,477a307fbb8a6777,477a307fbb8a6777,20.0
+D,非规则星形,8,True,similarity,similarity,1,affine_image,True,False,equal,55,55,1,6,8,True,56.27208126725567,477a307fbb8a6777,477a307fbb8a6777,20.0
+D,非规则星形,8,True,similarity,similarity,2,affine_image,True,False,equal,55,55,1,6,8,True,56.27208126725567,477a307fbb8a6777,477a307fbb8a6777,20.0
+D,非规则星形,8,True,scale_nonuniform,affine,0,affine_image,True,False,equal,55,55,1,6,8,True,56.27208126725567,477a307fbb8a6777,477a307fbb8a6777,20.0
+D,非规则星形,8,True,scale_nonuniform,affine,1,affine_image,True,False,equal,55,55,1,6,8,True,56.27208126725567,477a307fbb8a6777,477a307fbb8a6777,20.0
+D,非规则星形,8,True,scale_nonuniform,affine,2,affine_image,True,False,equal,55,55,1,6,8,True,56.27208126725567,477a307fbb8a6777,477a307fbb8a6777,20.0
+D,非规则星形,8,True,shear,affine,0,affine_image,True,False,equal,55,55,1,6,8,True,56.27208126725567,477a307fbb8a6777,477a307fbb8a6777,20.0
+D,非规则星形,8,True,shear,affine,1,affine_image,True,False,equal,55,55,1,6,8,True,56.27208126725567,477a307fbb8a6777,477a307fbb8a6777,20.0
+D,非规则星形,8,True,shear,affine,2,affine_image,True,False,equal,55,55,1,6,8,True,56.27208126725567,477a307fbb8a6777,477a307fbb8a6777,20.0
+D,非规则星形,8,True,affine_general,affine,0,affine_image,True,False,equal,55,55,1,6,8,True,56.27208126725567,477a307fbb8a6777,477a307fbb8a6777,20.0
+D,非规则星形,8,True,affine_general,affine,1,affine_image,True,False,equal,55,55,1,6,8,True,56.27208126725567,477a307fbb8a6777,477a307fbb8a6777,20.0
+D,非规则星形,8,True,affine_general,affine,2,affine_image,True,False,equal,55,55,1,6,8,True,56.27208126725567,477a307fbb8a6777,477a307fbb8a6777,20.0
+D,非规则星形,8,True,random,affine,0,affine_image,True,False,equal,55,55,1,6,8,True,56.27208126725567,477a307fbb8a6777,477a307fbb8a6777,20.0
+D,非规则星形,8,True,random,affine,1,affine_image,True,False,equal,55,55,1,6,8,True,56.27208126725567,477a307fbb8a6777,477a307fbb8a6777,20.0
+D,非规则星形,8,True,random,affine,2,affine_image,True,False,equal,55,55,1,6,8,True,56.27208126725567,477a307fbb8a6777,477a307fbb8a6777,20.0
+D,非规则星形,8,True,UNRELATED_CONTROL,unrelated,0,control,False,False,"descriptor mismatch: same cardinality, different canonical form; first divergence at frame index 0",55,56,1,6,8,True,56.27208126725567,477a307fbb8a6777,d54a0229cbcf42b0,20.0
+E,随机一般位置点集,12,True,translation,translation,0,affine_image,True,False,equal,220,220,0,6,7,True,198.57758753101845,526cb18565a07975,526cb18565a07975,20.0
+E,随机一般位置点集,12,True,translation,translation,1,affine_image,True,False,equal,220,220,0,6,7,True,198.57758753101845,526cb18565a07975,526cb18565a07975,20.0
+E,随机一般位置点集,12,True,translation,translation,2,affine_image,True,False,equal,220,220,0,6,7,True,198.57758753101845,526cb18565a07975,526cb18565a07975,20.0
+E,随机一般位置点集,12,True,rotation,rotation,0,affine_image,True,False,equal,220,220,0,6,7,True,198.57758753101845,526cb18565a07975,526cb18565a07975,20.0
+E,随机一般位置点集,12,True,rotation,rotation,1,affine_image,True,False,equal,220,220,0,6,7,True,198.57758753101845,526cb18565a07975,526cb18565a07975,20.0
+E,随机一般位置点集,12,True,rotation,rotation,2,affine_image,True,False,equal,220,220,0,6,7,True,198.57758753101845,526cb18565a07975,526cb18565a07975,20.0
+E,随机一般位置点集,12,True,reflection,reflection,0,affine_image,True,False,equal,220,220,0,6,7,True,198.57758753101845,526cb18565a07975,526cb18565a07975,20.0
+E,随机一般位置点集,12,True,reflection,reflection,1,affine_image,True,False,equal,220,220,0,6,7,True,198.57758753101845,526cb18565a07975,526cb18565a07975,20.0
+E,随机一般位置点集,12,True,reflection,reflection,2,affine_image,True,False,equal,220,220,0,6,7,True,198.57758753101845,526cb18565a07975,526cb18565a07975,20.0
+E,随机一般位置点集,12,True,similarity,similarity,0,affine_image,True,False,equal,220,220,0,6,7,True,198.57758753101845,526cb18565a07975,526cb18565a07975,20.0
+E,随机一般位置点集,12,True,similarity,similarity,1,affine_image,True,False,equal,220,220,0,6,7,True,198.57758753101845,526cb18565a07975,526cb18565a07975,20.0
+E,随机一般位置点集,12,True,similarity,similarity,2,affine_image,True,False,equal,220,220,0,6,7,True,198.57758753101845,526cb18565a07975,526cb18565a07975,20.0
+E,随机一般位置点集,12,True,scale_nonuniform,affine,0,affine_image,True,False,equal,220,220,0,6,7,True,198.57758753101845,526cb18565a07975,526cb18565a07975,20.0
+E,随机一般位置点集,12,True,scale_nonuniform,affine,1,affine_image,True,False,equal,220,220,0,6,7,True,198.57758753101845,526cb18565a07975,526cb18565a07975,20.0
+E,随机一般位置点集,12,True,scale_nonuniform,affine,2,affine_image,True,False,equal,220,220,0,6,7,True,198.57758753101845,526cb18565a07975,526cb18565a07975,20.0
+E,随机一般位置点集,12,True,shear,affine,0,affine_image,True,False,equal,220,220,0,6,7,True,198.57758753101845,526cb18565a07975,526cb18565a07975,20.0
+E,随机一般位置点集,12,True,shear,affine,1,affine_image,True,False,equal,220,220,0,6,7,True,198.57758753101845,526cb18565a07975,526cb18565a07975,20.0
+E,随机一般位置点集,12,True,shear,affine,2,affine_image,True,False,equal,220,220,0,6,7,True,198.57758753101845,526cb18565a07975,526cb18565a07975,20.0
+E,随机一般位置点集,12,True,affine_general,affine,0,affine_image,True,False,equal,220,220,0,6,7,True,198.57758753101845,526cb18565a07975,526cb18565a07975,20.0
+E,随机一般位置点集,12,True,affine_general,affine,1,affine_image,True,False,equal,220,220,0,6,7,True,198.57758753101845,526cb18565a07975,526cb18565a07975,20.0
+E,随机一般位置点集,12,True,affine_general,affine,2,affine_image,True,False,equal,220,220,0,6,7,True,198.57758753101845,526cb18565a07975,526cb18565a07975,20.0
+E,随机一般位置点集,12,True,random,affine,0,affine_image,True,False,equal,220,220,0,6,7,True,198.57758753101845,526cb18565a07975,526cb18565a07975,20.0
+E,随机一般位置点集,12,True,random,affine,1,affine_image,True,False,equal,220,220,0,6,7,True,198.57758753101845,526cb18565a07975,526cb18565a07975,20.0
+E,随机一般位置点集,12,True,random,affine,2,affine_image,True,False,equal,220,220,0,6,7,True,198.57758753101845,526cb18565a07975,526cb18565a07975,20.0
+E,随机一般位置点集,12,True,UNRELATED_CONTROL,unrelated,0,control,False,False,"descriptor mismatch: same cardinality, different canonical form; first divergence at frame index 0",220,220,0,6,7,True,198.57758753101845,526cb18565a07975,89a20ddcfb73e663,20.0

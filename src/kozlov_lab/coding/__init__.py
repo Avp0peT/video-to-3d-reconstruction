@@ -1,5 +1,11 @@
 """Image-code layer — **not implemented yet** (Phase 3, README section 7).
 
+Status: BLOCKED on open question **Q1** (the exact definition of Kozlov's formal
+image code) and gated by the Phase 2 acceptance gate.  The permission gate for
+implementing anything here is ``docs/specs/official_image_code.md``: while it is
+absent or incomplete, Phase 3 stays LOCKED and this package stays empty.  The
+pedagogical construction that *is* allowed lives in :mod:`kozlov_lab.teaching`.
+
 Status
 ------
 Blocked by the Phase 2 gate:

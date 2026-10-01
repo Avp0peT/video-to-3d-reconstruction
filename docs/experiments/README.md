@@ -6,9 +6,23 @@
 仓库根目录的 `results/<EXP-ID>_<日期>/`，可用下列命令重新生成：
 
 ```bash
-python experiments/exp_a_affine_invariance.py --n 1000
-python experiments/exp_invariant_table.py
+python experiments/run_all.py            # 全部 5 个实验 + 产物校验
+python experiments/run_all.py --quick    # 缩短样本量
 ```
+
+Sprint 3E 之后，权威产物是 `experiments/results/`：
+
+| 文件 | 内容 |
+|---|---|
+| `phase2_gate.json` | Phase 2 Gate（主臂 / 可证伪性 / 非平凡性 / 顺序无关性） |
+| `invariant_matrix.csv` | 5 数据集 × 7 变换族 × 7 性质 = 245 行，含理论预测与实测 |
+| `precision_stress.csv` | 条件数臂 + 量级臂 + 结构摧毁臂 |
+| `shape_generalization.csv` | 教学型编码 5 数据集 × 8 族 × 3 次重复 + 对照 |
+| `official_code_definition.json` | Q1 正式定义的验证（手算例子 + 5 数据集） |
+| `MANIFEST.json` | 每个产物的大小、行数、SHA-256 与 provenance |
+
+每个产物都配 `<name>.meta.json`：`timestamp` / `git_commit` / `git_dirty` /
+`python_version` / `numpy_version` / `seed` / `tolerances` / `experiment_config`。
 
 ## 约定
 
@@ -28,6 +42,7 @@ python experiments/exp_invariant_table.py
 |---|---|---|
 | [`EXP-A.md`](EXP-A.md) | Experiment A — 仿射不变量 | ✅ 完成 |
 | [`M6-invariant-table.md`](M6-invariant-table.md) | M6 不变量实验中心（README 第 9 节） | ✅ 完成 |
+| [`sprint3-multishape.md`](sprint3-multishape.md) | Sprint 3B/3C/3D：多形状验证 + 教学型编码 + Q1 | ✅ 完成 |
 
 ## 未开始（被前置阶段阻塞）
 

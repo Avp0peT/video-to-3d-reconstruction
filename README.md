@@ -22,16 +22,37 @@ $$
 | 0 | 数学规格（Theory Agent 输出） | ✅ 完成 |
 | 1 | 有限点集 + 几何变换 | ✅ 完成 |
 | 2 | 内部仿射坐标（**项目核心**） | ✅ 完成，**Gate 通过** |
-| 3 | 图像代码 | ⛔ 阻塞（未决问题 Q1） |
+| 3 | 图像代码（正式） | ⛔ **LOCKED：待 G3.1 裁定**（定义已取得，见下） |
 | 4 | 仿射等价识别 | ⛔ 阻塞（Phase 3） |
 | 5 | 信息压缩 | ⛔ 阻塞（Phase 4） |
 | 6 | 立体视觉 | ⛔ 阻塞（未决问题 Q4） |
-| 7 | Streamlit Web UI | ⛔ 未开始 |
-| 8 | 实验 B–E + 测试矩阵 | ⛔ 部分 |
-| 9 | 完整报告 + 答辩 Demo | ⛔ 部分 |
+| 7 | Streamlit Web UI（M1/M2/M3/M4/M6） | ✅ 完成 5 页 |
+| 8 | 多形状不变量验证 + 统一可复现产物 | ✅ 完成 |
+| 9 | 完整报告 + 答辩 Demo | ⏳ 阶段报告 |
 | 10 | 2026 扩展模块 E1–E5 | ⛔ 未开始 |
 
-**测试**：219 passed ｜ **实验**：Experiment A ✅、M6 不变量表 ✅
+**测试**：343 passed ｜ **实验**：5 个可复现实验全部通过 ｜ **教学型编码**：✅ 完成（Pedagogical Extension）
+
+### ★ Q1 的进展（重要）
+
+未决问题 **Q1（正式「код изображения」的定义）已取得逐字可读的一手文本**：
+
+$$\langle M_A,\ T_A\rangle,\qquad T_A=\{\,S_{mnu}/S_{ksp}\ \}\ \text{（遍历所有三元组对，分母非退化）}$$
+
+来源为 **Kozlov 本人的专利说明书 RU2779379C1**（作者自撰、可实施），
+其中把定理归给教材《Введение в математическую теорию зрительного восприятия》(МГУ, 2007)；
+2009 年论文摘要（出版社页面）独立确认"编码对离散点集的仿射变换不变"。
+
+G3.1–G3.7 七个 Gate 中 **6 项明确满足**，唯一开口是 **G3.1 的来源层级**
+（专利能否替代教材作为一手依据）。因此：
+
+```text
+Phase 3 = LOCKED（待 G3.1 裁定）
+```
+
+裁定前 `src/kozlov_lab/coding/` 保持为空。定义本身的数值验证已完成
+（两个手算例子 + 五个数据集），产物见 `experiments/results/official_code_definition.json`。
+**详见 [`docs/specs/official_image_code.md`](docs/specs/official_image_code.md)。**
 
 > Phase 3 的阻塞有两层，且必须分开看：
 > ① **工程阻塞**：Phase 2 的性质测试（Phase 2 Gate）——**已解除**；
@@ -55,9 +76,11 @@ $PY -m pytest -q -m gate -s
 # 现场演示（README 第 25 节第 1–7 步）
 $PY experiments/mvp_walkthrough.py
 
-# 实验（结果写入 results/<EXP-ID>_<日期>/）
-$PY experiments/exp_a_affine_invariance.py
-$PY experiments/exp_invariant_table.py
+# 一次性跑完所有可复现实验，并校验产物（写入 experiments/results/）
+$PY experiments/run_all.py            # --quick 可缩短样本量
+
+# 交互式界面（5 个页面）
+$PY -m streamlit run app/Home.py
 ```
 
 安装为包（可选）：
@@ -106,22 +129,37 @@ kozlov-visual-lab/
 │   │   ├── transforms.py         AffineTransform（平移/等距/相似/仿射）
 │   │   ├── affine_frame.py       AffineFrame, affine_coordinates  ← 项目核心
 │   │   └── invariants.py         不变量测量（Invariant Explorer 引擎）
-│   ├── datasets/shapes.py        图形注册表（triangle/star/grid/…）
-│   ├── coding/                   ⛔ Phase 3（未实现，见 docs/specs/image_code.md）
+│   ├── precision.py              可达精度报告（条件数项 + 量级项）
+│   ├── datasets/
+│   │   ├── shapes.py             图形注册表（triangle/star/grid/…）
+│   │   └── corpus.py             实验数据集 A–E（非对称性**实测**）
+│   ├── teaching/                 ✅ 教学型编码（Pedagogical Extension，与正式理论隔离）
+│   ├── coding/                   ⛔ Phase 3（待 G3.1 裁定，必须为空）
 │   ├── recognition/              ⛔ Phase 4
 │   ├── compression/              ⛔ Phase 5
 │   └── stereo/                   ⛔ Phase 6
-├── tests/                        219 个测试
+├── app/                          Streamlit 界面
+│   ├── Home.py                   演示故事线 + 状态
+│   ├── _shared.py                共享 UI 组件（figures / 三态结论 / 精度块）
+│   └── pages/
+│       ├── 01_Point_Set.py       M1 点集实验室
+│       ├── 02_Transformations.py M2 变换实验室
+│       ├── 03_Affine_Coordinates.py  M3 内部仿射坐标（核心）
+│       ├── 04_Teaching_Code.py   M4 教学型编码
+│       └── 06_Invariants.py      M6 不变量实验中心
+├── tests/                        343 个测试
 ├── experiments/                  可执行实验与演示
+│   └── results/                  5 个统一可复现产物 + MANIFEST.json
 ├── examples/                     9 个教材示例 JSON
 ├── docs/
 │   ├── specs/                    数学规格（带 status 与来源等级）
 │   ├── theory/                   数学原理 + 数值极限
 │   ├── experiments/              策展版实验报告
 │   ├── terminology_ru_zh.md      中俄术语对照（唯一译法来源）
+│   ├── status_report.html        可交互阶段报告
 │   ├── demo_script.md            课堂演示流程
 │   └── final_report.md           阶段报告
-└── results/                      每次运行的 JSON 产物（含 provenance）
+└── .sources/                     一手文献（不入库；见 docs/specs/official_image_code.md §1）
 ```
 
 ---
@@ -160,6 +198,8 @@ UI 层**不得**重新实现任何数学算法（README 第 18 节）。
 | 控制组（无关图像）破坏全部性质 | 7/7 被破坏 | 同上 |
 | $10^{-9}$ 的可达条件 | $\mathrm{cond}\lesssim10^{6}$ | [`docs/theory/numerical_limits.md`](docs/theory/numerical_limits.md) |
 | 平移幅度导致的独立失效 | $\max\|\Delta\alpha\|\approx\varepsilon\|t\|/\|B-A\|$ | 同上 |
+| 教学型编码在 5 数据集 × 8 变换族下不变 | 0 失败（含对照组） | `experiments/results/shape_generalization.csv` |
+| 正式定义的字面 $S\ne0$ 判据**不可用** | $\max\rho=3.07\times10^{16}$，平移后变 $1.23\times10^{17}$ | [`docs/specs/official_image_code.md`](docs/specs/official_image_code.md) §13 |
 
 ---
 
@@ -176,7 +216,9 @@ UI 层**不得**重新实现任何数学算法（README 第 18 节）。
 | 每个结果携带条件数与可达精度界 | README 第 6 节的 `1e-9` 只在良态标架成立 |
 | 哈希只是索引，**不是**数学图像代码 | README 第 7、23 节 |
 | 每次运行写 `provenance.json` | 让报告里的数字可追溯 |
-| `results/` 不入库，策展报告入库 | 原始产物可重生成，结论需要人工解读 |
+| 每个"保持"断言必须配一个"破坏"断言 | 否则测试无法区分"实现正确"与"实现撒谎" |
+| 哈希只是索引，**不是**数学图像代码 | README 第 7、23 节 |
+| 教学型编码与正式理论**目录隔离**，由测试强制 | 未决问题 Q1 未裁定前不得混淆 |
 
 ---
 

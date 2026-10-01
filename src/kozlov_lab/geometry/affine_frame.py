@@ -278,12 +278,14 @@ def affine_coordinates(
 
     mat = np.column_stack((pb - pa, pc - pa))
     sine = collinearity_sine(pa, pb, pc)
+    flatness = triangle_flatness(pa, pb, pc)
     cond = _condition_number(mat)
 
-    if check and sine <= tol:
+    if check and flatness <= tol:
         raise ValueError(
             "affine_coordinates: reference points A, B, C are collinear "
-            f"(|sin(angle BAC)| = {sine:.3e} <= tol = {tol:.1e}); "
+            f"(flatness {flatness:.3e} <= tol = {tol:.1e}; "
+            f"|sin(angle BAC)| = {sine:.3e}); "
             "a 2D affine frame requires three non-collinear points"
         )
 
@@ -323,10 +325,12 @@ def affine_coordinates_batch(
 
     mat = np.column_stack((pb - pa, pc - pa))
     sine = collinearity_sine(pa, pb, pc)
-    if sine <= tol:
+    flatness = triangle_flatness(pa, pb, pc)
+    if flatness <= tol:
         raise ValueError(
             "affine_coordinates_batch: reference points A, B, C are collinear "
-            f"(|sin(angle BAC)| = {sine:.3e} <= tol = {tol:.1e})"
+            f"(flatness {flatness:.3e} <= tol = {tol:.1e}; "
+            f"|sin(angle BAC)| = {sine:.3e})"
         )
 
     if pts.shape[0] == 0:
@@ -462,9 +466,9 @@ class AffineFrame:
         for (i, j, k) in iter_non_collinear_triples(pts, tol):
             seen += 1
             cond = _condition_number(frame_matrix(pts[i], pts[j], pts[k]))
-            # prefer obliqueness first, then conditioning
-            sine = collinearity_sine(pts[i], pts[j], pts[k])
-            score = cond / max(sine, 1e-12)
+            # prefer obliqueness first, then conditioning; `flatness` is the
+            # symmetric measure, so the score does not depend on the index order
+            score = cond / max(triangle_flatness(pts[i], pts[j], pts[k]), 1e-12)
             if best is None or score < best[0]:
                 best = (score, i, j, k)
             if seen >= 2000:
@@ -492,7 +496,15 @@ class AffineFrame:
         return _condition_number(self.matrix)
 
     def is_valid(self, tol: float = COLLINEAR_TOL) -> bool:
-        return self.collinearity_sine > tol
+        """Whether ``(A, B, C)`` can serve as a 2-D affine frame.
+
+        Uses :func:`triangle_flatness`, i.e. the **same symmetric criterion** as
+        :func:`is_non_collinear`.  It must not use the vertex sine: that quantity
+        depends on which point is named ``A``, so a triangle could be a valid frame
+        in one ordering and invalid in another, and the frame enumeration would then
+        disagree with the validity check.
+        """
+        return triangle_flatness(self.a, self.b, self.c) > tol
 
     def coordinates(self, point: Any, *, check: bool = True) -> AffineCoordinates:
         return affine_coordinates(point, self.a, self.b, self.c, check=check)
@@ -604,23 +616,6 @@ class InvarianceDelta:
             "transform_kind": self.transform_kind,
             "within_bound": self.within_bound,
         }
-
-
-@dataclass(frozen=True)
-class FrameCode:
-    """A single frame-relative encoding of an image (used from Phase 3 on).
-
-    Kept here because it is the natural output type of
-    :func:`affine_coordinates_batch`: the normalised points *are* the internal
-    coordinates of every image point relative to ``frame``.
-    """
-
-    frame: AffineFrame
-    normalized_points: tuple[tuple[float, float], ...]
-    condition_number: float
-
-    def as_array(self) -> np.ndarray:
-        return np.asarray(self.normalized_points, dtype=np.float64)
 
 
 # --------------------------------------------------------------------------- #

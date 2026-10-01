@@ -1,0 +1,102 @@
+{
+  "name": "phase2_gate",
+  "provenance": {
+    "timestamp_utc": "2026-10-01T06:27:19+00:00",
+    "package_version": "0.2.0",
+    "git_commit": "30fcc785f41cbe7cb6522eaae9bcde3cb7960912",
+    "git_dirty": true,
+    "git_branch": "master",
+    "python_version": "3.13.14",
+    "numpy_version": "2.5.3",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "cpu_count": 32,
+    "seed": 20261001,
+    "tolerances": {
+      "FLOAT_TOL": 1e-12,
+      "COLLINEAR_TOL": 1e-09,
+      "MATCH_TOL": 1e-09,
+      "SIGNATURE_DECIMALS": 9,
+      "MAX_CONDITION_NUMBER": 1000000.0,
+      "UNUSABLE_CONDITION_NUMBER": 1000000000000.0,
+      "UNUSABLE_ACCURACY": 0.001,
+      "TEACHING_CODE_DECIMALS": 9
+    },
+    "experiment_config": {
+      "image": "square_3x",
+      "frame_indices": [
+        0,
+        3,
+        5
+      ],
+      "n_transforms": 200,
+      "max_condition_budget": 50.0,
+      "required_accuracy": 1e-09,
+      "falsifiability_n": 100,
+      "order_trials": 25
+    }
+  },
+  "experiment": "phase2_gate",
+  "title": "Phase 2 acceptance gate (Experiment A)",
+  "main_arm": {
+    "n_transforms": 200,
+    "seed": 20261001,
+    "max_condition_budget": 50.0,
+    "max_delta": 1.2212453270876722e-14,
+    "median_delta": 6.661338147750939e-16,
+    "p99_delta": 8.248957072964883e-15,
+    "condition_number_min": 3.369924076215481,
+    "condition_number_median": 4.5219519261320995,
+    "condition_number_max": 79.0343574829536,
+    "worst_error_over_bound": 0.012212453270876722
+  },
+  "falsifiability_arm": [
+    {
+      "flatness": 1e-06,
+      "condition_number": 1999999.9999994999,
+      "condition_number_after_isometry_max": 2000000.000990027,
+      "max_delta": 1.5327350499916292e-10,
+      "reported_bound": 2.84217094303969e-08,
+      "exceeds_required_1e_9": false,
+      "within_reported_bound": true,
+      "n_transforms": 100
+    },
+    {
+      "flatness": 1e-08,
+      "condition_number": 199999999.99999997,
+      "condition_number_after_isometry_max": 200000008.34233662,
+      "max_delta": 1.3376395657793694e-08,
+      "reported_bound": 2.8421709430404003e-06,
+      "exceeds_required_1e_9": true,
+      "within_reported_bound": true,
+      "n_transforms": 100
+    },
+    {
+      "flatness": 5e-09,
+      "condition_number": 399999999.99999994,
+      "condition_number_after_isometry_max": 400000034.85424703,
+      "max_delta": 1.0376054613675027e-08,
+      "reported_bound": 5.684341886080801e-06,
+      "exceeds_required_1e_9": true,
+      "within_reported_bound": true,
+      "n_transforms": 100
+    }
+  ],
+  "order_independence_arm": {
+    "trials": 25,
+    "max_error_following_the_permutation": 0.0,
+    "max_error_of_the_invariance": 7.771561172376096e-16,
+    "permutation_is_exact": true,
+    "invariance_still_holds": true
+  },
+  "verdicts": {
+    "gate_passed": true,
+    "criterion": {
+      "max_delta_alpha_beta": "< 1e-09"
+    },
+    "non_trivial_measurement": true,
+    "threshold_is_falsifiable": true,
+    "ill_conditioned_arm_within_its_own_bound": true,
+    "order_independence_verified": true,
+    "note": "The 1e-9 criterion is asserted for well-conditioned frames only; the ill-conditioned arm records where it stops holding and the library's own reported bound for those configurations."
+  }
+}

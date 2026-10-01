@@ -13,6 +13,9 @@ __all__ = [
     "MATCH_TOL",
     "SIGNATURE_DECIMALS",
     "MAX_CONDITION_NUMBER",
+    "UNUSABLE_CONDITION_NUMBER",
+    "UNUSABLE_ACCURACY",
+    "TEACHING_CODE_DECIMALS",
     "EPS",
     "tolerance_for_condition",
 ]
@@ -51,7 +54,27 @@ SIGNATURE_DECIMALS: int = 9
 #: Above this condition number of the 2x2 frame matrix we refuse to make
 #: numerical claims at the ``MATCH_TOL`` level.  See
 #: :func:`tolerance_for_condition`.
+#:
+#: The value is not arbitrary: it is exactly where ``cond * eps`` reaches
+#: ``MATCH_TOL`` (``1e-9 / 2.22e-16 ≈ 1e6``), i.e. the point at which the
+#: project README's ``error < 1e-9`` requirement stops being attainable by any
+#: float64 algorithm.  It is therefore "the 1e-9 budget spent", not a taste
+#: parameter.
 MAX_CONDITION_NUMBER: float = 1e6
+
+#: Beyond this, the internal coordinates carry no significant digits at all and
+#: results must be reported as unusable rather than merely imprecise.
+UNUSABLE_CONDITION_NUMBER: float = 1e12
+
+#: Accuracy bound above which a result is reported as unusable (fewer than
+#: three decimal digits of ``(alpha, beta)`` survive).
+UNUSABLE_ACCURACY: float = 1e-3
+
+#: Default quantisation resolution of the *teaching* affine code
+#: (``kozlov_lab.teaching``).  Must stay coarser than the attainable precision
+#: of a well-conditioned frame, otherwise the canonical form would encode
+#: floating-point noise as if it were structure.
+TEACHING_CODE_DECIMALS: int = 9
 
 
 def tolerance_for_condition(condition_number: float, base: float = FLOAT_TOL) -> float:

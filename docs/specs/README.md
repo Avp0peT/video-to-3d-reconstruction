@@ -39,7 +39,9 @@
 | [`transforms.md`](transforms.md) | M2 几何变换实验室 | `verified` (S0) | Phase 1 |
 | [`affine_coordinates.md`](affine_coordinates.md) | M3 内部仿射坐标 | `verified` (S0) | Phase 2 |
 | [`invariants.md`](invariants.md) | M6 不变量实验中心 | `verified` (S0) | Phase 2 |
-| [`image_code.md`](image_code.md) | M4 图像代码 | `unverified` | Phase 3（**被 Gate 阻塞**） |
+| [`image_code.md`](image_code.md) | M4 图像代码 | `unverified` | Phase 3（**待 G3.1 裁定**） |
+| [`official_image_code.md`](official_image_code.md) | **Q1：正式「код изображения」定义** | `verified_with_recorded_substitution` | Phase 3 的权限闸门 |
+| [`teaching_affine_code.md`](teaching_affine_code.md) | M4 教学型编码（Pedagogical Extension） | `pedagogical` | Sprint 3C（已完成） |
 | [`recognition.md`](recognition.md) | M5 仿射等价识别 | `planned` | Phase 4（**被 Gate 阻塞**） |
 | [`compression.md`](compression.md) | M7 图像信息压缩 | `planned` | Phase 5 |
 | [`stereo.md`](stereo.md) | M8 立体视觉 | `planned` | Phase 6 |
@@ -48,14 +50,22 @@
 
 | ID | 问题 | 阻塞 | 需要的来源 |
 |---|---|---|---|
-| Q1 | 教材正式定义的「图像代码」`C(X)` 的精确形式是什么？ | Phase 3 | S1 / S2 |
+| Q1 | 教材正式定义的「图像代码」`C(X)` 的精确形式是什么？ | Phase 3 | ✅ **已取得定义**（见 [`official_image_code.md`](official_image_code.md)）；仅剩 G3.1"专利能否替代教材"待裁定 |
 | Q2 | `k-эквивалентность` 的严格定义 | Phase 10 (E1) | S1 / S3 |
 | Q3 | 教材中「сжатие информации」使用的具体简化算子 | Phase 5 | S1 |
 | Q4 | 教材立体视觉模型所用相机模型与对应点求解方法 | Phase 6 | S1 |
 | Q5 | 「判别函数」的教材形式（线性 / 二次 / 其他） | Phase 10 (E2) | S1 / S3 |
 
-在 Q1 解决之前，Phase 3 只能实现**教学型仿射不变编码器**，
-并且必须在界面与文档中明确写出「这不是教材的正式编码」。
+Q1 现已取得**逐字可读的正式定义**（来源为 Kozlov 本人专利说明书 + 2009 摘要，
+见 [`official_image_code.md`](official_image_code.md)）。但该文件记录的 Gate 表中有
+一项（G3.1 的来源层级）需项目负责人裁定，因此：
+
+```text
+Phase 3 = LOCKED（待 G3.1 裁定）
+```
+
+在裁定之前，`src/kozlov_lab/coding/` 保持为空，教学型编码继续保留其
+"非教材正式定义"的声明（而且现在理由更强：两者被证实是**不同的构造**）。
 
 ## 规格变更流程
 

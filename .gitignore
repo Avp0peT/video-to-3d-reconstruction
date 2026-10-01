@@ -6,7 +6,9 @@ __pycache__/
 .venv/
 venv/
 .ipynb_checkpoints/
-results/
+experiments/results/*_20*/
+.sources/
+
 build/
 dist/
 .DS_Store

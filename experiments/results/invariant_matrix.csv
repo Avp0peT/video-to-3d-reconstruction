@@ -1,0 +1,246 @@
+dataset,dataset_zh,n_points,is_asymmetric,family,kind,group,property,theory,measured,agreed,delta,tolerance,witness_count,witness,relation_size_in_source
+A,非对称三角形 + 内部点,9,True,translation,translation,isometry,absolute_coordinates,violated,violated,True,1.510315e+00,4.285149e-09,1,点 #5,
+A,非对称三角形 + 内部点,9,True,translation,translation,isometry,distances,preserved,preserved,True,8.881784e-16,3.585038e-09,3,"距离对 (4,7), (0,1), (5,7)",
+A,非对称三角形 + 内部点,9,True,translation,translation,isometry,angles,preserved,preserved,True,1.776357e-15,1.000000e-09,252,"三元组 (5,2,8), (8,3,5), (8,4,5)",
+A,非对称三角形 + 内部点,9,True,translation,translation,isometry,length_ratios,preserved,preserved,True,2.220446e-16,1.000000e-09,36,"比值对 (2,7), (4,7), (0,5)",
+A,非对称三角形 + 内部点,9,True,translation,translation,isometry,collinearity,preserved_or_vacuous,preserved,True,0.000000e+00,0.000000e+00,0,,2.0
+A,非对称三角形 + 内部点,9,True,translation,translation,isometry,parallelism,preserved_or_vacuous,preserved,True,0.000000e+00,0.000000e+00,0,,4.0
+A,非对称三角形 + 内部点,9,True,translation,translation,isometry,affine_coordinates,preserved,preserved,True,1.110223e-16,1.000000e-12,1,"frame=(0, 1, 2)",
+A,非对称三角形 + 内部点,9,True,rotation,rotation,isometry,absolute_coordinates,violated,violated,True,1.346299e+00,4.285149e-09,1,点 #7,
+A,非对称三角形 + 内部点,9,True,rotation,rotation,isometry,distances,preserved,preserved,True,4.440892e-16,3.585038e-09,3,"距离对 (6,7), (2,6), (3,6)",
+A,非对称三角形 + 内部点,9,True,rotation,rotation,isometry,angles,preserved,preserved,True,4.440892e-16,1.000000e-09,252,"三元组 (1,0,7), (3,0,7), (6,0,4)",
+A,非对称三角形 + 内部点,9,True,rotation,rotation,isometry,length_ratios,preserved,preserved,True,2.220446e-16,1.000000e-09,36,"比值对 (6,7), (2,6), (2,7)",
+A,非对称三角形 + 内部点,9,True,rotation,rotation,isometry,collinearity,preserved_or_vacuous,preserved,True,0.000000e+00,0.000000e+00,0,,2.0
+A,非对称三角形 + 内部点,9,True,rotation,rotation,isometry,parallelism,preserved_or_vacuous,preserved,True,0.000000e+00,0.000000e+00,0,,4.0
+A,非对称三角形 + 内部点,9,True,rotation,rotation,isometry,affine_coordinates,preserved,preserved,True,1.148693e-16,1.000000e-12,1,"frame=(0, 1, 2)",
+A,非对称三角形 + 内部点,9,True,reflection,reflection,isometry,absolute_coordinates,violated,violated,True,3.893740e+00,4.285149e-09,1,点 #7,
+A,非对称三角形 + 内部点,9,True,reflection,reflection,isometry,distances,preserved,preserved,True,5.551115e-16,3.585038e-09,3,"距离对 (1,7), (1,6), (5,7)",
+A,非对称三角形 + 内部点,9,True,reflection,reflection,isometry,angles,preserved,preserved,True,6.661338e-16,1.000000e-09,252,"三元组 (8,5,6)",
+A,非对称三角形 + 内部点,9,True,reflection,reflection,isometry,length_ratios,preserved,preserved,True,1.665335e-16,1.000000e-09,36,"比值对 (1,7), (5,6), (5,7)",
+A,非对称三角形 + 内部点,9,True,reflection,reflection,isometry,collinearity,preserved_or_vacuous,preserved,True,0.000000e+00,0.000000e+00,0,,2.0
+A,非对称三角形 + 内部点,9,True,reflection,reflection,isometry,parallelism,preserved_or_vacuous,preserved,True,0.000000e+00,0.000000e+00,0,,4.0
+A,非对称三角形 + 内部点,9,True,reflection,reflection,isometry,affine_coordinates,preserved,preserved,True,1.804112e-16,1.000000e-12,1,"frame=(0, 1, 2)",
+A,非对称三角形 + 内部点,9,True,similarity,similarity,similarity,absolute_coordinates,violated,violated,True,3.955517e+00,4.285149e-09,1,点 #7,
+A,非对称三角形 + 内部点,9,True,similarity,similarity,similarity,distances,violated,violated,True,5.377558e+00,3.585038e-09,3,"距离对 (0,7), (2,7), (1,2)",
+A,非对称三角形 + 内部点,9,True,similarity,similarity,similarity,angles,preserved,preserved,True,8.881784e-16,1.000000e-09,252,"三元组 (8,1,5)",
+A,非对称三角形 + 内部点,9,True,similarity,similarity,similarity,length_ratios,preserved,preserved,True,2.220446e-16,1.000000e-09,36,"比值对 (0,2), (2,7), (7,8)",
+A,非对称三角形 + 内部点,9,True,similarity,similarity,similarity,collinearity,preserved_or_vacuous,preserved,True,0.000000e+00,0.000000e+00,0,,2.0
+A,非对称三角形 + 内部点,9,True,similarity,similarity,similarity,parallelism,preserved_or_vacuous,preserved,True,0.000000e+00,0.000000e+00,0,,4.0
+A,非对称三角形 + 内部点,9,True,similarity,similarity,similarity,affine_coordinates,preserved,preserved,True,2.220446e-16,1.000000e-12,1,"frame=(0, 1, 2)",
+A,非对称三角形 + 内部点,9,True,scale_nonuniform,affine,affine,absolute_coordinates,violated,violated,True,2.119046e+00,4.285149e-09,1,点 #7,
+A,非对称三角形 + 内部点,9,True,scale_nonuniform,affine,affine,distances,violated,violated,True,3.519362e+00,3.585038e-09,3,"距离对 (0,7), (6,7), (0,1)",
+A,非对称三角形 + 内部点,9,True,scale_nonuniform,affine,affine,angles,violated,violated,True,1.182764e+00,1.000000e-09,252,"三元组 (2,0,5)",
+A,非对称三角形 + 内部点,9,True,scale_nonuniform,affine,affine,length_ratios,violated,violated,True,4.511782e-01,1.000000e-09,36,"比值对 (0,2), (2,6), (2,4)",
+A,非对称三角形 + 内部点,9,True,scale_nonuniform,affine,affine,collinearity,preserved_or_vacuous,preserved,True,0.000000e+00,0.000000e+00,0,,2.0
+A,非对称三角形 + 内部点,9,True,scale_nonuniform,affine,affine,parallelism,preserved_or_vacuous,preserved,True,0.000000e+00,0.000000e+00,0,,4.0
+A,非对称三角形 + 内部点,9,True,scale_nonuniform,affine,affine,affine_coordinates,preserved,preserved,True,1.110223e-16,1.000000e-12,1,"frame=(0, 1, 2)",
+A,非对称三角形 + 内部点,9,True,shear,affine,affine,absolute_coordinates,violated,violated,True,1.923746e+00,4.285149e-09,1,点 #2,
+A,非对称三角形 + 内部点,9,True,shear,affine,affine,distances,violated,violated,True,9.244892e-01,3.585038e-09,3,"距离对 (0,2), (2,6), (2,7)",
+A,非对称三角形 + 内部点,9,True,shear,affine,affine,angles,violated,violated,True,5.314767e-01,1.000000e-09,252,"三元组 (3,0,2)",
+A,非对称三角形 + 内部点,9,True,shear,affine,affine,length_ratios,violated,violated,True,2.528527e-01,1.000000e-09,36,"比值对 (2,7), (1,2), (0,2)",
+A,非对称三角形 + 内部点,9,True,shear,affine,affine,collinearity,preserved_or_vacuous,preserved,True,0.000000e+00,0.000000e+00,0,,2.0
+A,非对称三角形 + 内部点,9,True,shear,affine,affine,parallelism,preserved_or_vacuous,preserved,True,0.000000e+00,0.000000e+00,0,,4.0
+A,非对称三角形 + 内部点,9,True,shear,affine,affine,affine_coordinates,preserved,preserved,True,6.938894e-17,1.000000e-12,1,"frame=(0, 1, 2)",
+A,非对称三角形 + 内部点,9,True,affine_general,affine,affine,absolute_coordinates,violated,violated,True,2.236068e+00,4.285149e-09,1,点 #0,
+A,非对称三角形 + 内部点,9,True,affine_general,affine,affine,distances,violated,violated,True,1.261940e+00,3.585038e-09,3,"距离对 (0,7), (6,7), (0,1)",
+A,非对称三角形 + 内部点,9,True,affine_general,affine,affine,angles,violated,violated,True,4.091767e-01,1.000000e-09,252,"三元组 (2,0,7)",
+A,非对称三角形 + 内部点,9,True,affine_general,affine,affine,length_ratios,violated,violated,True,2.366619e-01,1.000000e-09,36,"比值对 (1,2), (2,3), (2,7)",
+A,非对称三角形 + 内部点,9,True,affine_general,affine,affine,collinearity,preserved_or_vacuous,preserved,True,0.000000e+00,0.000000e+00,0,,2.0
+A,非对称三角形 + 内部点,9,True,affine_general,affine,affine,parallelism,preserved_or_vacuous,preserved,True,0.000000e+00,0.000000e+00,0,,4.0
+A,非对称三角形 + 内部点,9,True,affine_general,affine,affine,affine_coordinates,preserved,preserved,True,1.110223e-16,1.000000e-12,1,"frame=(0, 1, 2)",
+B,非对称四边形（梯形，不等腰）,10,True,translation,translation,isometry,absolute_coordinates,violated,violated,True,1.701764e+00,4.494719e-09,1,点 #1,
+B,非对称四边形（梯形，不等腰）,10,True,translation,translation,isometry,distances,preserved,preserved,True,8.881784e-16,4.031129e-09,3,"距离对 (0,6), (1,4), (1,9)",
+B,非对称四边形（梯形，不等腰）,10,True,translation,translation,isometry,angles,preserved,preserved,True,1.776357e-15,1.000000e-09,360,"三元组 (9,1,2), (9,2,6)",
+B,非对称四边形（梯形，不等腰）,10,True,translation,translation,isometry,length_ratios,preserved,preserved,True,2.220446e-16,1.000000e-09,45,"比值对 (0,6), (1,4), (1,9)",
+B,非对称四边形（梯形，不等腰）,10,True,translation,translation,isometry,collinearity,preserved_or_vacuous,preserved,True,0.000000e+00,0.000000e+00,0,,11.0
+B,非对称四边形（梯形，不等腰）,10,True,translation,translation,isometry,parallelism,preserved_or_vacuous,preserved,True,0.000000e+00,0.000000e+00,0,,56.0
+B,非对称四边形（梯形，不等腰）,10,True,translation,translation,isometry,affine_coordinates,preserved,preserved,True,4.440892e-16,1.000000e-12,1,"frame=(2, 3, 5)",
+B,非对称四边形（梯形，不等腰）,10,True,rotation,rotation,isometry,absolute_coordinates,violated,violated,True,1.358889e+00,4.494719e-09,1,点 #1,
+B,非对称四边形（梯形，不等腰）,10,True,rotation,rotation,isometry,distances,preserved,preserved,True,8.881784e-16,4.031129e-09,3,"距离对 (1,8), (2,8), (1,5)",
+B,非对称四边形（梯形，不等腰）,10,True,rotation,rotation,isometry,angles,preserved,preserved,True,4.440892e-16,1.000000e-09,360,"三元组 (8,0,3), (4,0,9), (5,0,9)",
+B,非对称四边形（梯形，不等腰）,10,True,rotation,rotation,isometry,length_ratios,preserved,preserved,True,2.220446e-16,1.000000e-09,45,"比值对 (1,8), (2,8), (1,5)",
+B,非对称四边形（梯形，不等腰）,10,True,rotation,rotation,isometry,collinearity,preserved_or_vacuous,preserved,True,0.000000e+00,0.000000e+00,0,,11.0
+B,非对称四边形（梯形，不等腰）,10,True,rotation,rotation,isometry,parallelism,preserved_or_vacuous,preserved,True,0.000000e+00,0.000000e+00,0,,56.0
+B,非对称四边形（梯形，不等腰）,10,True,rotation,rotation,isometry,affine_coordinates,preserved,preserved,True,2.220446e-16,1.000000e-12,1,"frame=(2, 3, 5)",
+B,非对称四边形（梯形，不等腰）,10,True,reflection,reflection,isometry,absolute_coordinates,violated,violated,True,4.134266e+00,4.494719e-09,1,点 #1,
+B,非对称四边形（梯形，不等腰）,10,True,reflection,reflection,isometry,distances,preserved,preserved,True,6.661338e-16,4.031129e-09,3,"距离对 (7,8), (8,9), (3,6)",
+B,非对称四边形（梯形，不等腰）,10,True,reflection,reflection,isometry,angles,preserved,preserved,True,8.881784e-16,1.000000e-09,360,"三元组 (2,1,7), (6,1,5)",
+B,非对称四边形（梯形，不等腰）,10,True,reflection,reflection,isometry,length_ratios,preserved,preserved,True,1.665335e-16,1.000000e-09,45,"比值对 (7,8), (8,9), (3,6)",
+B,非对称四边形（梯形，不等腰）,10,True,reflection,reflection,isometry,collinearity,preserved_or_vacuous,preserved,True,0.000000e+00,0.000000e+00,0,,11.0
+B,非对称四边形（梯形，不等腰）,10,True,reflection,reflection,isometry,parallelism,preserved_or_vacuous,preserved,True,0.000000e+00,0.000000e+00,0,,56.0
+B,非对称四边形（梯形，不等腰）,10,True,reflection,reflection,isometry,affine_coordinates,preserved,preserved,True,4.440892e-16,1.000000e-12,1,"frame=(2, 3, 5)",
+B,非对称四边形（梯形，不等腰）,10,True,similarity,similarity,similarity,absolute_coordinates,violated,violated,True,3.992506e+00,4.494719e-09,1,点 #1,
+B,非对称四边形（梯形，不等腰）,10,True,similarity,similarity,similarity,distances,violated,violated,True,6.046693e+00,4.031129e-09,3,"距离对 (0,1), (1,3), (0,9)",
+B,非对称四边形（梯形，不等腰）,10,True,similarity,similarity,similarity,angles,preserved,preserved,True,1.332268e-15,1.000000e-09,360,"三元组 (2,7,9)",
+B,非对称四边形（梯形，不等腰）,10,True,similarity,similarity,similarity,length_ratios,preserved,preserved,True,3.330669e-16,1.000000e-09,45,"比值对 (2,4), (0,2), (2,5)",
+B,非对称四边形（梯形，不等腰）,10,True,similarity,similarity,similarity,collinearity,preserved_or_vacuous,preserved,True,0.000000e+00,0.000000e+00,0,,11.0
+B,非对称四边形（梯形，不等腰）,10,True,similarity,similarity,similarity,parallelism,preserved_or_vacuous,preserved,True,0.000000e+00,0.000000e+00,0,,56.0
+B,非对称四边形（梯形，不等腰）,10,True,similarity,similarity,similarity,affine_coordinates,preserved,preserved,True,6.661338e-16,1.000000e-12,1,"frame=(2, 3, 5)",
+B,非对称四边形（梯形，不等腰）,10,True,scale_nonuniform,affine,affine,absolute_coordinates,violated,violated,True,2.109468e+00,4.494719e-09,1,点 #1,
+B,非对称四边形（梯形，不等腰）,10,True,scale_nonuniform,affine,affine,distances,violated,violated,True,3.972776e+00,4.031129e-09,3,"距离对 (0,1), (1,8), (1,3)",
+B,非对称四边形（梯形，不等腰）,10,True,scale_nonuniform,affine,affine,angles,violated,violated,True,1.272787e+00,1.000000e-09,360,"三元组 (4,7,8)",
+B,非对称四边形（梯形，不等腰）,10,True,scale_nonuniform,affine,affine,length_ratios,violated,violated,True,2.982535e-01,1.000000e-09,45,"比值对 (5,7), (2,6), (3,4)",
+B,非对称四边形（梯形，不等腰）,10,True,scale_nonuniform,affine,affine,collinearity,preserved_or_vacuous,preserved,True,0.000000e+00,0.000000e+00,0,,11.0
+B,非对称四边形（梯形，不等腰）,10,True,scale_nonuniform,affine,affine,parallelism,preserved_or_vacuous,preserved,True,0.000000e+00,0.000000e+00,0,,56.0
+B,非对称四边形（梯形，不等腰）,10,True,scale_nonuniform,affine,affine,affine_coordinates,preserved,preserved,True,2.220446e-16,1.000000e-12,1,"frame=(2, 3, 5)",
+B,非对称四边形（梯形，不等腰）,10,True,shear,affine,affine,absolute_coordinates,violated,violated,True,1.729769e+00,4.494719e-09,1,点 #2,
+B,非对称四边形（梯形，不等腰）,10,True,shear,affine,affine,distances,violated,violated,True,1.209177e+00,4.031129e-09,3,"距离对 (0,2), (2,4), (0,7)",
+B,非对称四边形（梯形，不等腰）,10,True,shear,affine,affine,angles,violated,violated,True,5.265465e-01,1.000000e-09,360,"三元组 (4,0,8)",
+B,非对称四边形（梯形，不等腰）,10,True,shear,affine,affine,length_ratios,violated,violated,True,2.330263e-01,1.000000e-09,45,"比值对 (1,3), (3,6), (1,7)",
+B,非对称四边形（梯形，不等腰）,10,True,shear,affine,affine,collinearity,preserved_or_vacuous,preserved,True,0.000000e+00,0.000000e+00,0,,11.0
+B,非对称四边形（梯形，不等腰）,10,True,shear,affine,affine,parallelism,preserved_or_vacuous,preserved,True,0.000000e+00,0.000000e+00,0,,56.0
+B,非对称四边形（梯形，不等腰）,10,True,shear,affine,affine,affine_coordinates,preserved,preserved,True,2.220446e-16,1.000000e-12,1,"frame=(2, 3, 5)",
+B,非对称四边形（梯形，不等腰）,10,True,affine_general,affine,affine,absolute_coordinates,violated,violated,True,2.236068e+00,4.494719e-09,1,点 #0,
+B,非对称四边形（梯形，不等腰）,10,True,affine_general,affine,affine,distances,violated,violated,True,1.405150e+00,4.031129e-09,3,"距离对 (0,1), (0,9), (0,2)",
+B,非对称四边形（梯形，不等腰）,10,True,affine_general,affine,affine,angles,violated,violated,True,4.039396e-01,1.000000e-09,360,"三元组 (3,0,1)",
+B,非对称四边形（梯形，不等腰）,10,True,affine_general,affine,affine,length_ratios,violated,violated,True,1.465825e-01,1.000000e-09,45,"比值对 (3,5), (1,2), (6,7)",
+B,非对称四边形（梯形，不等腰）,10,True,affine_general,affine,affine,collinearity,preserved_or_vacuous,preserved,True,0.000000e+00,0.000000e+00,0,,11.0
+B,非对称四边形（梯形，不等腰）,10,True,affine_general,affine,affine,parallelism,preserved_or_vacuous,preserved,True,0.000000e+00,0.000000e+00,0,,56.0
+B,非对称四边形（梯形，不等腰）,10,True,affine_general,affine,affine,affine_coordinates,preserved,preserved,True,4.440892e-16,1.000000e-12,1,"frame=(2, 3, 5)",
+C,不规则五边形,7,True,translation,translation,isometry,absolute_coordinates,violated,violated,True,1.233779e+00,3.962323e-09,1,点 #0,
+C,不规则五边形,7,True,translation,translation,isometry,distances,preserved,preserved,True,4.440892e-16,3.466987e-09,2,"距离对 (3,5), (2,3)",
+C,不规则五边形,7,True,translation,translation,isometry,angles,preserved,preserved,True,4.440892e-16,1.000000e-09,105,"三元组 (6,2,5), (6,3,5)",
+C,不规则五边形,7,True,translation,translation,isometry,length_ratios,preserved,preserved,True,1.110223e-16,1.000000e-09,21,"比值对 (3,5), (2,3)",
+C,不规则五边形,7,True,translation,translation,isometry,collinearity,preserved_or_vacuous,preserved,True,0.000000e+00,0.000000e+00,0,,1.0
+C,不规则五边形,7,True,translation,translation,isometry,parallelism,preserved_or_vacuous,vacuous,True,0.000000e+00,0.000000e+00,0,,0.0
+C,不规则五边形,7,True,translation,translation,isometry,affine_coordinates,preserved,preserved,True,2.220446e-16,1.000000e-12,1,"frame=(1, 2, 6)",
+C,不规则五边形,7,True,rotation,rotation,isometry,absolute_coordinates,violated,violated,True,1.140433e+00,3.962323e-09,1,点 #2,
+C,不规则五边形,7,True,rotation,rotation,isometry,distances,preserved,preserved,True,4.440892e-16,3.466987e-09,3,"距离对 (3,5), (1,2), (0,3)",
+C,不规则五边形,7,True,rotation,rotation,isometry,angles,preserved,preserved,True,4.440892e-16,1.000000e-09,105,"三元组 (1,0,2), (5,0,6), (1,2,5)",
+C,不规则五边形,7,True,rotation,rotation,isometry,length_ratios,preserved,preserved,True,1.110223e-16,1.000000e-09,21,"比值对 (4,6), (3,5), (0,3)",
+C,不规则五边形,7,True,rotation,rotation,isometry,collinearity,preserved_or_vacuous,preserved,True,0.000000e+00,0.000000e+00,0,,1.0
+C,不规则五边形,7,True,rotation,rotation,isometry,parallelism,preserved_or_vacuous,vacuous,True,0.000000e+00,0.000000e+00,0,,0.0
+C,不规则五边形,7,True,rotation,rotation,isometry,affine_coordinates,preserved,preserved,True,4.440892e-16,1.000000e-12,1,"frame=(1, 2, 6)",
+C,不规则五边形,7,True,reflection,reflection,isometry,absolute_coordinates,violated,violated,True,2.528354e+00,3.962323e-09,1,点 #1,
+C,不规则五边形,7,True,reflection,reflection,isometry,distances,preserved,preserved,True,8.881784e-16,3.466987e-09,3,"距离对 (3,5), (3,6), (1,2)",
+C,不规则五边形,7,True,reflection,reflection,isometry,angles,preserved,preserved,True,4.440892e-16,1.000000e-09,105,"三元组 (1,2,5), (5,1,4), (6,1,4)",
+C,不规则五边形,7,True,reflection,reflection,isometry,length_ratios,preserved,preserved,True,2.220446e-16,1.000000e-09,21,"比值对 (3,5), (3,6), (1,2)",
+C,不规则五边形,7,True,reflection,reflection,isometry,collinearity,preserved_or_vacuous,preserved,True,0.000000e+00,0.000000e+00,0,,1.0
+C,不规则五边形,7,True,reflection,reflection,isometry,parallelism,preserved_or_vacuous,vacuous,True,0.000000e+00,0.000000e+00,0,,0.0
+C,不规则五边形,7,True,reflection,reflection,isometry,affine_coordinates,preserved,preserved,True,6.661338e-16,1.000000e-12,1,"frame=(1, 2, 6)",
+C,不规则五边形,7,True,similarity,similarity,similarity,absolute_coordinates,violated,violated,True,3.350668e+00,3.962323e-09,1,点 #2,
+C,不规则五边形,7,True,similarity,similarity,similarity,distances,violated,violated,True,5.200481e+00,3.466987e-09,3,"距离对 (0,2), (0,3), (2,4)",
+C,不规则五边形,7,True,similarity,similarity,similarity,angles,preserved,preserved,True,4.440892e-16,1.000000e-09,105,"三元组 (1,0,2), (1,2,5), (6,1,4)",
+C,不规则五边形,7,True,similarity,similarity,similarity,length_ratios,preserved,preserved,True,2.220446e-16,1.000000e-09,21,"比值对 (3,5), (4,5), (0,1)",
+C,不规则五边形,7,True,similarity,similarity,similarity,collinearity,preserved_or_vacuous,preserved,True,0.000000e+00,0.000000e+00,0,,1.0
+C,不规则五边形,7,True,similarity,similarity,similarity,parallelism,preserved_or_vacuous,vacuous,True,0.000000e+00,0.000000e+00,0,,0.0
+C,不规则五边形,7,True,similarity,similarity,similarity,affine_coordinates,preserved,preserved,True,4.440892e-16,1.000000e-12,1,"frame=(1, 2, 6)",
+C,不规则五边形,7,True,scale_nonuniform,affine,affine,absolute_coordinates,violated,violated,True,1.668636e+00,3.962323e-09,1,点 #2,
+C,不规则五边形,7,True,scale_nonuniform,affine,affine,distances,violated,violated,True,2.724697e+00,3.466987e-09,3,"距离对 (2,4), (0,2), (0,1)",
+C,不规则五边形,7,True,scale_nonuniform,affine,affine,angles,violated,violated,True,1.282641e+00,1.000000e-09,105,"三元组 (3,0,1)",
+C,不规则五边形,7,True,scale_nonuniform,affine,affine,length_ratios,violated,violated,True,5.114206e-01,1.000000e-09,21,"比值对 (3,5), (0,3), (1,3)",
+C,不规则五边形,7,True,scale_nonuniform,affine,affine,collinearity,preserved_or_vacuous,preserved,True,0.000000e+00,0.000000e+00,0,,1.0
+C,不规则五边形,7,True,scale_nonuniform,affine,affine,parallelism,preserved_or_vacuous,vacuous,True,0.000000e+00,0.000000e+00,0,,0.0
+C,不规则五边形,7,True,scale_nonuniform,affine,affine,affine_coordinates,preserved,preserved,True,4.440892e-16,1.000000e-12,1,"frame=(1, 2, 6)",
+C,不规则五边形,7,True,shear,affine,affine,absolute_coordinates,violated,violated,True,2.173292e+00,3.962323e-09,1,点 #3,
+C,不规则五边形,7,True,shear,affine,affine,distances,violated,violated,True,1.209619e+00,3.466987e-09,3,"距离对 (0,3), (0,2), (2,5)",
+C,不规则五边形,7,True,shear,affine,affine,angles,violated,violated,True,5.388326e-01,1.000000e-09,105,"三元组 (1,0,3), (1,3,5)",
+C,不规则五边形,7,True,shear,affine,affine,length_ratios,violated,violated,True,2.692017e-01,1.000000e-09,21,"比值对 (1,4), (2,3), (1,3)",
+C,不规则五边形,7,True,shear,affine,affine,collinearity,preserved_or_vacuous,preserved,True,0.000000e+00,0.000000e+00,0,,1.0
+C,不规则五边形,7,True,shear,affine,affine,parallelism,preserved_or_vacuous,vacuous,True,0.000000e+00,0.000000e+00,0,,0.0
+C,不规则五边形,7,True,shear,affine,affine,affine_coordinates,preserved,preserved,True,4.440892e-16,1.000000e-12,1,"frame=(1, 2, 6)",
+C,不规则五边形,7,True,affine_general,affine,affine,absolute_coordinates,violated,violated,True,2.236068e+00,3.962323e-09,1,点 #0,
+C,不规则五边形,7,True,affine_general,affine,affine,distances,violated,violated,True,1.294055e+00,3.466987e-09,3,"距离对 (0,2), (2,4), (2,5)",
+C,不规则五边形,7,True,affine_general,affine,affine,angles,violated,violated,True,4.090505e-01,1.000000e-09,105,"三元组 (1,2,4)",
+C,不规则五边形,7,True,affine_general,affine,affine,length_ratios,violated,violated,True,2.517634e-01,1.000000e-09,21,"比值对 (1,3), (3,5), (4,5)",
+C,不规则五边形,7,True,affine_general,affine,affine,collinearity,preserved_or_vacuous,preserved,True,0.000000e+00,0.000000e+00,0,,1.0
+C,不规则五边形,7,True,affine_general,affine,affine,parallelism,preserved_or_vacuous,vacuous,True,0.000000e+00,0.000000e+00,0,,0.0
+C,不规则五边形,7,True,affine_general,affine,affine,affine_coordinates,preserved,preserved,True,4.440892e-16,1.000000e-12,1,"frame=(1, 2, 6)",
+D,非规则星形,8,True,translation,translation,isometry,absolute_coordinates,violated,violated,True,9.408666e-01,4.183780e-09,1,点 #1,
+D,非规则星形,8,True,translation,translation,isometry,distances,preserved,preserved,True,4.440892e-16,3.117563e-09,3,"距离对 (3,5), (1,3), (2,7)",
+D,非规则星形,8,True,translation,translation,isometry,angles,preserved,preserved,True,4.440892e-16,1.000000e-09,168,"三元组 (0,1,3), (7,1,4), (6,1,5)",
+D,非规则星形,8,True,translation,translation,isometry,length_ratios,preserved,preserved,True,2.220446e-16,1.000000e-09,28,"比值对 (4,7), (2,7), (4,6)",
+D,非规则星形,8,True,translation,translation,isometry,collinearity,preserved_or_vacuous,preserved,True,0.000000e+00,0.000000e+00,0,,1.0
+D,非规则星形,8,True,translation,translation,isometry,parallelism,preserved_or_vacuous,vacuous,True,0.000000e+00,0.000000e+00,0,,0.0
+D,非规则星形,8,True,translation,translation,isometry,affine_coordinates,preserved,preserved,True,2.220446e-16,1.000000e-12,1,"frame=(2, 4, 6)",
+D,非规则星形,8,True,rotation,rotation,isometry,absolute_coordinates,violated,violated,True,1.129831e+00,4.183780e-09,1,点 #3,
+D,非规则星形,8,True,rotation,rotation,isometry,distances,preserved,preserved,True,4.440892e-16,3.117563e-09,3,"距离对 (5,7), (2,6), (3,5)",
+D,非规则星形,8,True,rotation,rotation,isometry,angles,preserved,preserved,True,4.440892e-16,1.000000e-09,168,"三元组 (0,4,6), (6,1,5), (6,5,7)",
+D,非规则星形,8,True,rotation,rotation,isometry,length_ratios,preserved,preserved,True,3.330669e-16,1.000000e-09,28,"比值对 (2,6), (1,4), (4,7)",
+D,非规则星形,8,True,rotation,rotation,isometry,collinearity,preserved_or_vacuous,preserved,True,0.000000e+00,0.000000e+00,0,,1.0
+D,非规则星形,8,True,rotation,rotation,isometry,parallelism,preserved_or_vacuous,vacuous,True,0.000000e+00,0.000000e+00,0,,0.0
+D,非规则星形,8,True,rotation,rotation,isometry,affine_coordinates,preserved,preserved,True,2.220446e-16,1.000000e-12,1,"frame=(2, 4, 6)",
+D,非规则星形,8,True,reflection,reflection,isometry,absolute_coordinates,violated,violated,True,3.487665e+00,4.183780e-09,1,点 #3,
+D,非规则星形,8,True,reflection,reflection,isometry,distances,preserved,preserved,True,4.440892e-16,3.117563e-09,3,"距离对 (5,7), (3,7), (3,5)",
+D,非规则星形,8,True,reflection,reflection,isometry,angles,preserved,preserved,True,4.440892e-16,1.000000e-09,168,"三元组 (0,3,7), (7,1,5), (7,2,6)",
+D,非规则星形,8,True,reflection,reflection,isometry,length_ratios,preserved,preserved,True,2.220446e-16,1.000000e-09,28,"比值对 (5,7), (4,7), (3,6)",
+D,非规则星形,8,True,reflection,reflection,isometry,collinearity,preserved_or_vacuous,preserved,True,0.000000e+00,0.000000e+00,0,,1.0
+D,非规则星形,8,True,reflection,reflection,isometry,parallelism,preserved_or_vacuous,vacuous,True,0.000000e+00,0.000000e+00,0,,0.0
+D,非规则星形,8,True,reflection,reflection,isometry,affine_coordinates,preserved,preserved,True,3.330669e-16,1.000000e-12,1,"frame=(2, 4, 6)",
+D,非规则星形,8,True,similarity,similarity,similarity,absolute_coordinates,violated,violated,True,3.319519e+00,4.183780e-09,1,点 #3,
+D,非规则星形,8,True,similarity,similarity,similarity,distances,violated,violated,True,4.676344e+00,3.117563e-09,3,"距离对 (1,3), (3,5), (3,6)",
+D,非规则星形,8,True,similarity,similarity,similarity,angles,preserved,preserved,True,4.440892e-16,1.000000e-09,168,"三元组 (0,1,3), (7,1,4), (7,1,6)",
+D,非规则星形,8,True,similarity,similarity,similarity,length_ratios,preserved,preserved,True,1.665335e-16,1.000000e-09,28,"比值对 (3,4), (5,7), (4,6)",
+D,非规则星形,8,True,similarity,similarity,similarity,collinearity,preserved_or_vacuous,preserved,True,0.000000e+00,0.000000e+00,0,,1.0
+D,非规则星形,8,True,similarity,similarity,similarity,parallelism,preserved_or_vacuous,vacuous,True,0.000000e+00,0.000000e+00,0,,0.0
+D,非规则星形,8,True,similarity,similarity,similarity,affine_coordinates,preserved,preserved,True,3.330669e-16,1.000000e-12,1,"frame=(2, 4, 6)",
+D,非规则星形,8,True,scale_nonuniform,affine,affine,absolute_coordinates,violated,violated,True,1.623151e+00,4.183780e-09,1,点 #1,
+D,非规则星形,8,True,scale_nonuniform,affine,affine,distances,violated,violated,True,2.925663e+00,3.117563e-09,3,"距离对 (1,3), (1,4), (4,6)",
+D,非规则星形,8,True,scale_nonuniform,affine,affine,angles,violated,violated,True,1.282296e+00,1.000000e-09,168,"三元组 (7,2,5)",
+D,非规则星形,8,True,scale_nonuniform,affine,affine,length_ratios,violated,violated,True,6.646684e-01,1.000000e-09,28,"比值对 (2,5), (3,5), (0,5)",
+D,非规则星形,8,True,scale_nonuniform,affine,affine,collinearity,preserved_or_vacuous,preserved,True,0.000000e+00,0.000000e+00,0,,1.0
+D,非规则星形,8,True,scale_nonuniform,affine,affine,parallelism,preserved_or_vacuous,vacuous,True,0.000000e+00,0.000000e+00,0,,0.0
+D,非规则星形,8,True,scale_nonuniform,affine,affine,affine_coordinates,preserved,preserved,True,2.220446e-16,1.000000e-12,1,"frame=(2, 4, 6)",
+D,非规则星形,8,True,shear,affine,affine,absolute_coordinates,violated,violated,True,1.528131e+00,4.183780e-09,1,点 #5,
+D,非规则星形,8,True,shear,affine,affine,distances,violated,violated,True,1.087926e+00,3.117563e-09,3,"距离对 (1,5), (2,5), (5,7)",
+D,非规则星形,8,True,shear,affine,affine,angles,violated,violated,True,5.433041e-01,1.000000e-09,168,"三元组 (3,2,5)",
+D,非规则星形,8,True,shear,affine,affine,length_ratios,violated,violated,True,3.158445e-01,1.000000e-09,28,"比值对 (3,6), (1,3), (3,7)",
+D,非规则星形,8,True,shear,affine,affine,collinearity,preserved_or_vacuous,preserved,True,0.000000e+00,0.000000e+00,0,,1.0
+D,非规则星形,8,True,shear,affine,affine,parallelism,preserved_or_vacuous,vacuous,True,0.000000e+00,0.000000e+00,0,,0.0
+D,非规则星形,8,True,shear,affine,affine,affine_coordinates,preserved,preserved,True,3.330669e-16,1.000000e-12,1,"frame=(2, 4, 6)",
+D,非规则星形,8,True,affine_general,affine,affine,absolute_coordinates,violated,violated,True,2.779648e+00,4.183780e-09,1,点 #5,
+D,非规则星形,8,True,affine_general,affine,affine,distances,violated,violated,True,1.082077e+00,3.117563e-09,3,"距离对 (1,4), (1,5), (4,7)",
+D,非规则星形,8,True,affine_general,affine,affine,angles,violated,violated,True,4.111390e-01,1.000000e-09,168,"三元组 (2,0,1)",
+D,非规则星形,8,True,affine_general,affine,affine,length_ratios,violated,violated,True,2.742684e-01,1.000000e-09,28,"比值对 (3,5), (2,6), (3,6)",
+D,非规则星形,8,True,affine_general,affine,affine,collinearity,preserved_or_vacuous,preserved,True,0.000000e+00,0.000000e+00,0,,1.0
+D,非规则星形,8,True,affine_general,affine,affine,parallelism,preserved_or_vacuous,vacuous,True,0.000000e+00,0.000000e+00,0,,0.0
+D,非规则星形,8,True,affine_general,affine,affine,affine_coordinates,preserved,preserved,True,3.330669e-16,1.000000e-12,1,"frame=(2, 4, 6)",
+E,随机一般位置点集,12,True,translation,translation,isometry,absolute_coordinates,violated,violated,True,8.485969e-01,5.296140e-09,1,点 #1,
+E,随机一般位置点集,12,True,translation,translation,isometry,distances,preserved,preserved,True,2.220446e-16,4.600751e-09,3,"距离对 (0,2), (6,9), (5,11)",
+E,随机一般位置点集,12,True,translation,translation,isometry,angles,preserved,preserved,True,4.440892e-16,1.000000e-09,660,"三元组 (3,1,9), (5,4,9), (5,4,11)",
+E,随机一般位置点集,12,True,translation,translation,isometry,length_ratios,preserved,preserved,True,5.551115e-17,1.000000e-09,66,"比值对 (0,2), (6,9), (5,11)",
+E,随机一般位置点集,12,True,translation,translation,isometry,collinearity,preserved_or_vacuous,vacuous,True,0.000000e+00,0.000000e+00,0,,0.0
+E,随机一般位置点集,12,True,translation,translation,isometry,parallelism,preserved_or_vacuous,vacuous,True,0.000000e+00,0.000000e+00,0,,0.0
+E,随机一般位置点集,12,True,translation,translation,isometry,affine_coordinates,preserved,preserved,True,0.000000e+00,1.000000e-12,1,"frame=(6, 7, 9)",
+E,随机一般位置点集,12,True,rotation,rotation,isometry,absolute_coordinates,violated,violated,True,1.596669e+00,5.296140e-09,1,点 #4,
+E,随机一般位置点集,12,True,rotation,rotation,isometry,distances,preserved,preserved,True,8.881784e-16,4.600751e-09,3,"距离对 (4,7), (4,6), (0,4)",
+E,随机一般位置点集,12,True,rotation,rotation,isometry,angles,preserved,preserved,True,8.881784e-16,1.000000e-09,660,"三元组 (3,1,7)",
+E,随机一般位置点集,12,True,rotation,rotation,isometry,length_ratios,preserved,preserved,True,2.220446e-16,1.000000e-09,66,"比值对 (4,7), (4,6), (0,4)",
+E,随机一般位置点集,12,True,rotation,rotation,isometry,collinearity,preserved_or_vacuous,vacuous,True,0.000000e+00,0.000000e+00,0,,0.0
+E,随机一般位置点集,12,True,rotation,rotation,isometry,parallelism,preserved_or_vacuous,vacuous,True,0.000000e+00,0.000000e+00,0,,0.0
+E,随机一般位置点集,12,True,rotation,rotation,isometry,affine_coordinates,preserved,preserved,True,8.881784e-16,1.000000e-12,1,"frame=(6, 7, 9)",
+E,随机一般位置点集,12,True,reflection,reflection,isometry,absolute_coordinates,violated,violated,True,3.411547e+00,5.296140e-09,1,点 #1,
+E,随机一般位置点集,12,True,reflection,reflection,isometry,distances,preserved,preserved,True,4.440892e-16,4.600751e-09,3,"距离对 (9,11), (8,11), (2,4)",
+E,随机一般位置点集,12,True,reflection,reflection,isometry,angles,preserved,preserved,True,6.661338e-16,1.000000e-09,660,"三元组 (5,4,10)",
+E,随机一般位置点集,12,True,reflection,reflection,isometry,length_ratios,preserved,preserved,True,1.110223e-16,1.000000e-09,66,"比值对 (9,11), (8,11), (2,4)",
+E,随机一般位置点集,12,True,reflection,reflection,isometry,collinearity,preserved_or_vacuous,vacuous,True,0.000000e+00,0.000000e+00,0,,0.0
+E,随机一般位置点集,12,True,reflection,reflection,isometry,parallelism,preserved_or_vacuous,vacuous,True,0.000000e+00,0.000000e+00,0,,0.0
+E,随机一般位置点集,12,True,reflection,reflection,isometry,affine_coordinates,preserved,preserved,True,8.881784e-16,1.000000e-12,1,"frame=(6, 7, 9)",
+E,随机一般位置点集,12,True,similarity,similarity,similarity,absolute_coordinates,violated,violated,True,4.691121e+00,5.296140e-09,1,点 #4,
+E,随机一般位置点集,12,True,similarity,similarity,similarity,distances,violated,violated,True,6.901126e+00,4.600751e-09,3,"距离对 (1,4), (3,4), (1,5)",
+E,随机一般位置点集,12,True,similarity,similarity,similarity,angles,preserved,preserved,True,8.881784e-16,1.000000e-09,660,"三元组 (3,1,6), (3,1,7)",
+E,随机一般位置点集,12,True,similarity,similarity,similarity,length_ratios,preserved,preserved,True,2.220446e-16,1.000000e-09,66,"比值对 (3,4), (4,7), (0,4)",
+E,随机一般位置点集,12,True,similarity,similarity,similarity,collinearity,preserved_or_vacuous,vacuous,True,0.000000e+00,0.000000e+00,0,,0.0
+E,随机一般位置点集,12,True,similarity,similarity,similarity,parallelism,preserved_or_vacuous,vacuous,True,0.000000e+00,0.000000e+00,0,,0.0
+E,随机一般位置点集,12,True,similarity,similarity,similarity,affine_coordinates,preserved,preserved,True,8.881784e-16,1.000000e-12,1,"frame=(6, 7, 9)",
+E,随机一般位置点集,12,True,scale_nonuniform,affine,affine,absolute_coordinates,violated,violated,True,2.228710e+00,5.296140e-09,1,点 #1,
+E,随机一般位置点集,12,True,scale_nonuniform,affine,affine,distances,violated,violated,True,3.503817e+00,4.600751e-09,3,"距离对 (1,11), (1,5), (1,4)",
+E,随机一般位置点集,12,True,scale_nonuniform,affine,affine,angles,violated,violated,True,1.276031e+00,1.000000e-09,660,"三元组 (6,4,9)",
+E,随机一般位置点集,12,True,scale_nonuniform,affine,affine,length_ratios,violated,violated,True,4.576047e-01,1.000000e-09,66,"比值对 (4,9), (9,10), (5,9)",
+E,随机一般位置点集,12,True,scale_nonuniform,affine,affine,collinearity,preserved_or_vacuous,vacuous,True,0.000000e+00,0.000000e+00,0,,0.0
+E,随机一般位置点集,12,True,scale_nonuniform,affine,affine,parallelism,preserved_or_vacuous,vacuous,True,0.000000e+00,0.000000e+00,0,,0.0
+E,随机一般位置点集,12,True,scale_nonuniform,affine,affine,affine_coordinates,preserved,preserved,True,4.440892e-16,1.000000e-12,1,"frame=(6, 7, 9)",
+E,随机一般位置点集,12,True,shear,affine,affine,absolute_coordinates,violated,violated,True,1.479484e+00,5.296140e-09,1,点 #4,
+E,随机一般位置点集,12,True,shear,affine,affine,distances,violated,violated,True,1.715064e+00,4.600751e-09,3,"距离对 (3,4), (1,4), (4,9)",
+E,随机一般位置点集,12,True,shear,affine,affine,angles,violated,violated,True,5.402367e-01,1.000000e-09,660,"三元组 (0,8,9)",
+E,随机一般位置点集,12,True,shear,affine,affine,length_ratios,violated,violated,True,2.433974e-01,1.000000e-09,66,"比值对 (1,9), (2,7), (8,9)",
+E,随机一般位置点集,12,True,shear,affine,affine,collinearity,preserved_or_vacuous,vacuous,True,0.000000e+00,0.000000e+00,0,,0.0
+E,随机一般位置点集,12,True,shear,affine,affine,parallelism,preserved_or_vacuous,vacuous,True,0.000000e+00,0.000000e+00,0,,0.0
+E,随机一般位置点集,12,True,shear,affine,affine,affine_coordinates,preserved,preserved,True,8.881784e-16,1.000000e-12,1,"frame=(6, 7, 9)",
+E,随机一般位置点集,12,True,affine_general,affine,affine,absolute_coordinates,violated,violated,True,3.480912e+00,5.296140e-09,1,点 #4,
+E,随机一般位置点集,12,True,affine_general,affine,affine,distances,violated,violated,True,1.720841e+00,4.600751e-09,3,"距离对 (1,4), (3,4), (1,5)",
+E,随机一般位置点集,12,True,affine_general,affine,affine,angles,violated,violated,True,4.110959e-01,1.000000e-09,660,"三元组 (9,1,4)",
+E,随机一般位置点集,12,True,affine_general,affine,affine,length_ratios,violated,violated,True,2.360811e-01,1.000000e-09,66,"比值对 (2,9), (2,6), (9,10)",
+E,随机一般位置点集,12,True,affine_general,affine,affine,collinearity,preserved_or_vacuous,vacuous,True,0.000000e+00,0.000000e+00,0,,0.0
+E,随机一般位置点集,12,True,affine_general,affine,affine,parallelism,preserved_or_vacuous,vacuous,True,0.000000e+00,0.000000e+00,0,,0.0
+E,随机一般位置点集,12,True,affine_general,affine,affine,affine_coordinates,preserved,preserved,True,8.881784e-16,1.000000e-12,1,"frame=(6, 7, 9)",

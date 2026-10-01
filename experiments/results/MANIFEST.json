@@ -1,0 +1,73 @@
+{
+  "provenance": {
+    "timestamp_utc": "2026-10-01T06:27:43+00:00",
+    "package_version": "0.2.0",
+    "git_commit": "30fcc785f41cbe7cb6522eaae9bcde3cb7960912",
+    "git_dirty": true,
+    "git_branch": "master",
+    "python_version": "3.13.14",
+    "numpy_version": "2.5.3",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "cpu_count": 32,
+    "seed": null,
+    "tolerances": {
+      "FLOAT_TOL": 1e-12,
+      "COLLINEAR_TOL": 1e-09,
+      "MATCH_TOL": 1e-09,
+      "SIGNATURE_DECIMALS": 9,
+      "MAX_CONDITION_NUMBER": 1000000.0,
+      "UNUSABLE_CONDITION_NUMBER": 1000000000000.0,
+      "UNUSABLE_ACCURACY": 0.001,
+      "TEACHING_CODE_DECIMALS": 9
+    },
+    "experiment_config": {
+      "quick": true
+    }
+  },
+  "files": {
+    "phase2_gate.json": {
+      "bytes": 3237,
+      "lines": 102,
+      "sha256": "4167d0bebad618d8a9518a7659f088c4623b3d7f403fd3914a81d93a4cc85f8a"
+    },
+    "invariant_matrix.csv": {
+      "bytes": 37751,
+      "lines": 246,
+      "sha256": "66bb1f495e5159676d878c56df19c122ad161b32cf21366051e40a0fe836312b"
+    },
+    "precision_stress.csv": {
+      "bytes": 4618,
+      "lines": 21,
+      "sha256": "05bc8d1c3a6b2d82dce8746a73e2f0fc3d364b5d33bf7ca3ee9b93f8649f7de8"
+    },
+    "shape_generalization.csv": {
+      "bytes": 21212,
+      "lines": 126,
+      "sha256": "5c7a5035e20bd2b7bbf03b8ca0071404f03e696359ced5f7d0b63c87f4623c69"
+    },
+    "official_code_definition.json": {
+      "bytes": 45305,
+      "lines": 1480,
+      "sha256": "347ed6ff9a16637baa9e41595bfc501685c00c061e51a11294370b0ace69d3f3"
+    }
+  },
+  "required": [
+    "phase2_gate.json",
+    "invariant_matrix.csv",
+    "precision_stress.csv",
+    "shape_generalization.csv",
+    "official_code_definition.json"
+  ],
+  "missing": [],
+  "empty": [],
+  "sidecars": [
+    "invariant_matrix.meta.json",
+    "invariant_matrix_summary.meta.json",
+    "official_code_definition.meta.json",
+    "phase2_gate.meta.json",
+    "precision_stress.meta.json",
+    "shape_generalization.meta.json",
+    "shape_generalization_summary.meta.json"
+  ],
+  "failures": []
+}

@@ -1,0 +1,104 @@
+{
+  "name": "shape_generalization_summary",
+  "provenance": {
+    "timestamp_utc": "2026-10-01T06:27:38+00:00",
+    "package_version": "0.2.0",
+    "git_commit": "30fcc785f41cbe7cb6522eaae9bcde3cb7960912",
+    "git_dirty": true,
+    "git_branch": "master",
+    "python_version": "3.13.14",
+    "numpy_version": "2.5.3",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "cpu_count": 32,
+    "seed": 20261003,
+    "tolerances": {
+      "FLOAT_TOL": 1e-12,
+      "COLLINEAR_TOL": 1e-09,
+      "MATCH_TOL": 1e-09,
+      "SIGNATURE_DECIMALS": 9,
+      "MAX_CONDITION_NUMBER": 1000000.0,
+      "UNUSABLE_CONDITION_NUMBER": 1000000000000.0,
+      "UNUSABLE_ACCURACY": 0.001,
+      "TEACHING_CODE_DECIMALS": 9
+    },
+    "experiment_config": {
+      "repetitions": 3,
+      "decimals": 6
+    }
+  },
+  "experiment": "shape_generalization",
+  "title": "teaching affine code across datasets A-E",
+  "datasets": {
+    "A": {
+      "families": 8,
+      "equivalent": 24,
+      "control_not_equivalent": 1,
+      "n_points": 9,
+      "is_asymmetric": true,
+      "n_frames": 82,
+      "n_collinear_triples": 2,
+      "worst_condition_number": 133.21273130523232,
+      "recommended_decimals": 7,
+      "decimals_used": 6,
+      "quantization_is_safe": true
+    },
+    "B": {
+      "families": 8,
+      "equivalent": 24,
+      "control_not_equivalent": 1,
+      "n_points": 10,
+      "is_asymmetric": true,
+      "n_frames": 109,
+      "n_collinear_triples": 11,
+      "worst_condition_number": 881.0302935366244,
+      "recommended_decimals": 6,
+      "decimals_used": 6,
+      "quantization_is_safe": true
+    },
+    "C": {
+      "families": 8,
+      "equivalent": 24,
+      "control_not_equivalent": 1,
+      "n_points": 7,
+      "is_asymmetric": true,
+      "n_frames": 34,
+      "n_collinear_triples": 1,
+      "worst_condition_number": 12.816135432769332,
+      "recommended_decimals": 8,
+      "decimals_used": 6,
+      "quantization_is_safe": true
+    },
+    "D": {
+      "families": 8,
+      "equivalent": 24,
+      "control_not_equivalent": 1,
+      "n_points": 8,
+      "is_asymmetric": true,
+      "n_frames": 55,
+      "n_collinear_triples": 1,
+      "worst_condition_number": 56.27208126725567,
+      "recommended_decimals": 8,
+      "decimals_used": 6,
+      "quantization_is_safe": true
+    },
+    "E": {
+      "families": 8,
+      "equivalent": 24,
+      "control_not_equivalent": 1,
+      "n_points": 12,
+      "is_asymmetric": true,
+      "n_frames": 220,
+      "n_collinear_triples": 0,
+      "worst_condition_number": 198.57758753101845,
+      "recommended_decimals": 7,
+      "decimals_used": 6,
+      "quantization_is_safe": true
+    }
+  },
+  "verdict": {
+    "rows": 125,
+    "failures": [],
+    "all_affine_images_equivalent": true,
+    "control_never_equivalent": true
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "timestamp_utc": "2026-10-01T06:27:39+00:00",
+  "package_version": "0.2.0",
+  "git_commit": "30fcc785f41cbe7cb6522eaae9bcde3cb7960912",
+  "git_dirty": true,
+  "git_branch": "master",
+  "python_version": "3.13.14",
+  "numpy_version": "2.5.3",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "cpu_count": 32,
+  "seed": 20261003,
+  "tolerances": {
+    "FLOAT_TOL": 1e-12,
+    "COLLINEAR_TOL": 1e-09,
+    "MATCH_TOL": 1e-09,
+    "SIGNATURE_DECIMALS": 9,
+    "MAX_CONDITION_NUMBER": 1000000.0,
+    "UNUSABLE_CONDITION_NUMBER": 1000000000000.0,
+    "UNUSABLE_ACCURACY": 0.001,
+    "TEACHING_CODE_DECIMALS": 9
+  },
+  "experiment_config": {
+    "repetitions": 3,
+    "decimals": 6
+  }
+}

@@ -50,9 +50,17 @@ from .transforms import AffineTransform
 
 __all__ = [
     "Verdict",
+    "TheoryVerdict",
     "InvariantEntry",
     "InvariantReport",
+    "TheoryRow",
+    "TheoryCheck",
+    "Discrepancy",
     "PROPERTY_KEYS",
+    "THEORY_EXPECTATION",
+    "FAMILY_LABELS_ZH",
+    "theory_verdict",
+    "check_against_theory",
     "absolute_coordinate_change",
     "distance_change",
     "angle_change",
@@ -65,6 +73,13 @@ __all__ = [
 
 Verdict = Literal["preserved", "violated", "vacuous"]
 
+#: What the theory (README section 9) predicts, per transformation *kind*.
+#:
+#: ``"preserved_or_vacuous"`` is the honest value for the two relation-valued
+#: properties: the relation is preserved, but if the image contains no instance
+#: of it there is nothing to preserve and the verdict must be ``vacuous``.
+TheoryVerdict = Literal["preserved", "violated", "preserved_or_vacuous", "unknown"]
+
 #: Canonical property order, matching README section 9 top-to-bottom.
 PROPERTY_KEYS: tuple[str, ...] = (
     "absolute_coordinates",
@@ -75,6 +90,323 @@ PROPERTY_KEYS: tuple[str, ...] = (
     "parallelism",
     "affine_coordinates",
 )
+
+_ISO = {
+    "absolute_coordinates": "violated",
+    "distances": "preserved",
+    "angles": "preserved",
+    "length_ratios": "preserved",
+    "collinearity": "preserved_or_vacuous",
+    "parallelism": "preserved_or_vacuous",
+    "affine_coordinates": "preserved",
+}
+
+#: The theory table as data.  This is the single source of truth used by
+#: :func:`check_against_theory`, by the tests, and by the Invariant Explorer
+#: page — so a disagreement between "what the theory says" and "what we measure"
+#: is always a *visible* discrepancy rather than a stale copy in a docstring.
+THEORY_EXPECTATION: dict[str, dict[str, TheoryVerdict]] = {
+    "identity": {
+        "absolute_coordinates": "preserved",
+        "distances": "preserved",
+        "angles": "preserved",
+        "length_ratios": "preserved",
+        "collinearity": "preserved_or_vacuous",
+        "parallelism": "preserved_or_vacuous",
+        "affine_coordinates": "preserved",
+    },
+    "translation": dict(_ISO),
+    "rotation": dict(_ISO),
+    "reflection": dict(_ISO),
+    "similarity": {
+        "absolute_coordinates": "violated",
+        "distances": "violated",  # unless s == 1, in which case it is an isometry
+        "angles": "preserved",
+        "length_ratios": "preserved",
+        "collinearity": "preserved_or_vacuous",
+        "parallelism": "preserved_or_vacuous",
+        "affine_coordinates": "preserved",
+    },
+    "affine": {
+        "absolute_coordinates": "violated",
+        "distances": "violated",
+        "angles": "violated",
+        "length_ratios": "violated",
+        "collinearity": "preserved_or_vacuous",
+        "parallelism": "preserved_or_vacuous",
+        "affine_coordinates": "preserved",
+    },
+    "singular": {
+        "absolute_coordinates": "unknown",
+        "distances": "unknown",
+        "angles": "unknown",
+        "length_ratios": "unknown",
+        "collinearity": "unknown",
+        "parallelism": "unknown",
+        "affine_coordinates": "unknown",
+    },
+    "unknown": {key: "unknown" for key in PROPERTY_KEYS},
+}
+
+#: Human labels for the theory table rows (readme section 9 wording).
+FAMILY_LABELS_ZH: dict[str, str] = {
+    "identity": "恒等",
+    "translation": "平移",
+    "rotation": "旋转",
+    "reflection": "反射",
+    "similarity": "相似",
+    "affine": "仿射",
+    "singular": "退化",
+    "unknown": "未知",
+}
+
+
+def theory_verdict(
+    kind: str,
+    property_key: str,
+    *,
+    transform: "AffineTransform | None" = None,
+) -> TheoryVerdict:
+    """Predicted verdict for ``property_key`` under a transform of ``kind``.
+
+    Most of the table is static, but two entries are genuinely *conditional* and
+    are refined when the transform is supplied:
+
+    * ``similarity`` + ``distances`` — preserved iff ``|s - 1| <= MATCH_TOL``
+      (a similarity with ``s = 1 + 5e-10`` does change distances, but only at a
+      level the measurement cannot resolve; reporting a "discrepancy" there
+      would be a tolerance artefact, not a finding).
+
+    Without a transform the static table is used, which is the right answer for
+    documentation and for the rendered theory table.
+    """
+    if kind == "similarity" and property_key == "distances" and transform is not None:
+        return "violated" if abs(transform.scale_factor - 1.0) > MATCH_TOL else "preserved"
+    table = THEORY_EXPECTATION.get(kind)
+    if table is None:
+        return "unknown"
+    return table.get(property_key, "unknown")
+
+
+@dataclass(frozen=True)
+class TheoryRow:
+    """One row of the theory-vs-measurement comparison."""
+
+    property_key: str
+    label_zh: str
+    expected: TheoryVerdict
+    measured: Verdict
+    agreed: bool
+    delta: float
+    tolerance: float
+    witness: str | None
+    note: str | None = None
+
+    def as_row(self) -> dict[str, Any]:
+        return {
+            "property": self.property_key,
+            "label_zh": self.label_zh,
+            "theory": self.expected,
+            "measured": self.measured,
+            "agreed": self.agreed,
+            "delta": self.delta,
+            "tolerance": self.tolerance,
+            "witness": self.witness,
+            "note": self.note,
+        }
+
+
+@dataclass(frozen=True)
+class Discrepancy:
+    """Theory and measurement disagree — must never be hidden."""
+
+    property_key: str
+    label_zh: str
+    expected: TheoryVerdict
+    measured: Verdict
+    delta: float
+    tolerance: float
+    severity: Literal["warning", "critical"]
+    explanation: str
+
+    def as_dict(self) -> dict[str, Any]:
+        return {
+            "property": self.property_key,
+            "label_zh": self.label_zh,
+            "expected": self.expected,
+            "measured": self.measured,
+            "delta": self.delta,
+            "tolerance": self.tolerance,
+            "severity": self.severity,
+            "explanation": self.explanation,
+        }
+
+
+@dataclass(frozen=True)
+class TheoryCheck:
+    """Result of comparing a measurement against the theory table."""
+
+    kind: str
+    rows: tuple[TheoryRow, ...]
+    discrepancies: tuple[Discrepancy, ...]
+
+    @property
+    def has_discrepancy(self) -> bool:
+        return bool(self.discrepancies)
+
+    @property
+    def critical(self) -> tuple[Discrepancy, ...]:
+        return tuple(d for d in self.discrepancies if d.severity == "critical")
+
+    def headline(self, lang: str = "zh") -> str:
+        if self.discrepancies:
+            return {
+                "zh": f"发现 {len(self.discrepancies)} 处理论/实测不一致",
+                "ru": f"Обнаружено расхождений: {len(self.discrepancies)}",
+                "en": f"{len(self.discrepancies)} theory/measurement discrepancy(ies)",
+            }.get(lang, f"{len(self.discrepancies)} discrepancy(ies)")
+        n_checked = sum(1 for r in self.rows if r.expected != "unknown")
+        if n_checked == 0:
+            # An all-"unknown" table must NOT read as a pass: nothing was compared.
+            return {
+                "zh": f"无可比对项：变换类型 `{self.kind}` 没有理论预测（对照实验 / 未知变换）",
+                "ru": f"Нет сравнимых пунктов: для типа `{self.kind}` нет теоретического прогноза",
+                "en": f"Nothing comparable: no theory prediction for kind `{self.kind}`",
+            }.get(lang, f"Nothing comparable for kind `{self.kind}`")
+        return {
+            "zh": f"理论预测与实测一致（{n_checked} 项可比对）",
+            "ru": f"Теория и измерение согласуются ({n_checked} сравнимых пунктов)",
+            "en": f"Theory and measurement agree ({n_checked} comparable items)",
+        }.get(lang, f"Theory and measurement agree ({n_checked} items)")
+
+    def banner(self, lang: str = "zh") -> str | None:
+        """The literal discrepancy banner required by the Invariant Explorer spec."""
+        if not self.discrepancies:
+            return None
+        worst = max(self.discrepancies, key=lambda d: (d.severity == "critical", abs(d.delta)))
+        lines = [
+            "NUMERICAL / IMPLEMENTATION DISCREPANCY",
+            f"property = {worst.property_key} ({worst.label_zh})",
+            f"theory  = {worst.expected}",
+            f"measured= {worst.measured}",
+            f"delta   = {worst.delta:.3e}   tolerance = {worst.tolerance:.3e}",
+            f"severity= {worst.severity}",
+            worst.explanation,
+        ]
+        if len(self.discrepancies) > 1:
+            lines.append(f"(+{len(self.discrepancies) - 1} more)")
+        return "\n".join(lines)
+
+    def as_rows(self) -> list[dict[str, Any]]:
+        return [row.as_row() for row in self.rows]
+
+    def markdown_table(self) -> str:
+        symbol = {"preserved": "✓", "violated": "×", "vacuous": "–"}
+        lines = [
+            "| 性质 | 理论预测 | 实测 | 一致 | max \\|Δ\\| | 容差 | 见证 |",
+            "|---|---|---|---|---|---|---|",
+        ]
+        for row in self.rows:
+            mark = "✓" if row.agreed else "**✗**"
+            lines.append(
+                f"| {row.label_zh} | {row.expected} | {symbol[row.measured]} {row.measured} | {mark} | "
+                f"{row.delta:.3e} | {row.tolerance:.1e} | {row.witness or '—'} |"
+            )
+        return "\n".join(lines)
+
+
+def check_against_theory(
+    report: "InvariantReport",
+    *,
+    transform: "AffineTransform | None" = None,
+) -> TheoryCheck:
+    """Compare a measurement against :data:`THEORY_EXPECTATION`.
+
+    Agreement rule:
+
+    * ``preserved`` / ``violated`` must match exactly;
+    * ``preserved_or_vacuous`` accepts either ``preserved`` or ``vacuous``;
+    * ``unknown`` (degenerate transform, or a control pair) never counts as a
+      discrepancy — but it is also excluded from the "comparable items" count,
+      so a table full of ``unknown`` cannot look like a pass.
+    """
+    rows: list[TheoryRow] = []
+    discrepancies: list[Discrepancy] = []
+
+    for entry in report.entries:
+        expected = theory_verdict(report.transform_kind, entry.key, transform=transform)
+        measured = entry.verdict
+
+        if expected == "unknown":
+            agreed = True
+        elif expected == "preserved_or_vacuous":
+            agreed = measured in ("preserved", "vacuous")
+        else:
+            agreed = measured == expected
+
+        rows.append(
+            TheoryRow(
+                property_key=entry.key,
+                label_zh=entry.label_zh,
+                expected=expected,
+                measured=measured,
+                agreed=agreed,
+                delta=entry.delta,
+                tolerance=entry.tolerance,
+                witness=entry.witness,
+                note=entry.note,
+            )
+        )
+        if agreed:
+            continue
+
+        severity, explanation = _explain_discrepancy(expected, measured)
+        discrepancies.append(
+            Discrepancy(
+                property_key=entry.key,
+                label_zh=entry.label_zh,
+                expected=expected,
+                measured=measured,
+                delta=entry.delta,
+                tolerance=entry.tolerance,
+                severity=severity,
+                explanation=explanation,
+            )
+        )
+
+    return TheoryCheck(report.transform_kind, tuple(rows), tuple(discrepancies))
+
+
+def _explain_discrepancy(
+    expected: TheoryVerdict, measured: Verdict
+) -> tuple[Literal["warning", "critical"], str]:
+    """Classify a theory/measurement disagreement and explain its likely cause.
+
+    The distinction that matters: a ``vacuous`` measurement is **untested**, not
+    falsified, so it is a warning; anything else is a genuine conflict and gets
+    the critical banner.
+    """
+    if measured == "vacuous":
+        return (
+            "warning",
+            "该性质在图像中不存在可检验的见证：结论**未被检验**，不含信息。"
+            "不是反例，但也不能算作通过（见 docs/specs/invariants.md §2）。",
+        )
+    if expected == "preserved":
+        return (
+            "critical",
+            "理论要求保持，实测报破坏。检查三处：① 容差是否与该性质的量纲/尺度匹配；"
+            "② 逐点对应关系是否正确；③ 是否落入平移幅度导致的输入精度失效区间"
+            "（见 docs/theory/numerical_limits.md §2）。",
+        )
+    if measured == "preserved":
+        return (
+            "critical",
+            "理论要求破坏，实测报保持。这通常指向**测量方法错误**，而不是数学错误："
+            "例如把关系型性质（平行性）当连续量（夹角）来测，"
+            "或对已排序的坐标做逐点比较（见 docs/specs/invariants.md §1）。",
+        )
+    return ("critical", "理论预测与实测结论不一致，需要人工核查。")
 
 
 # --------------------------------------------------------------------------- #
@@ -160,6 +492,21 @@ class InvariantReport:
             )
         return "\n".join(lines)
 
+    # ------------------------------------------------------------------ #
+    # theory comparison (used by the Invariant Explorer and by the tests)
+    # ------------------------------------------------------------------ #
+    def theory_check(self, transform: "AffineTransform | None" = None) -> "TheoryCheck":
+        """Compare this measurement against the theory table.
+
+        Pass the transform whenever it is known: two entries of the table are
+        conditional on it (see :func:`theory_verdict`).
+        """
+        return check_against_theory(self, transform=transform)
+
+    def theory_table(self, transform: "AffineTransform | None" = None) -> str:
+        """Markdown rendering of theory vs. measurement."""
+        return self.theory_check(transform).markdown_table()
+
 
 # --------------------------------------------------------------------------- #
 # continuous quantities
@@ -233,11 +580,12 @@ def angle_change(x: Any, y: Any, *, max_points: int = 30) -> tuple[float, list[t
     return worst_delta, witnesses[:3], n_tested
 
 
-def length_ratio_change(x: Any, y: Any) -> tuple[float, list[tuple[int, int, int, int]], int]:
-    """``max`` change of normalised length ratios ``d_ij / d_kl``.
+def length_ratio_change(x: Any, y: Any) -> tuple[float, list[tuple[int, int]], int]:
+    """``max`` change of normalised length ratios ``d_ij / d_max``.
 
     Ratios are normalised by the largest distance of the respective image, so
-    the quantity is scale-free by construction.
+    the quantity is scale-free by construction.  Witnesses are index *pairs*
+    ``(i, j)``: the ratio attached to the pair ``ij``.
     """
     X = as_point_matrix(x, name="x")
     Y = as_point_matrix(y, name="y")
@@ -441,7 +789,7 @@ def invariant_report(
         entries.append(
             _entry("length_ratios", math.nan, math.nan, delta, rel_tol,
                    "violated" if delta > rel_tol else "preserved",
-                   n_tested, _fmt_quads(witnesses),
+                   n_tested, _fmt_pairs(witnesses, "比值对"),
                    note="相似下保持；非等比缩放下改变")
         )
 
@@ -621,7 +969,7 @@ def _angle_at(vertex: np.ndarray, p: np.ndarray, q: np.ndarray) -> float:
 
 def _normalised_ratio_vector(
     pts: np.ndarray,
-) -> tuple[np.ndarray, list[tuple[int, int, int, int]]]:
+) -> tuple[np.ndarray, list[tuple[int, int]]]:
     """All ``d_ij / d_max`` ratios as a vector, plus their index witnesses."""
     n = pts.shape[0]
     d = _pairwise_distance_matrix(pts)
@@ -633,7 +981,7 @@ def _normalised_ratio_vector(
     if scale <= 0:
         return np.zeros(0), []
     pairs = list(zip(iu[0].tolist(), iu[1].tolist()))
-    return values / scale, [(i, j, i, j) for i, j in pairs]
+    return values / scale, [(int(i), int(j)) for i, j in pairs]
 
 
 def _collinear_triples(pts: np.ndarray, tol: float) -> frozenset[tuple[int, int, int]]:
@@ -711,9 +1059,9 @@ def _infer_kind(x: np.ndarray, y: np.ndarray) -> tuple[str, str]:
     return "unknown", "unknown"
 
 
-def _fmt_pairs(pairs: Iterable[tuple[int, int]]) -> str | None:
+def _fmt_pairs(pairs: Iterable[tuple[int, int]], label: str = "距离对") -> str | None:
     items = [f"({i},{j})" for i, j in pairs]
-    return "距离对 " + ", ".join(items) if items else None
+    return f"{label} " + ", ".join(items) if items else None
 
 
 def _fmt_triples(triples: Iterable[tuple[int, int, int]]) -> str | None:

@@ -81,15 +81,16 @@
 <header>
   <h1>Kozlov Visual Perception Lab — 阶段报告</h1>
   <div class="sub">
-    《视觉感知的数学理论》交互式实验与识别系统 ｜ Phase 0–2 完成 ｜ 报告日期 2026-10-01 ｜ 包版本 0.2.0
+    《视觉感知的数学理论》交互式实验与识别系统 ｜ Phase 0–2 + Sprint 3A–3E 完成 ｜ 2026-10-01 ｜ 包版本 0.2.0
   </div>
   <div class="badges">
     <span class="badge b-ok">Phase 2 Gate 通过</span>
-    <span class="badge b-ok">219 tests passed</span>
-    <span class="badge b-ok">Experiment A 通过</span>
-    <span class="badge b-ok">M6 不变量表通过</span>
-    <span class="badge b-warn">Phase 3–6 阻塞（未决问题 Q1–Q5）</span>
-    <span class="badge b-neutral">Web UI 未开始（Phase 7）</span>
+    <span class="badge b-ok">343 tests passed</span>
+    <span class="badge b-ok">5 个可复现实验全部通过</span>
+    <span class="badge b-ok">UI M1 / M2 / M3 / M4 / M6 完成</span>
+    <span class="badge b-ok">教学型编码完成（Pedagogical Extension）</span>
+    <span class="badge b-warn">Phase 3 = LOCKED（待 G3.1 裁定）</span>
+    <span class="badge b-neutral">Phase 4–6 未开始</span>
   </div>
 </header>
 
@@ -248,51 +249,121 @@ flatness 用于定义「关系」。这不是「哪个更好」的问题。</p>
 <table>
   <thead><tr><th class="num">#</th><th>README 交付项</th><th>状态</th><th>位置</th></tr></thead>
   <tbody>
-    <tr><td class="num">1</td><td>可运行的交互式 Web 应用</td><td><span class="badge b-neutral">未做（Phase 7）</span></td><td>—</td></tr>
+    <tr><td class="num">1</td><td>可运行的交互式 Web 应用</td><td><span class="badge b-ok">5 页完成</span></td><td class="mono">app/</td></tr>
     <tr><td class="num">2</td><td>独立 Python 数学核心库</td><td><span class="badge b-ok">完成</span></td><td class="mono">src/kozlov_lab/</td></tr>
-    <tr><td class="num">3</td><td>单元测试 + 数学性质测试</td><td><span class="badge b-ok">219 passed</span></td><td class="mono">tests/</td></tr>
+    <tr><td class="num">3</td><td>单元测试 + 数学性质测试</td><td><span class="badge b-ok">343 passed</span></td><td class="mono">tests/</td></tr>
     <tr><td class="num">4</td><td>教材示例数据</td><td><span class="badge b-ok">9 个 JSON</span></td><td class="mono">examples/</td></tr>
     <tr><td class="num">5</td><td>中文/俄文术语解释</td><td><span class="badge b-ok">完成</span></td><td class="mono">docs/terminology_ru_zh.md</td></tr>
     <tr><td class="num">6</td><td>项目 README</td><td><span class="badge b-ok">完成</span></td><td class="mono">README.md</td></tr>
     <tr><td class="num">7</td><td>数学原理说明文档</td><td><span class="badge b-ok">完成</span></td><td class="mono">docs/theory/pipeline.md</td></tr>
-    <tr><td class="num">8</td><td>实验结果文档</td><td><span class="badge b-ok">A / M6 完成</span></td><td class="mono">docs/experiments/</td></tr>
+    <tr><td class="num">8</td><td>实验结果文档</td><td><span class="badge b-ok">A / M6 / Sprint 3</span></td><td class="mono">docs/experiments/</td></tr>
     <tr><td class="num">9</td><td>课堂展示 Demo 流程</td><td><span class="badge b-ok">完成</span></td><td class="mono">docs/demo_script.md</td></tr>
     <tr><td class="num">10</td><td>最终项目报告</td><td><span class="badge b-warn">阶段报告</span></td><td class="mono">docs/final_report.md</td></tr>
   </tbody>
 </table>
 
-<h2>6. 为什么 Phase 3 停在这里</h2>
-<p>README 第 24 节设了两道 Gate，本项目另外发现<b>第二层</b>阻塞。
-两层必须分开看：</p>
+<h2>6. Sprint 3：多形状验证 · 教学型编码 · Q1 定义</h2>
+
+<h3>6.1 多形状不变量验证（Sprint 3B）</h3>
+<p>5 个<b>非对称</b>数据集 × 7 个变换族 × 7 个性质 = 245 行，取自
+<span class="mono">experiments/results/invariant_matrix.csv</span>：</p>
 <table>
-  <thead><tr><th>层</th><th>内容</th><th>状态</th></tr></thead>
+  <thead><tr><th>性质</th><th class="num">保持</th><th class="num">破坏</th><th class="num">无见证</th></tr></thead>
   <tbody>
-    <tr><td>工程阻塞</td><td>Phase 2 性质测试（Gate）</td><td style="color:#14663a"><b>已解除</b>（Experiment A 通过）</td></tr>
-    <tr><td>数学阻塞</td><td>未决问题 Q1：教材正式编码定义未由一手资料确认</td><td style="color:#a8271c"><b>未解除</b></td></tr>
+    <tr><td>绝对坐标</td><td class="num">0</td><td class="num">35</td><td class="num">0</td></tr>
+    <tr><td>距离</td><td class="num">15</td><td class="num">20</td><td class="num">0</td></tr>
+    <tr><td>角度</td><td class="num">20</td><td class="num">15</td><td class="num">0</td></tr>
+    <tr><td>长度比例</td><td class="num">20</td><td class="num">15</td><td class="num">0</td></tr>
+    <tr><td>共线性</td><td class="num">28</td><td class="num">0</td><td class="num">7</td></tr>
+    <tr><td>平行性</td><td class="num">14</td><td class="num">0</td><td class="num">21</td></tr>
+    <tr><td><b>仿射坐标</b></td><td class="num"><b>35</b></td><td class="num">0</td><td class="num">0</td></tr>
   </tbody>
 </table>
-<p>只解除第一层就动手实现编码，等于「凭猜测实现教材算法」——
-README 第 23、26 节明确禁止。演示脚本因此<b>停在诚实的位置</b>：
-不提供占位实现，也不把哈希说成「图像代码」。</p>
+<p><b>仿射坐标 35/35 全部保持</b>；理论预测与实测 <b>0 处不一致</b>。
+28 行「无见证」正是三态语义存在的理由——若把空的对称差当成「保持」，
+表格会看起来完全达标而实际什么都没测。</p>
 
-<h2>7. 建议的下一步</h2>
+<h3>6.2 教学型编码（Sprint 3C）</h3>
+<p><span class="mono">C_teach(X)</span>：对每个非共线三元组取内部仿射坐标、
+量化、排序，再对全部描述符排序。<b>Pedagogical Extension</b>，
+与正式理论<b>目录隔离</b>（<span class="mono">teaching/</span> vs 保持为空的
+<span class="mono">coding/</span>），由 13 项测试强制。</p>
+<table>
+  <thead><tr><th>检查</th><th>结果</th><th>出处</th></tr></thead>
+  <tbody>
+    <tr><td>仿射像的编码相等</td><td>120/120（5 数据集 × 8 族 × 3 次重复）</td><td class="mono">shape_generalization.csv</td></tr>
+    <tr><td>对照组（同基数无关点集）</td><td>5/5 正确判为不相等</td><td>同上</td></tr>
+    <tr><td>量化安全性</td><td>5/5 数据集为安全</td><td>同上</td></tr>
+    <tr><td><b>失败数</b></td><td><b>0</b></td><td>同上</td></tr>
+  </tbody>
+</table>
+
+<h3>6.3 ★ Q1：定义已逐字取得</h3>
+<p>未决问题 Q1（正式「код изображения」的定义）从「完全没有依据」推进到
+<b>「定义已取得、仅剩来源层级待裁定」</b>：</p>
+<pre>&lt;M_A, T_A&gt;,   T_A = { S_mnu / S_ksp }   over all pairs of triples
+                        (只有分母非退化的三元组可用)</pre>
+<p>来源为 <b>Kozlov 本人的专利说明书 RU2779379C1</b>（作者自撰、可实施，
+且把定理归给教材 МГУ 2007）；2009 年论文摘要（出版社页面）独立确认仿射不变性。
+教材正文与 2009 全文<b>未能获取</b>，已在文档中逐项登记。</p>
+<table>
+  <thead><tr><th>Gate</th><th>要求</th><th>判定</th></tr></thead>
+  <tbody>
+    <tr><td>G3.1</td><td>从一手资料获得清晰定义</td><td class="cell-0">⚠ 取决于「专利能否替代教材」的裁定</td></tr>
+    <tr><td>G3.2</td><td>点是否带编号</td><td class="cell-p">✓ 是（专利逐字）</td></tr>
+    <tr><td>G3.3</td><td>frame 是否有序</td><td class="cell-p">✓ 正式定义无 frame</td></tr>
+    <tr><td>G3.4</td><td>如何消除 frame 歧义</td><td class="cell-p">✓ 取遍所有三元组对</td></tr>
+    <tr><td>G3.5</td><td>在何种变换群下不变</td><td class="cell-p">✓ 可逆仿射群</td></tr>
+    <tr><td>G3.6</td><td>两个手算例子</td><td class="cell-p">✓ 已完成（$T_A={0,\tfrac12,1,2}$ 逐值相符）</td></tr>
+    <tr><td>G3.7</td><td>可写成可测试规格</td><td class="cell-p">✓ 已完成</td></tr>
+  </tbody>
+</table>
+<p><b>6 / 7 明确满足</b>，唯一开口是来源层级 ⇒</p>
+<pre>Phase 3 = LOCKED（待 G3.1 裁定）</pre>
+<p><span class="mono">src/kozlov_lab/coding/</span> 保持为空。</p>
+
+<h3>6.4 ⚠️ 同一轮发现的实现级事实</h3>
+<p>字面执行源定义的分母判据 <span class="mono">S != 0</span> <b>在浮点下不可用</b>。
+实测（数据集 B）：</p>
+<table>
+  <thead><tr><th>量</th><th class="num">值</th></tr></thead>
+  <tbody>
+    <tr><td>最小<b>非零</b>面积（纯舍入）</td><td class="num">1.11e-16</td></tr>
+    <tr><td>最大面积</td><td class="num">3.41</td></tr>
+    <tr><td>因此 max ρ</td><td class="num" style="color:#a8271c"><b>3.07e+16</b></td></tr>
+    <tr><td><b>一次纯平移</b>后 max ρ</td><td class="num" style="color:#a8271c">1.23e+17</td></tr>
+  </tbody>
+</table>
+<p>即 <span class="mono">T_A</span> 的最大元素由无数学内容的舍入决定，且<b>在平移下改变</b>——
+用这种 T_A 做判定，会把「同一图像平移一下」判成不同代码。
+改用<b>无量纲</b>的 flatness 判据后，5 数据集 × 8 族全部通过（9.5e-14）。</p>
+<p>同样的教训在 Phase 2 出现过一次：<b>有量纲的量 × 固定阈值必然出错</b>。</p>
+
+<h3>6.5 另外两个被修掉的坑</h3>
+<ul>
+  <li><b>比较度量选错会制造假的失败</b>：第一版用「相对该值」的偏差，报出 1e283。
+      真因是分母塌陷（ρ=0 平移后变成 ~1e-283）。改为相对<b>集合尺度</b>，并把近零元素数报告出来。</li>
+  <li><b>两处退化判据必须一致</b>：全码与截短码用不同判据时，截短码在 B 上偏差 0.25 而全码通过。</li>
+</ul>
+
+<h2>7. 需要裁定的事项</h2>
 <ol>
-  <li><b>Phase 7 的 M1/M2/M3/M6 四个 Streamlit 页面</b> —— 数学层已稳定且 100% 测试覆盖，
-      答辩价值最高，且<b>不依赖任何未决问题</b>。</li>
-  <li><b>把不变量表扩展到 4–5 个不同形态的图形</b>（含无共线三元组的正多边形），
-      补上当前「只在一个图形上验证」的局限。</li>
-  <li><b>Phase 3 的「教学型编码器」</b> —— README 第 7 节已给足形式化描述，
-      但需先确认是否接受「非教材正式定义」这一折中（界面须标注）。</li>
+  <li><b>G3.1 的来源层级</b>：接受专利作为 G3.1 依据 ⇒ 可按规格实现正式编码并解锁
+      <span class="mono">coding/</span>；不接受 ⇒ 需获取教材或 2009 全文。</li>
+  <li><b>A8 重复点接口冲突</b>：正式定义要求点互异，与本项目「接受多重集」冲突，需确定处理方式。</li>
+  <li>若第 1 条通过，实现须遵守 Q1 文档 §13.5 的五条要求（无量纲退化判据、报告近零元素、
+      尺度相对比较、两处判据一致、默认覆盖含共线点的图像）。</li>
 </ol>
 
 <div class="foot">
   原始产物：<span class="mono">results/EXP-A_2026-10-01/</span>、<span class="mono">results/M6-INVARIANT-TABLE_2026-10-01/</span>
   （含 <span class="mono">provenance.json</span>：git commit、包版本、Python/numpy 版本、全部容差常量、随机种子）<br>
-  复现：<span class="mono">python experiments/exp_a_affine_invariance.py</span> ｜
-  <span class="mono">python experiments/exp_invariant_table.py</span> ｜
+  复现：<span class="mono">python experiments/run_all.py</span> ｜
   <span class="mono">python experiments/mvp_walkthrough.py</span> ｜
-  <span class="mono">pytest -q -m gate -s</span><br>
-  HEAD commit <span class="mono">34f09c0</span> ｜ 工作树干净
+  <span class="mono">streamlit run app/Home.py</span> ｜
+  <span class="mono">pytest -q</span><br>
+  5 个实验产物 + <span class="mono">MANIFEST.json</span>（含 SHA-256）在
+  <span class="mono">experiments/results/</span>
 </div>
 
 </div>

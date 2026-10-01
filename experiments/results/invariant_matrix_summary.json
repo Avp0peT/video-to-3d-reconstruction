@@ -1,0 +1,569 @@
+{
+  "name": "invariant_matrix_summary",
+  "provenance": {
+    "timestamp_utc": "2026-10-01T06:27:22+00:00",
+    "package_version": "0.2.0",
+    "git_commit": "30fcc785f41cbe7cb6522eaae9bcde3cb7960912",
+    "git_dirty": true,
+    "git_branch": "master",
+    "python_version": "3.13.14",
+    "numpy_version": "2.5.3",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "cpu_count": 32,
+    "seed": 20261001,
+    "tolerances": {
+      "FLOAT_TOL": 1e-12,
+      "COLLINEAR_TOL": 1e-09,
+      "MATCH_TOL": 1e-09,
+      "SIGNATURE_DECIMALS": 9,
+      "MAX_CONDITION_NUMBER": 1000000.0,
+      "UNUSABLE_CONDITION_NUMBER": 1000000000000.0,
+      "UNUSABLE_ACCURACY": 0.001,
+      "TEACHING_CODE_DECIMALS": 9
+    },
+    "experiment_config": {
+      "datasets": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E"
+      ]
+    }
+  },
+  "experiment": "invariant_matrix",
+  "title": "invariant matrix summary (per dataset)",
+  "rows": 245,
+  "datasets": {
+    "A": {
+      "families": {
+        "translation": {
+          "kind": "translation",
+          "group": "isometry",
+          "verdicts": {
+            "absolute_coordinates": "violated",
+            "distances": "preserved",
+            "angles": "preserved",
+            "length_ratios": "preserved",
+            "collinearity": "preserved",
+            "parallelism": "preserved",
+            "affine_coordinates": "preserved"
+          },
+          "discrepancies": 0
+        },
+        "rotation": {
+          "kind": "rotation",
+          "group": "isometry",
+          "verdicts": {
+            "absolute_coordinates": "violated",
+            "distances": "preserved",
+            "angles": "preserved",
+            "length_ratios": "preserved",
+            "collinearity": "preserved",
+            "parallelism": "preserved",
+            "affine_coordinates": "preserved"
+          },
+          "discrepancies": 0
+        },
+        "reflection": {
+          "kind": "reflection",
+          "group": "isometry",
+          "verdicts": {
+            "absolute_coordinates": "violated",
+            "distances": "preserved",
+            "angles": "preserved",
+            "length_ratios": "preserved",
+            "collinearity": "preserved",
+            "parallelism": "preserved",
+            "affine_coordinates": "preserved"
+          },
+          "discrepancies": 0
+        },
+        "similarity": {
+          "kind": "similarity",
+          "group": "similarity",
+          "verdicts": {
+            "absolute_coordinates": "violated",
+            "distances": "violated",
+            "angles": "preserved",
+            "length_ratios": "preserved",
+            "collinearity": "preserved",
+            "parallelism": "preserved",
+            "affine_coordinates": "preserved"
+          },
+          "discrepancies": 0
+        },
+        "scale_nonuniform": {
+          "kind": "affine",
+          "group": "affine",
+          "verdicts": {
+            "absolute_coordinates": "violated",
+            "distances": "violated",
+            "angles": "violated",
+            "length_ratios": "violated",
+            "collinearity": "preserved",
+            "parallelism": "preserved",
+            "affine_coordinates": "preserved"
+          },
+          "discrepancies": 0
+        },
+        "shear": {
+          "kind": "affine",
+          "group": "affine",
+          "verdicts": {
+            "absolute_coordinates": "violated",
+            "distances": "violated",
+            "angles": "violated",
+            "length_ratios": "violated",
+            "collinearity": "preserved",
+            "parallelism": "preserved",
+            "affine_coordinates": "preserved"
+          },
+          "discrepancies": 0
+        },
+        "affine_general": {
+          "kind": "affine",
+          "group": "affine",
+          "verdicts": {
+            "absolute_coordinates": "violated",
+            "distances": "violated",
+            "angles": "violated",
+            "length_ratios": "violated",
+            "collinearity": "preserved",
+            "parallelism": "preserved",
+            "affine_coordinates": "preserved"
+          },
+          "discrepancies": 0
+        }
+      },
+      "vacuous_rows": 0,
+      "violated_rows": 17,
+      "n_frames_checked": 7
+    },
+    "B": {
+      "families": {
+        "translation": {
+          "kind": "translation",
+          "group": "isometry",
+          "verdicts": {
+            "absolute_coordinates": "violated",
+            "distances": "preserved",
+            "angles": "preserved",
+            "length_ratios": "preserved",
+            "collinearity": "preserved",
+            "parallelism": "preserved",
+            "affine_coordinates": "preserved"
+          },
+          "discrepancies": 0
+        },
+        "rotation": {
+          "kind": "rotation",
+          "group": "isometry",
+          "verdicts": {
+            "absolute_coordinates": "violated",
+            "distances": "preserved",
+            "angles": "preserved",
+            "length_ratios": "preserved",
+            "collinearity": "preserved",
+            "parallelism": "preserved",
+            "affine_coordinates": "preserved"
+          },
+          "discrepancies": 0
+        },
+        "reflection": {
+          "kind": "reflection",
+          "group": "isometry",
+          "verdicts": {
+            "absolute_coordinates": "violated",
+            "distances": "preserved",
+            "angles": "preserved",
+            "length_ratios": "preserved",
+            "collinearity": "preserved",
+            "parallelism": "preserved",
+            "affine_coordinates": "preserved"
+          },
+          "discrepancies": 0
+        },
+        "similarity": {
+          "kind": "similarity",
+          "group": "similarity",
+          "verdicts": {
+            "absolute_coordinates": "violated",
+            "distances": "violated",
+            "angles": "preserved",
+            "length_ratios": "preserved",
+            "collinearity": "preserved",
+            "parallelism": "preserved",
+            "affine_coordinates": "preserved"
+          },
+          "discrepancies": 0
+        },
+        "scale_nonuniform": {
+          "kind": "affine",
+          "group": "affine",
+          "verdicts": {
+            "absolute_coordinates": "violated",
+            "distances": "violated",
+            "angles": "violated",
+            "length_ratios": "violated",
+            "collinearity": "preserved",
+            "parallelism": "preserved",
+            "affine_coordinates": "preserved"
+          },
+          "discrepancies": 0
+        },
+        "shear": {
+          "kind": "affine",
+          "group": "affine",
+          "verdicts": {
+            "absolute_coordinates": "violated",
+            "distances": "violated",
+            "angles": "violated",
+            "length_ratios": "violated",
+            "collinearity": "preserved",
+            "parallelism": "preserved",
+            "affine_coordinates": "preserved"
+          },
+          "discrepancies": 0
+        },
+        "affine_general": {
+          "kind": "affine",
+          "group": "affine",
+          "verdicts": {
+            "absolute_coordinates": "violated",
+            "distances": "violated",
+            "angles": "violated",
+            "length_ratios": "violated",
+            "collinearity": "preserved",
+            "parallelism": "preserved",
+            "affine_coordinates": "preserved"
+          },
+          "discrepancies": 0
+        }
+      },
+      "vacuous_rows": 0,
+      "violated_rows": 17,
+      "n_frames_checked": 7
+    },
+    "C": {
+      "families": {
+        "translation": {
+          "kind": "translation",
+          "group": "isometry",
+          "verdicts": {
+            "absolute_coordinates": "violated",
+            "distances": "preserved",
+            "angles": "preserved",
+            "length_ratios": "preserved",
+            "collinearity": "preserved",
+            "parallelism": "vacuous",
+            "affine_coordinates": "preserved"
+          },
+          "discrepancies": 0
+        },
+        "rotation": {
+          "kind": "rotation",
+          "group": "isometry",
+          "verdicts": {
+            "absolute_coordinates": "violated",
+            "distances": "preserved",
+            "angles": "preserved",
+            "length_ratios": "preserved",
+            "collinearity": "preserved",
+            "parallelism": "vacuous",
+            "affine_coordinates": "preserved"
+          },
+          "discrepancies": 0
+        },
+        "reflection": {
+          "kind": "reflection",
+          "group": "isometry",
+          "verdicts": {
+            "absolute_coordinates": "violated",
+            "distances": "preserved",
+            "angles": "preserved",
+            "length_ratios": "preserved",
+            "collinearity": "preserved",
+            "parallelism": "vacuous",
+            "affine_coordinates": "preserved"
+          },
+          "discrepancies": 0
+        },
+        "similarity": {
+          "kind": "similarity",
+          "group": "similarity",
+          "verdicts": {
+            "absolute_coordinates": "violated",
+            "distances": "violated",
+            "angles": "preserved",
+            "length_ratios": "preserved",
+            "collinearity": "preserved",
+            "parallelism": "vacuous",
+            "affine_coordinates": "preserved"
+          },
+          "discrepancies": 0
+        },
+        "scale_nonuniform": {
+          "kind": "affine",
+          "group": "affine",
+          "verdicts": {
+            "absolute_coordinates": "violated",
+            "distances": "violated",
+            "angles": "violated",
+            "length_ratios": "violated",
+            "collinearity": "preserved",
+            "parallelism": "vacuous",
+            "affine_coordinates": "preserved"
+          },
+          "discrepancies": 0
+        },
+        "shear": {
+          "kind": "affine",
+          "group": "affine",
+          "verdicts": {
+            "absolute_coordinates": "violated",
+            "distances": "violated",
+            "angles": "violated",
+            "length_ratios": "violated",
+            "collinearity": "preserved",
+            "parallelism": "vacuous",
+            "affine_coordinates": "preserved"
+          },
+          "discrepancies": 0
+        },
+        "affine_general": {
+          "kind": "affine",
+          "group": "affine",
+          "verdicts": {
+            "absolute_coordinates": "violated",
+            "distances": "violated",
+            "angles": "violated",
+            "length_ratios": "violated",
+            "collinearity": "preserved",
+            "parallelism": "vacuous",
+            "affine_coordinates": "preserved"
+          },
+          "discrepancies": 0
+        }
+      },
+      "vacuous_rows": 7,
+      "violated_rows": 17,
+      "n_frames_checked": 7
+    },
+    "D": {
+      "families": {
+        "translation": {
+          "kind": "translation",
+          "group": "isometry",
+          "verdicts": {
+            "absolute_coordinates": "violated",
+            "distances": "preserved",
+            "angles": "preserved",
+            "length_ratios": "preserved",
+            "collinearity": "preserved",
+            "parallelism": "vacuous",
+            "affine_coordinates": "preserved"
+          },
+          "discrepancies": 0
+        },
+        "rotation": {
+          "kind": "rotation",
+          "group": "isometry",
+          "verdicts": {
+            "absolute_coordinates": "violated",
+            "distances": "preserved",
+            "angles": "preserved",
+            "length_ratios": "preserved",
+            "collinearity": "preserved",
+            "parallelism": "vacuous",
+            "affine_coordinates": "preserved"
+          },
+          "discrepancies": 0
+        },
+        "reflection": {
+          "kind": "reflection",
+          "group": "isometry",
+          "verdicts": {
+            "absolute_coordinates": "violated",
+            "distances": "preserved",
+            "angles": "preserved",
+            "length_ratios": "preserved",
+            "collinearity": "preserved",
+            "parallelism": "vacuous",
+            "affine_coordinates": "preserved"
+          },
+          "discrepancies": 0
+        },
+        "similarity": {
+          "kind": "similarity",
+          "group": "similarity",
+          "verdicts": {
+            "absolute_coordinates": "violated",
+            "distances": "violated",
+            "angles": "preserved",
+            "length_ratios": "preserved",
+            "collinearity": "preserved",
+            "parallelism": "vacuous",
+            "affine_coordinates": "preserved"
+          },
+          "discrepancies": 0
+        },
+        "scale_nonuniform": {
+          "kind": "affine",
+          "group": "affine",
+          "verdicts": {
+            "absolute_coordinates": "violated",
+            "distances": "violated",
+            "angles": "violated",
+            "length_ratios": "violated",
+            "collinearity": "preserved",
+            "parallelism": "vacuous",
+            "affine_coordinates": "preserved"
+          },
+          "discrepancies": 0
+        },
+        "shear": {
+          "kind": "affine",
+          "group": "affine",
+          "verdicts": {
+            "absolute_coordinates": "violated",
+            "distances": "violated",
+            "angles": "violated",
+            "length_ratios": "violated",
+            "collinearity": "preserved",
+            "parallelism": "vacuous",
+            "affine_coordinates": "preserved"
+          },
+          "discrepancies": 0
+        },
+        "affine_general": {
+          "kind": "affine",
+          "group": "affine",
+          "verdicts": {
+            "absolute_coordinates": "violated",
+            "distances": "violated",
+            "angles": "violated",
+            "length_ratios": "violated",
+            "collinearity": "preserved",
+            "parallelism": "vacuous",
+            "affine_coordinates": "preserved"
+          },
+          "discrepancies": 0
+        }
+      },
+      "vacuous_rows": 7,
+      "violated_rows": 17,
+      "n_frames_checked": 7
+    },
+    "E": {
+      "families": {
+        "translation": {
+          "kind": "translation",
+          "group": "isometry",
+          "verdicts": {
+            "absolute_coordinates": "violated",
+            "distances": "preserved",
+            "angles": "preserved",
+            "length_ratios": "preserved",
+            "collinearity": "vacuous",
+            "parallelism": "vacuous",
+            "affine_coordinates": "preserved"
+          },
+          "discrepancies": 0
+        },
+        "rotation": {
+          "kind": "rotation",
+          "group": "isometry",
+          "verdicts": {
+            "absolute_coordinates": "violated",
+            "distances": "preserved",
+            "angles": "preserved",
+            "length_ratios": "preserved",
+            "collinearity": "vacuous",
+            "parallelism": "vacuous",
+            "affine_coordinates": "preserved"
+          },
+          "discrepancies": 0
+        },
+        "reflection": {
+          "kind": "reflection",
+          "group": "isometry",
+          "verdicts": {
+            "absolute_coordinates": "violated",
+            "distances": "preserved",
+            "angles": "preserved",
+            "length_ratios": "preserved",
+            "collinearity": "vacuous",
+            "parallelism": "vacuous",
+            "affine_coordinates": "preserved"
+          },
+          "discrepancies": 0
+        },
+        "similarity": {
+          "kind": "similarity",
+          "group": "similarity",
+          "verdicts": {
+            "absolute_coordinates": "violated",
+            "distances": "violated",
+            "angles": "preserved",
+            "length_ratios": "preserved",
+            "collinearity": "vacuous",
+            "parallelism": "vacuous",
+            "affine_coordinates": "preserved"
+          },
+          "discrepancies": 0
+        },
+        "scale_nonuniform": {
+          "kind": "affine",
+          "group": "affine",
+          "verdicts": {
+            "absolute_coordinates": "violated",
+            "distances": "violated",
+            "angles": "violated",
+            "length_ratios": "violated",
+            "collinearity": "vacuous",
+            "parallelism": "vacuous",
+            "affine_coordinates": "preserved"
+          },
+          "discrepancies": 0
+        },
+        "shear": {
+          "kind": "affine",
+          "group": "affine",
+          "verdicts": {
+            "absolute_coordinates": "violated",
+            "distances": "violated",
+            "angles": "violated",
+            "length_ratios": "violated",
+            "collinearity": "vacuous",
+            "parallelism": "vacuous",
+            "affine_coordinates": "preserved"
+          },
+          "discrepancies": 0
+        },
+        "affine_general": {
+          "kind": "affine",
+          "group": "affine",
+          "verdicts": {
+            "absolute_coordinates": "violated",
+            "distances": "violated",
+            "angles": "violated",
+            "length_ratios": "violated",
+            "collinearity": "vacuous",
+            "parallelism": "vacuous",
+            "affine_coordinates": "preserved"
+          },
+          "discrepancies": 0
+        }
+      },
+      "vacuous_rows": 14,
+      "violated_rows": 17,
+      "n_frames_checked": 7
+    }
+  },
+  "discrepancies": [],
+  "verdict": {
+    "theory_measurement_discrepancies": 0,
+    "all_relations_non_vacuous_where_designed": true
+  }
+}

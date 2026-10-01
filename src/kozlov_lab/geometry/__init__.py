@@ -10,7 +10,6 @@ from __future__ import annotations
 from .affine_frame import (
     AffineCoordinates,
     AffineFrame,
-    FrameCode,
     InvarianceDelta,
     affine_coordinates,
     affine_coordinates_batch,
@@ -26,18 +25,25 @@ from .affine_frame import (
     triangle_flatness,
 )
 from .invariants import (
+    FAMILY_LABELS_ZH,
     PROPERTY_KEYS,
+    THEORY_EXPECTATION,
+    Discrepancy,
     InvariantEntry,
     InvariantReport,
+    TheoryCheck,
+    TheoryRow,
     absolute_coordinate_change,
     affine_coordinate_change,
     angle_change,
+    check_against_theory,
     collinearity_relation_change,
     distance_change,
     invariant_report,
     length_ratio_change,
     parallelism_relation_change,
     report_for_transform,
+    theory_verdict,
 )
 from .points import Point2D, PointSet2D, as_point_array, as_point_matrix
 from .transforms import IDENTITY, AffineTransform, apply_affine, rotation_matrix
@@ -57,7 +63,6 @@ __all__ = [
     "AffineFrame",
     "AffineCoordinates",
     "InvarianceDelta",
-    "FrameCode",
     "affine_coordinates",
     "affine_coordinates_batch",
     "reconstruct_point",
@@ -72,8 +77,15 @@ __all__ = [
     "find_non_collinear_triple",
     # invariants
     "PROPERTY_KEYS",
+    "THEORY_EXPECTATION",
+    "FAMILY_LABELS_ZH",
+    "theory_verdict",
+    "check_against_theory",
     "InvariantEntry",
     "InvariantReport",
+    "TheoryRow",
+    "TheoryCheck",
+    "Discrepancy",
     "invariant_report",
     "report_for_transform",
     "absolute_coordinate_change",
