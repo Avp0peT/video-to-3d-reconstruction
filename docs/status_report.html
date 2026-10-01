@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kozlov Visual Perception Lab — 阶段报告（Phase 0–2）</title>
+<style>
+  :root {
+    --bg: #f7f8fa;
+    --panel: #ffffff;
+    --ink: #1c1f24;
+    --ink-soft: #545b66;
+    --ink-faint: #8a929e;
+    --line: #e3e6ea;
+    --accent: #1f6feb;
+    --ok-bg: #e8f5ec; --ok-ink: #14663a;
+    --bad-bg: #fdeceb; --bad-ink: #a8271c;
+    --warn-bg: #fef6e4; --warn-ink: #8a5a00;
+    --neutral-bg: #eef0f3; --neutral-ink: #5a626d;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font: 15px/1.65 -apple-system, "Segoe UI", "Microsoft YaHei", "PingFang SC", sans-serif;
+  }
+  .wrap { max-width: 1040px; margin: 0 auto; padding: 40px 24px 72px; }
+  header { border-bottom: 2px solid var(--line); padding-bottom: 20px; margin-bottom: 28px; }
+  h1 { font-size: 26px; margin: 0 0 6px; letter-spacing: -0.2px; }
+  .sub { color: var(--ink-soft); font-size: 14px; }
+  .badges { margin-top: 14px; display: flex; flex-wrap: wrap; gap: 8px; }
+  .badge {
+    display: inline-block; padding: 4px 10px; border-radius: 999px;
+    font-size: 12.5px; font-weight: 600; letter-spacing: 0.2px;
+  }
+  .b-ok { background: var(--ok-bg); color: var(--ok-ink); }
+  .b-bad { background: var(--bad-bg); color: var(--bad-ink); }
+  .b-warn { background: var(--warn-bg); color: var(--warn-ink); }
+  .b-neutral { background: var(--neutral-bg); color: var(--neutral-ink); }
+  h2 { font-size: 18px; margin: 36px 0 12px; padding-bottom: 6px; border-bottom: 1px solid var(--line); }
+  h3 { font-size: 15px; margin: 22px 0 8px; color: var(--ink-soft); }
+  p { margin: 10px 0; }
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px; margin: 16px 0; }
+  .card {
+    background: var(--panel); border: 1px solid var(--line); border-radius: 10px;
+    padding: 14px 16px;
+  }
+  .card .k { font-size: 12.5px; color: var(--ink-faint); }
+  .card .val { font-size: 22px; font-weight: 650; margin: 4px 0 2px; letter-spacing: -0.4px;
+             font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; }
+  .card .n { font-size: 12px; color: var(--ink-soft); }
+  table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 13.5px;
+          background: var(--panel); border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+  th, td { padding: 8px 11px; text-align: left; border-bottom: 1px solid var(--line); }
+  th { background: #f2f4f7; font-weight: 600; font-size: 12.5px; color: var(--ink-soft); }
+  tr:last-child td { border-bottom: none; }
+  td.num, th.num { text-align: right; font-family: ui-monospace, Consolas, monospace; font-size: 13px; }
+  /* table verdict cells (distinct names: ``.v`` is used for card values) */
+  .cell-p { color: var(--ok-ink); background: var(--ok-bg); font-weight: 700; text-align: center; }
+  .cell-v { color: var(--bad-ink); background: var(--bad-bg); font-weight: 700; text-align: center; }
+  .cell-0 { color: var(--neutral-ink); background: var(--neutral-bg); text-align: center; }
+  code { background: #f2f4f7; padding: 1px 5px; border-radius: 4px;
+         font: 13px ui-monospace, Consolas, monospace; }
+  pre { background: #f5f7f9; border: 1px solid var(--line); border-left: 3px solid var(--accent);
+        border-radius: 6px; padding: 12px 14px; overflow-x: auto;
+        font: 12.5px/1.55 ui-monospace, Consolas, monospace; }
+  .note { background: var(--warn-bg); border-left: 3px solid #d99b00; padding: 12px 14px;
+          border-radius: 6px; margin: 14px 0; font-size: 14px; }
+  .note strong { color: var(--warn-ink); }
+  .ok-note { background: var(--ok-bg); border-left: 3px solid #2f9e5f; }
+  .ok-note strong { color: var(--ok-ink); }
+  ul { padding-left: 22px; }
+  li { margin: 5px 0; }
+  .foot { margin-top: 44px; padding-top: 16px; border-top: 1px solid var(--line);
+          color: var(--ink-faint); font-size: 12.5px; }
+  .mono { font-family: ui-monospace, Consolas, monospace; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>Kozlov Visual Perception Lab — 阶段报告</h1>
+  <div class="sub">
+    《视觉感知的数学理论》交互式实验与识别系统 ｜ Phase 0–2 完成 ｜ 报告日期 2026-10-01 ｜ 包版本 0.2.0
+  </div>
+  <div class="badges">
+    <span class="badge b-ok">Phase 2 Gate 通过</span>
+    <span class="badge b-ok">219 tests passed</span>
+    <span class="badge b-ok">Experiment A 通过</span>
+    <span class="badge b-ok">M6 不变量表通过</span>
+    <span class="badge b-warn">Phase 3–6 阻塞（未决问题 Q1–Q5）</span>
+    <span class="badge b-neutral">Web UI 未开始（Phase 7）</span>
+  </div>
+</header>
+
+<h2>1. 核心结果：内部仿射坐标的仿射不变性</h2>
+
+<p>取图像三个不共线点 <span class="mono">A, B, C</span>，则任意点 <span class="mono">P</span> 有唯一分解
+<code>P − A = α(B − A) + β(C − A)</code>。对<b>任意</b>可逆仿射变换 <code>T(x) = Mx + t</code>，
+<code>(α, β)</code> 不变（标架随图像一起变换）。这就是可以充当图像编码的不变量。</p>
+
+<div class="cards">
+  <div class="card">
+    <div class="k">max |Δα| （1000 次随机仿射）</div>
+    <div class="val" style="color:#14663a">2.243e-14</div>
+    <div class="n">要求 &lt; 1e-9 ｜ 余量 4.5e4 倍</div>
+  </div>
+  <div class="card">
+    <div class="k">max |Δβ|</div>
+    <div class="val" style="color:#14663a">2.109e-14</div>
+    <div class="n">理论界 1.655e-12 ｜ 余量 74 倍</div>
+  </div>
+  <div class="card">
+    <div class="k">中位 |Δα|</div>
+    <div class="val">6.661e-16</div>
+    <div class="n">已达 float64 机器精度</div>
+  </div>
+  <div class="card">
+    <div class="k">运行时间</div>
+    <div class="val">0.12 s</div>
+    <div class="n">12 点图像 × 1000 次变换</div>
+  </div>
+</div>
+
+<div class="note ok-note">
+  <strong>为什么这个数字可信</strong>：它同时满足三条独立检查 ——
+  ① 1000 次随机变换的<b>最大值</b>（不是单次样本）；
+  ② 与理论界 <code>cond·ε·64</code> 逐行比较（不是"恰好低于阈值"）；
+  ③ <b>可证伪性</b>：同样的实验在病态标架上<b>必须</b>超过 1e-9，实测 1.35e-8 ——
+  证明这个阈值具有区分力，而不是自证成立。
+</div>
+
+<h2>2. 不变量表：实测版与 README 理论表逐格一致</h2>
+
+<p>README 要求「每一项必须能通过实际数值实验验证，而不仅仅展示文字」。
+下表是对 <span class="mono">square_3x</span>（12 点）的实测结果。
+<span class="cell-p">P</span> = 保持（且原本存在见证） ｜
+<span class="cell-v">V</span> = 被破坏 ｜
+<span class="cell-0">–</span> = 无见证（结论不含信息）</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>变换族</th><th>类别</th>
+      <th class="num">绝对坐标</th><th class="num">距离</th><th class="num">角度</th>
+      <th class="num">长度比例</th><th class="num">共线性</th><th class="num">平行性</th><th class="num">仿射坐标</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td>identity</td><td>identity</td><td class="cell-p">P</td><td class="cell-p">P</td><td class="cell-p">P</td><td class="cell-p">P</td><td class="cell-p">P</td><td class="cell-p">P</td><td class="cell-p">P</td></tr>
+    <tr><td>translation</td><td>translation</td><td class="cell-v">V</td><td class="cell-p">P</td><td class="cell-p">P</td><td class="cell-p">P</td><td class="cell-p">P</td><td class="cell-p">P</td><td class="cell-p">P</td></tr>
+    <tr><td>rotation</td><td>rotation</td><td class="cell-v">V</td><td class="cell-p">P</td><td class="cell-p">P</td><td class="cell-p">P</td><td class="cell-p">P</td><td class="cell-p">P</td><td class="cell-p">P</td></tr>
+    <tr><td>reflection</td><td>reflection</td><td class="cell-v">V</td><td class="cell-p">P</td><td class="cell-p">P</td><td class="cell-p">P</td><td class="cell-p">P</td><td class="cell-p">P</td><td class="cell-p">P</td></tr>
+    <tr><td>similarity (s=2.5)</td><td>similarity</td><td class="cell-v">V</td><td class="cell-v">V</td><td class="cell-p">P</td><td class="cell-p">P</td><td class="cell-p">P</td><td class="cell-p">P</td><td class="cell-p">P</td></tr>
+    <tr><td>scale (2, 0.5)</td><td>affine</td><td class="cell-v">V</td><td class="cell-v">V</td><td class="cell-v">V</td><td class="cell-v">V</td><td class="cell-p">P</td><td class="cell-p">P</td><td class="cell-p">P</td></tr>
+    <tr><td>shear</td><td>affine</td><td class="cell-v">V</td><td class="cell-v">V</td><td class="cell-v">V</td><td class="cell-v">V</td><td class="cell-p">P</td><td class="cell-p">P</td><td class="cell-p">P</td></tr>
+    <tr><td>affine general</td><td>affine</td><td class="cell-v">V</td><td class="cell-v">V</td><td class="cell-v">V</td><td class="cell-v">V</td><td class="cell-p">P</td><td class="cell-p">P</td><td class="cell-p">P</td></tr>
+    <tr style="background:#fcfcfd">
+      <td><b>UNRELATED_CONTROL</b></td><td>unrelated</td>
+      <td class="cell-v">V</td><td class="cell-v">V</td><td class="cell-v">V</td><td class="cell-v">V</td>
+      <td class="cell-v">V</td><td class="cell-v">V</td><td class="cell-v">V</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="note">
+  <strong>控制组是这张表的可信度来源。</strong>
+  前 8 行的「共线性 / 平行性 / 仿射坐标」永远是 P。若测量代码有缺陷
+  （例如关系集合恒为空、或逐点比较用了排序后的坐标），这三行仍会全 P 且看起来完全正常。
+  把图像与<b>同基数的随机点集</b>比较时，7 项<b>全部</b>被破坏 ——
+  这一行才是让上面的 P 具有信息量的东西。
+</div>
+
+<h2>3. 数值边界（本阶段最有价值的部分）</h2>
+
+<p>三类<b>互相独立</b>的误差来源。把三者混在一起是常见错误：
+一个「误差 1e-8」的结果，在 E1 下是病态标架的必然结果，
+在 E2 下是尺度选择问题，在 E3 下根本不是精度问题而是输入已被摧毁。</p>
+
+<table>
+  <thead><tr><th>#</th><th>来源</th><th>界</th><th>是否被 accuracy_bound 覆盖</th></tr></thead>
+  <tbody>
+    <tr><td>E1</td><td>标架条件数</td><td class="mono">cond(M)·ε·C</td><td style="color:#14663a">是</td></tr>
+    <tr><td>E2</td><td>坐标量级 / 平移幅度</td><td class="mono">ε·|t| / |B−A|</td><td style="color:#a8271c"><b>否</b></td></tr>
+    <tr><td>E3</td><td>图像结构摧毁（下溢/塌缩）</td><td>无（结构已丢失）</td><td style="color:#8a5a00">否，但库会抛错</td></tr>
+  </tbody>
+</table>
+
+<h3>E1：1e-9 只在良态标架上成立</h3>
+<table>
+  <thead><tr><th class="num">flatness</th><th class="num">cond([B−A, C−A])</th><th class="num">实测 max|Δ|</th><th class="num">报告界</th><th class="num">满足 1e-9</th></tr></thead>
+  <tbody>
+    <tr><td class="num">1e-2</td><td class="num">2.0e+2</td><td class="num">1.710e-14</td><td class="num">2.842e-12</td><td class="cell-p">是</td></tr>
+    <tr><td class="num">1e-4</td><td class="num">2.0e+4</td><td class="num">1.567e-12</td><td class="num">2.842e-10</td><td class="cell-p">是</td></tr>
+    <tr><td class="num">1e-6</td><td class="num">2.0e+6</td><td class="num">1.738e-10</td><td class="num">2.842e-08</td><td class="cell-p">是</td></tr>
+    <tr><td class="num">1e-8</td><td class="num">2.0e+8</td><td class="num">1.351e-08</td><td class="num">2.842e-06</td><td class="cell-v">否</td></tr>
+    <tr><td class="num">5e-9</td><td class="num">4.0e+8</td><td class="num">1.391e-08</td><td class="num">5.684e-06</td><td class="cell-v">否</td></tr>
+  </tbody>
+</table>
+<p>最后两行全部仍在<b>各自的报告界内</b>：库从不宣称做不到的事。
+<code>MAX_CONDITION_NUMBER = 1e6</code> 不是随手取的常数，它正是
+「1e-9 预算被条件数耗尽的点」。</p>
+
+<h3>E2：平移幅度是独立失效模式</h3>
+<p>平移在线性部分是恒等映射，直觉上不该影响内部坐标。数值上它影响很大，
+因为坐标量级决定其可分辨精度，而 <code>α</code> 要除以标架尺寸：</p>
+<pre>max|Δα| ≈ ulp(max|coordinate|) / |B − A|  =  ε·|t| / |B − A|</pre>
+<table>
+  <thead><tr><th class="num">|t|</th><th class="num">预测</th><th class="num">实测</th><th class="num">实测/预测</th></tr></thead>
+  <tbody>
+    <tr><td class="num">1</td><td class="num">1.110e-16</td><td class="num">1.110e-16</td><td class="num">1.00</td></tr>
+    <tr><td class="num">1e3</td><td class="num">1.110e-13</td><td class="num">6.151e-14</td><td class="num">0.55</td></tr>
+    <tr><td class="num">1e6</td><td class="num">1.110e-10</td><td class="num">6.306e-11</td><td class="num">0.57</td></tr>
+  </tbody>
+</table>
+<p>信息在<b>输入阶段</b>（坐标被舍入）就丢了，求解器无法恢复，故条件数界看不到它。
+尺度 × 平移共 15 组配置中，实测/预测最大比值 ≈ 2.2，
+另有 <b>3 组</b>误差塌到 1e-16（小型点集上舍入恰好完全抵消）——
+所以这类误差必须用<b>多配置最大值</b>报告，引用单次样本会得到假的好结果。</p>
+
+<h2>4. 六个「否定结果」——本轮最有价值的发现</h2>
+
+<table>
+  <thead><tr><th class="num">#</th><th>发现</th><th>影响 / 修法</th><th>谁发现的</th></tr></thead>
+  <tbody>
+    <tr><td class="num">1</td><td>1e-9 只在 flatness ≳ 1e-6 时成立</td><td>库改为报告<b>可达精度界</b>，不硬编码阈值</td><td>Experiment A</td></tr>
+    <tr><td class="num">2</td><td>平移幅度导致的独立失效</td><td>跨量级比较时容差须额外加 <code>ε|t|/|B−A|</code></td><td>Experiment A</td></tr>
+    <tr><td class="num">3</td><td><b>顶点正弦不是置换不变量</b>，不能定义「共线」关系</td><td>改用置换不变的 flatness；否则编码依赖索引顺序</td><td>Hypothesis</td></tr>
+    <tr><td class="num">4</td><td>用标量缩放控制条件数<b>完全无效</b>（cond(cA)=cond(A)）</td><td>改为钳制奇异值；实测由 55.4 → ≤50</td><td>测试</td></tr>
+    <tr><td class="num">5</td><td>arccos 在近平行处导数发散，把纯平移判成「角度不保持」</td><td>改用 atan2(|u×v|, u·v)</td><td>Hypothesis</td></tr>
+    <tr><td class="num">6</td><td>存在舍入恰好抵消的配置（15 组中 3 组）</td><td>报告必须用多配置最大值</td><td>Experiment A</td></tr>
+  </tbody>
+</table>
+
+<h3>第 3 项的完整反例</h3>
+<pre>a = (0, 0),  b = (3.47370303e-152, 0),  c = (0, 1)
+
+|sin(∠BAC)| = 1.0                      ← 在顶点 A
+|sin(∠BCA)| = 3.5e-152                 ← 在顶点 C
+
+同一组点，用 |sin(∠BAC)| &gt; 1e-9 判「是否共线」→ 换名后结论相反。</pre>
+<p>修法：用 <code>flatness = 2·Area / max_side² = h_min / max_side</code>（置换不变）。
+注意<b>两者都保留</b>：顶点正弦用于诊断「这个标架」的条件数（其含义本就依赖顶点），
+flatness 用于定义「关系」。这不是「哪个更好」的问题。</p>
+
+<h2>5. 交付清单</h2>
+
+<table>
+  <thead><tr><th class="num">#</th><th>README 交付项</th><th>状态</th><th>位置</th></tr></thead>
+  <tbody>
+    <tr><td class="num">1</td><td>可运行的交互式 Web 应用</td><td><span class="badge b-neutral">未做（Phase 7）</span></td><td>—</td></tr>
+    <tr><td class="num">2</td><td>独立 Python 数学核心库</td><td><span class="badge b-ok">完成</span></td><td class="mono">src/kozlov_lab/</td></tr>
+    <tr><td class="num">3</td><td>单元测试 + 数学性质测试</td><td><span class="badge b-ok">219 passed</span></td><td class="mono">tests/</td></tr>
+    <tr><td class="num">4</td><td>教材示例数据</td><td><span class="badge b-ok">9 个 JSON</span></td><td class="mono">examples/</td></tr>
+    <tr><td class="num">5</td><td>中文/俄文术语解释</td><td><span class="badge b-ok">完成</span></td><td class="mono">docs/terminology_ru_zh.md</td></tr>
+    <tr><td class="num">6</td><td>项目 README</td><td><span class="badge b-ok">完成</span></td><td class="mono">README.md</td></tr>
+    <tr><td class="num">7</td><td>数学原理说明文档</td><td><span class="badge b-ok">完成</span></td><td class="mono">docs/theory/pipeline.md</td></tr>
+    <tr><td class="num">8</td><td>实验结果文档</td><td><span class="badge b-ok">A / M6 完成</span></td><td class="mono">docs/experiments/</td></tr>
+    <tr><td class="num">9</td><td>课堂展示 Demo 流程</td><td><span class="badge b-ok">完成</span></td><td class="mono">docs/demo_script.md</td></tr>
+    <tr><td class="num">10</td><td>最终项目报告</td><td><span class="badge b-warn">阶段报告</span></td><td class="mono">docs/final_report.md</td></tr>
+  </tbody>
+</table>
+
+<h2>6. 为什么 Phase 3 停在这里</h2>
+<p>README 第 24 节设了两道 Gate，本项目另外发现<b>第二层</b>阻塞。
+两层必须分开看：</p>
+<table>
+  <thead><tr><th>层</th><th>内容</th><th>状态</th></tr></thead>
+  <tbody>
+    <tr><td>工程阻塞</td><td>Phase 2 性质测试（Gate）</td><td style="color:#14663a"><b>已解除</b>（Experiment A 通过）</td></tr>
+    <tr><td>数学阻塞</td><td>未决问题 Q1：教材正式编码定义未由一手资料确认</td><td style="color:#a8271c"><b>未解除</b></td></tr>
+  </tbody>
+</table>
+<p>只解除第一层就动手实现编码，等于「凭猜测实现教材算法」——
+README 第 23、26 节明确禁止。演示脚本因此<b>停在诚实的位置</b>：
+不提供占位实现，也不把哈希说成「图像代码」。</p>
+
+<h2>7. 建议的下一步</h2>
+<ol>
+  <li><b>Phase 7 的 M1/M2/M3/M6 四个 Streamlit 页面</b> —— 数学层已稳定且 100% 测试覆盖，
+      答辩价值最高，且<b>不依赖任何未决问题</b>。</li>
+  <li><b>把不变量表扩展到 4–5 个不同形态的图形</b>（含无共线三元组的正多边形），
+      补上当前「只在一个图形上验证」的局限。</li>
+  <li><b>Phase 3 的「教学型编码器」</b> —— README 第 7 节已给足形式化描述，
+      但需先确认是否接受「非教材正式定义」这一折中（界面须标注）。</li>
+</ol>
+
+<div class="foot">
+  原始产物：<span class="mono">results/EXP-A_2026-10-01/</span>、<span class="mono">results/M6-INVARIANT-TABLE_2026-10-01/</span>
+  （含 <span class="mono">provenance.json</span>：git commit、包版本、Python/numpy 版本、全部容差常量、随机种子）<br>
+  复现：<span class="mono">python experiments/exp_a_affine_invariance.py</span> ｜
+  <span class="mono">python experiments/exp_invariant_table.py</span> ｜
+  <span class="mono">python experiments/mvp_walkthrough.py</span> ｜
+  <span class="mono">pytest -q -m gate -s</span><br>
+  HEAD commit <span class="mono">34f09c0</span> ｜ 工作树干净
+</div>
+
+</div>
+</body>
+</html>
