@@ -1,7 +1,7 @@
 {
-  "timestamp_utc": "2026-10-01T06:27:42+00:00",
+  "timestamp_utc": "2026-10-01T07:08:19+00:00",
   "package_version": "0.2.0",
-  "git_commit": "30fcc785f41cbe7cb6522eaae9bcde3cb7960912",
+  "git_commit": "4a4a7f2931ccfffed106d953bc93a80d27121de1",
   "git_dirty": true,
   "git_branch": "master",
   "python_version": "3.13.14",
@@ -20,16 +20,12 @@
     "TEACHING_CODE_DECIMALS": 9
   },
   "experiment_config": {
-    "definition": "T_A = {S_mnu / S_ksp} over all pairs of triples, denominators non-zero",
-    "shortened_rule": "triples differing in exactly one index (four-point groups)",
-    "datasets": [
-      "A",
-      "B",
-      "C",
-      "D",
-      "E"
-    ],
-    "image_for_scale": "square_3x",
-    "note": "implementation lives in experiments/ because Phase 3 is gated on G3.1"
+    "definition": "T_A = {S_mnu / S_ksp}; triples unordered and distinct; denominators non-degenerate",
+    "source": "Kozlov 2009, Fundam. Prikl. Mat. 15:5, 95-110 (primary full text)",
+    "layers_checked": [
+      "code_definable",
+      "theorem_applicable",
+      "numerically_well_conditioned"
+    ]
   }
 }

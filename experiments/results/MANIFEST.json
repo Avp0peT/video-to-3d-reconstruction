@@ -1,8 +1,8 @@
 {
   "provenance": {
-    "timestamp_utc": "2026-10-01T06:27:43+00:00",
+    "timestamp_utc": "2026-10-01T07:08:20+00:00",
     "package_version": "0.2.0",
-    "git_commit": "30fcc785f41cbe7cb6522eaae9bcde3cb7960912",
+    "git_commit": "4a4a7f2931ccfffed106d953bc93a80d27121de1",
     "git_dirty": true,
     "git_branch": "master",
     "python_version": "3.13.14",
@@ -28,7 +28,7 @@
     "phase2_gate.json": {
       "bytes": 3237,
       "lines": 102,
-      "sha256": "4167d0bebad618d8a9518a7659f088c4623b3d7f403fd3914a81d93a4cc85f8a"
+      "sha256": "2ece6a2a967bb70893351678d3dbc958eee8197b699b8a39ef2729ab82807431"
     },
     "invariant_matrix.csv": {
       "bytes": 37751,
@@ -46,9 +46,9 @@
       "sha256": "5c7a5035e20bd2b7bbf03b8ca0071404f03e696359ced5f7d0b63c87f4623c69"
     },
     "official_code_definition.json": {
-      "bytes": 45305,
-      "lines": 1480,
-      "sha256": "347ed6ff9a16637baa9e41595bfc501685c00c061e51a11294370b0ace69d3f3"
+      "bytes": 7380,
+      "lines": 233,
+      "sha256": "39c914aedfd173e14ce09d4b1df84e22a70cb46932a37693cca44efac5fc4e00"
     }
   },
   "required": [

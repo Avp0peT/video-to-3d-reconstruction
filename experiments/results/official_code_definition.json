@@ -1,9 +1,9 @@
 {
   "name": "official_code_definition",
   "provenance": {
-    "timestamp_utc": "2026-10-01T06:27:41+00:00",
+    "timestamp_utc": "2026-10-01T07:08:18+00:00",
     "package_version": "0.2.0",
-    "git_commit": "30fcc785f41cbe7cb6522eaae9bcde3cb7960912",
+    "git_commit": "4a4a7f2931ccfffed106d953bc93a80d27121de1",
     "git_dirty": true,
     "git_branch": "master",
     "python_version": "3.13.14",
@@ -22,59 +22,50 @@
       "TEACHING_CODE_DECIMALS": 9
     },
     "experiment_config": {
-      "definition": "T_A = {S_mnu / S_ksp} over all pairs of triples, denominators non-zero",
-      "shortened_rule": "triples differing in exactly one index (four-point groups)",
-      "datasets": [
-        "A",
-        "B",
-        "C",
-        "D",
-        "E"
-      ],
-      "image_for_scale": "square_3x",
-      "note": "implementation lives in experiments/ because Phase 3 is gated on G3.1"
+      "definition": "T_A = {S_mnu / S_ksp}; triples unordered and distinct; denominators non-degenerate",
+      "source": "Kozlov 2009, Fundam. Prikl. Mat. 15:5, 95-110 (primary full text)",
+      "layers_checked": [
+        "code_definable",
+        "theorem_applicable",
+        "numerically_well_conditioned"
+      ]
     }
   },
   "experiment": "official_code_definition",
-  "title": "verification of the Q1 formal definition (not a Phase 3 implementation)",
+  "title": "Q1 gate evidence: worked examples and dataset-level record",
   "spec": "docs/specs/official_image_code.md",
   "example_1": {
     "points": [
       [
-        0.0,
-        0.0
+        0,
+        0
       ],
       [
-        2.0,
-        0.0
+        2,
+        0
       ],
       [
-        0.0,
-        2.0
+        0,
+        2
       ],
       [
-        1.0,
-        1.0
+        1,
+        1
       ]
     ],
-    "areas": {
-      "(0, 1, 2)": 2.0,
-      "(0, 1, 3)": 1.0,
-      "(0, 2, 3)": 1.0,
-      "(1, 2, 3)": 0.0
+    "n_entries": 9,
+    "hand_expected_value_multiset": {
+      "0": 3,
+      "1/2": 2,
+      "1": 2,
+      "2": 2
     },
-    "hand_expected_T": [
-      0.0,
-      0.5,
-      1.0,
-      2.0
-    ],
-    "computed_T": [
-      0.0,
-      0.5,
-      1.0,
-      2.0
-    ],
+    "computed_value_multiset": {
+      "0": 3,
+      "1": 2,
+      "2": 2,
+      "1/2": 2
+    },
     "degenerate_triples": [
       [
         1,
@@ -82,1399 +73,161 @@
         3
       ]
     ],
-    "det_L": 6.0,
-    "area_scale_factor": 6.0,
-    "max_relative_code_difference_after_transform": 0.0,
-    "shortened_code_T": [
-      0.0,
-      0.5,
-      1.0,
-      2.0
-    ]
+    "det_M": 6,
+    "entries_identical_after_transform": true,
+    "domain": "general_position"
   },
   "example_2": {
     "points": [
       [
-        0.0,
-        0.0
+        0,
+        0
       ],
       [
-        3.0,
-        0.0
+        3,
+        0
       ],
       [
-        0.0,
-        4.0
+        0,
+        4
       ],
       [
-        1.0,
-        1.0
+        1,
+        1
       ],
       [
-        5.0,
-        2.0
+        5,
+        2
       ]
     ],
-    "n_triples": 10,
-    "areas": {
-      "(0, 1, 2)": 6.0,
-      "(0, 1, 3)": 1.5,
-      "(0, 1, 4)": 3.0,
-      "(0, 2, 3)": 2.0,
-      "(0, 2, 4)": 10.0,
-      "(0, 3, 4)": 1.5,
-      "(1, 2, 3)": 2.5,
-      "(1, 2, 4)": 7.0,
-      "(1, 3, 4)": 3.0,
-      "(2, 3, 4)": 6.5
-    },
-    "T_size": 51,
-    "T": [
-      0.15,
-      0.2,
-      0.21428571428571427,
-      0.23076923076923078,
-      0.25,
-      0.2857142857142857,
-      0.3,
-      0.3076923076923077,
-      0.3333333333333333,
-      0.35714285714285715,
-      0.38461538461538464,
-      0.4166666666666667,
-      0.42857142857142855,
-      0.46153846153846156,
-      0.5,
-      0.6,
-      0.65,
-      0.6666666666666666,
-      0.7,
-      0.75,
-      0.8,
-      0.8333333333333334,
-      0.8571428571428571,
-      0.9230769230769231,
-      0.9285714285714286,
-      1.0,
-      1.0769230769230769,
-      1.0833333333333333,
-      1.1666666666666667,
-      1.2,
-      1.25,
-      1.3333333333333333,
-      1.4285714285714286,
-      1.5,
-      1.5384615384615385,
-      1.6666666666666667,
-      2.0,
-      2.1666666666666665,
-      2.3333333333333335,
-      2.4,
-      2.6,
-      2.8,
-      3.0,
-      3.25,
-      3.3333333333333335,
-      3.5,
-      4.0,
-      4.333333333333333,
-      4.666666666666667,
-      5.0,
-      6.666666666666667
-    ],
-    "shortened_T_size": 43,
-    "shortened_is_subset": true,
+    "n_entries": 90,
     "families": {
       "translation": {
-        "det": 1.0,
-        "max_relative_difference": 0.0,
-        "invariant_within_1e-12": true
+        "entries_identical": true,
+        "geometry_route_found_a_map": true,
+        "det": 1
       },
       "similarity": {
-        "det": 6.250000000000001,
-        "max_relative_difference": 6.661338147750939e-17,
-        "invariant_within_1e-12": true
+        "entries_identical": true,
+        "geometry_route_found_a_map": true,
+        "det": 9
       },
       "shear": {
-        "det": 1.1600000000000001,
-        "max_relative_difference": 1.3322676295501878e-16,
-        "invariant_within_1e-12": true
+        "entries_identical": true,
+        "geometry_route_found_a_map": true,
+        "det": 2
       },
-      "affine_general": {
-        "det": 1.26,
-        "max_relative_difference": 5.329070518200751e-16,
-        "invariant_within_1e-12": true
+      "generic": {
+        "entries_identical": true,
+        "geometry_route_found_a_map": true,
+        "det": -1
       }
     },
-    "relabelling_invariant": true
+    "relabelling": {
+      "permutation": [
+        4,
+        2,
+        0,
+        3,
+        1
+      ],
+      "code_route_equivalent": true,
+      "geometry_route_equivalent": true,
+      "routes_agree": true
+    }
   },
   "dataset_rows": [
     {
       "dataset": "A",
       "n_points": 9,
-      "family": "translation",
-      "kind": "translation",
-      "det": 1.0,
-      "T_size": 4925,
-      "shortened_T_size": 1157,
-      "n_near_zero_values": 1,
-      "code_scale": 782.8571428571441,
-      "max_abs_difference": 3.893774191965349e-12,
-      "max_difference_over_scale": 4.973799150320693e-15,
-      "shortened_max_difference_over_scale": 1.0484837930118562e-14,
-      "invariant_full": true,
-      "invariant_shortened": true
-    },
-    {
-      "dataset": "A",
-      "n_points": 9,
-      "family": "rotation",
-      "kind": "rotation",
-      "det": 1.0,
-      "T_size": 4925,
-      "shortened_T_size": 1157,
-      "n_near_zero_values": 1,
-      "code_scale": 782.8571428571431,
-      "max_abs_difference": 1.5347723092418164e-12,
-      "max_difference_over_scale": 1.96047557749867e-15,
-      "shortened_max_difference_over_scale": 3.4660621256590288e-15,
-      "invariant_full": true,
-      "invariant_shortened": true
-    },
-    {
-      "dataset": "A",
-      "n_points": 9,
-      "family": "reflection",
-      "kind": "reflection",
-      "det": -1.0,
-      "T_size": 4925,
-      "shortened_T_size": 1157,
-      "n_near_zero_values": 1,
-      "code_scale": 782.8571428571421,
-      "max_abs_difference": 2.0463630789890885e-12,
-      "max_difference_over_scale": 2.6139674366648967e-15,
-      "shortened_max_difference_over_scale": 2.9461528068101745e-15,
-      "invariant_full": true,
-      "invariant_shortened": true
-    },
-    {
-      "dataset": "A",
-      "n_points": 9,
-      "family": "similarity",
-      "kind": "similarity",
-      "det": 6.250000000000001,
-      "T_size": 4925,
-      "shortened_T_size": 1157,
-      "n_near_zero_values": 1,
-      "code_scale": 782.8571428571439,
-      "max_abs_difference": 2.6147972675971687e-12,
-      "max_difference_over_scale": 3.340069502405138e-15,
-      "shortened_max_difference_over_scale": 7.01877580445952e-15,
-      "invariant_full": true,
-      "invariant_shortened": true
-    },
-    {
-      "dataset": "A",
-      "n_points": 9,
-      "family": "scale_nonuniform",
-      "kind": "affine",
-      "det": 1.0,
-      "T_size": 4925,
-      "shortened_T_size": 1157,
-      "n_near_zero_values": 1,
-      "code_scale": 782.8571428571421,
-      "max_abs_difference": 2.1032064978498966e-12,
-      "max_difference_over_scale": 2.6865776432389217e-15,
-      "shortened_max_difference_over_scale": 2.7728497005272223e-15,
-      "invariant_full": true,
-      "invariant_shortened": true
-    },
-    {
-      "dataset": "A",
-      "n_points": 9,
-      "family": "shear",
-      "kind": "affine",
-      "det": 1.1600000000000001,
-      "T_size": 4925,
-      "shortened_T_size": 1157,
-      "n_near_zero_values": 1,
-      "code_scale": 782.8571428571421,
-      "max_abs_difference": 2.6147972675971687e-12,
-      "max_difference_over_scale": 3.3400695024051457e-15,
-      "shortened_max_difference_over_scale": 5.545699401054446e-15,
-      "invariant_full": true,
-      "invariant_shortened": true
-    },
-    {
-      "dataset": "A",
-      "n_points": 9,
-      "family": "affine_general",
-      "kind": "affine",
-      "det": 1.26,
-      "T_size": 4925,
-      "shortened_T_size": 1157,
-      "n_near_zero_values": 1,
-      "code_scale": 782.8571428571679,
-      "max_abs_difference": 1.7621459846850485e-11,
-      "max_difference_over_scale": 2.250916403794698e-14,
-      "shortened_max_difference_over_scale": 3.292759019375969e-14,
-      "invariant_full": true,
-      "invariant_shortened": true
-    },
-    {
-      "dataset": "A",
-      "n_points": 9,
-      "family": "random",
-      "kind": "affine",
-      "det": 0.1701204488244772,
-      "T_size": 4925,
-      "shortened_T_size": 1157,
-      "n_near_zero_values": 1,
-      "code_scale": 782.8571428571421,
-      "max_abs_difference": 1.1112888387287967e-11,
-      "max_difference_over_scale": 1.419529538522187e-14,
-      "shortened_max_difference_over_scale": 2.937487651496027e-14,
-      "invariant_full": true,
-      "invariant_shortened": true
+      "layer": "refused",
+      "reason": "NonExactCoordinateError",
+      "note": "the coordinate 3.1 is not integer-valued. The exact layer cannot represent it without inventing precision: Fraction(0.1) is the binary rational 3602879701896397/36028797018963968, not one tenth. Pass "
     },
     {
       "dataset": "B",
       "n_points": 10,
-      "family": "translation",
-      "kind": "translation",
-      "det": 1.0,
-      "T_size": 4036,
-      "shortened_T_size": 1170,
-      "n_near_zero_values": 1,
-      "code_scale": 779.999999999977,
-      "max_abs_difference": 1.978150976356119e-11,
-      "max_difference_over_scale": 2.5360909953284322e-14,
-      "shortened_max_difference_over_scale": 2.5360909953284325e-14,
-      "invariant_full": true,
-      "invariant_shortened": true
-    },
-    {
-      "dataset": "B",
-      "n_points": 10,
-      "family": "rotation",
-      "kind": "rotation",
-      "det": 1.0,
-      "T_size": 4036,
-      "shortened_T_size": 1170,
-      "n_near_zero_values": 1,
-      "code_scale": 779.999999999977,
-      "max_abs_difference": 3.467448550509289e-11,
-      "max_difference_over_scale": 4.445446859627424e-14,
-      "shortened_max_difference_over_scale": 4.460022095232761e-14,
-      "invariant_full": true,
-      "invariant_shortened": true
-    },
-    {
-      "dataset": "B",
-      "n_points": 10,
-      "family": "reflection",
-      "kind": "reflection",
-      "det": -1.0,
-      "T_size": 4036,
-      "shortened_T_size": 1170,
-      "n_near_zero_values": 1,
-      "code_scale": 779.9999999999969,
-      "max_abs_difference": 1.978150976356119e-11,
-      "max_difference_over_scale": 2.5360909953283675e-14,
-      "shortened_max_difference_over_scale": 2.5360909953283685e-14,
-      "invariant_full": true,
-      "invariant_shortened": true
-    },
-    {
-      "dataset": "B",
-      "n_points": 10,
-      "family": "similarity",
-      "kind": "similarity",
-      "det": 6.250000000000001,
-      "T_size": 4036,
-      "shortened_T_size": 1170,
-      "n_near_zero_values": 1,
-      "code_scale": 779.9999999999866,
-      "max_abs_difference": 9.43600753089413e-12,
-      "max_difference_over_scale": 1.209744555242858e-14,
-      "shortened_max_difference_over_scale": 1.2388950264535293e-14,
-      "invariant_full": true,
-      "invariant_shortened": true
-    },
-    {
-      "dataset": "B",
-      "n_points": 10,
-      "family": "scale_nonuniform",
-      "kind": "affine",
-      "det": 1.0,
-      "T_size": 4036,
-      "shortened_T_size": 1170,
-      "n_near_zero_values": 1,
-      "code_scale": 779.999999999977,
-      "max_abs_difference": 1.7053025658242404e-13,
-      "max_difference_over_scale": 2.1862853408003727e-16,
-      "shortened_max_difference_over_scale": 1.457523560533582e-16,
-      "invariant_full": true,
-      "invariant_shortened": true
-    },
-    {
-      "dataset": "B",
-      "n_points": 10,
-      "family": "shear",
-      "kind": "affine",
-      "det": 1.1600000000000001,
-      "T_size": 4036,
-      "shortened_T_size": 1170,
-      "n_near_zero_values": 1,
-      "code_scale": 779.999999999977,
-      "max_abs_difference": 2.0463630789890885e-12,
-      "max_difference_over_scale": 2.623542408960447e-15,
-      "shortened_max_difference_over_scale": 2.4777900529070893e-15,
-      "invariant_full": true,
-      "invariant_shortened": true
-    },
-    {
-      "dataset": "B",
-      "n_points": 10,
-      "family": "affine_general",
-      "kind": "affine",
-      "det": 1.26,
-      "T_size": 4036,
-      "shortened_T_size": 1170,
-      "n_near_zero_values": 1,
-      "code_scale": 779.999999999977,
-      "max_abs_difference": 4.4224179873708636e-11,
-      "max_difference_over_scale": 5.669766650475633e-14,
-      "shortened_max_difference_over_scale": 5.669766650475634e-14,
-      "invariant_full": true,
-      "invariant_shortened": true
-    },
-    {
-      "dataset": "B",
-      "n_points": 10,
-      "family": "random",
-      "kind": "affine",
-      "det": 0.1701204488244772,
-      "T_size": 4036,
-      "shortened_T_size": 1170,
-      "n_near_zero_values": 1,
-      "code_scale": 779.999999999977,
-      "max_abs_difference": 3.410605131648481e-12,
-      "max_difference_over_scale": 4.372570681600745e-15,
-      "shortened_max_difference_over_scale": 4.226818325547388e-15,
-      "invariant_full": true,
-      "invariant_shortened": true
+      "layer": "refused",
+      "reason": "NonExactCoordinateError",
+      "note": "the coordinate 0.5 is not integer-valued. The exact layer cannot represent it without inventing precision: Fraction(0.1) is the binary rational 3602879701896397/36028797018963968, not one tenth. Pass "
     },
     {
       "dataset": "C",
       "n_points": 7,
-      "family": "translation",
-      "kind": "translation",
-      "det": 1.0,
-      "T_size": 1101,
-      "shortened_T_size": 374,
-      "n_near_zero_values": 1,
-      "code_scale": 9.454990814451921,
-      "max_abs_difference": 8.881784197001252e-15,
-      "max_difference_over_scale": 9.393752327527887e-16,
-      "shortened_max_difference_over_scale": 7.326462498923921e-16,
-      "invariant_full": true,
-      "invariant_shortened": true
-    },
-    {
-      "dataset": "C",
-      "n_points": 7,
-      "family": "rotation",
-      "kind": "rotation",
-      "det": 1.0,
-      "T_size": 1101,
-      "shortened_T_size": 374,
-      "n_near_zero_values": 1,
-      "code_scale": 9.454990814451929,
-      "max_abs_difference": 8.881784197001252e-15,
-      "max_difference_over_scale": 9.393752327527879e-16,
-      "shortened_max_difference_over_scale": 9.768616665231886e-16,
-      "invariant_full": true,
-      "invariant_shortened": true
-    },
-    {
-      "dataset": "C",
-      "n_points": 7,
-      "family": "reflection",
-      "kind": "reflection",
-      "det": -1.0,
-      "T_size": 1101,
-      "shortened_T_size": 374,
-      "n_near_zero_values": 1,
-      "code_scale": 9.454990814451921,
-      "max_abs_difference": 7.105427357601002e-15,
-      "max_difference_over_scale": 7.515001862022309e-16,
-      "shortened_max_difference_over_scale": 4.884308332615947e-16,
-      "invariant_full": true,
-      "invariant_shortened": true
-    },
-    {
-      "dataset": "C",
-      "n_points": 7,
-      "family": "similarity",
-      "kind": "similarity",
-      "det": 6.250000000000001,
-      "T_size": 1101,
-      "shortened_T_size": 374,
-      "n_near_zero_values": 1,
-      "code_scale": 9.454990814451921,
-      "max_abs_difference": 8.881784197001252e-15,
-      "max_difference_over_scale": 9.393752327527887e-16,
-      "shortened_max_difference_over_scale": 8.547539582077908e-16,
-      "invariant_full": true,
-      "invariant_shortened": true
-    },
-    {
-      "dataset": "C",
-      "n_points": 7,
-      "family": "scale_nonuniform",
-      "kind": "affine",
-      "det": 1.0,
-      "T_size": 1101,
-      "shortened_T_size": 374,
-      "n_near_zero_values": 1,
-      "code_scale": 9.454990814451921,
-      "max_abs_difference": 2.6645352591003757e-15,
-      "max_difference_over_scale": 2.818125698258366e-16,
-      "shortened_max_difference_over_scale": 2.442154166307973e-16,
-      "invariant_full": true,
-      "invariant_shortened": true
-    },
-    {
-      "dataset": "C",
-      "n_points": 7,
-      "family": "shear",
-      "kind": "affine",
-      "det": 1.1600000000000001,
-      "T_size": 1101,
-      "shortened_T_size": 374,
-      "n_near_zero_values": 1,
-      "code_scale": 9.45499081445193,
-      "max_abs_difference": 8.881784197001252e-15,
-      "max_difference_over_scale": 9.393752327527877e-16,
-      "shortened_max_difference_over_scale": 8.547539582077901e-16,
-      "invariant_full": true,
-      "invariant_shortened": true
-    },
-    {
-      "dataset": "C",
-      "n_points": 7,
-      "family": "affine_general",
-      "kind": "affine",
-      "det": 1.26,
-      "T_size": 1101,
-      "shortened_T_size": 374,
-      "n_near_zero_values": 1,
-      "code_scale": 9.454990814451921,
-      "max_abs_difference": 6.217248937900877e-15,
-      "max_difference_over_scale": 6.57562662926952e-16,
-      "shortened_max_difference_over_scale": 5.494846874192941e-16,
-      "invariant_full": true,
-      "invariant_shortened": true
-    },
-    {
-      "dataset": "C",
-      "n_points": 7,
-      "family": "random",
-      "kind": "affine",
-      "det": 0.1701204488244772,
-      "T_size": 1101,
-      "shortened_T_size": 374,
-      "n_near_zero_values": 1,
-      "code_scale": 9.454990814451934,
-      "max_abs_difference": 1.2434497875801753e-14,
-      "max_difference_over_scale": 1.3151253258539023e-15,
-      "shortened_max_difference_over_scale": 1.037915520680888e-15,
-      "invariant_full": true,
-      "invariant_shortened": true
+      "layer": "refused",
+      "reason": "NonExactCoordinateError",
+      "note": "the coordinate 2.3 is not integer-valued. The exact layer cannot represent it without inventing precision: Fraction(0.1) is the binary rational 3602879701896397/36028797018963968, not one tenth. Pass "
     },
     {
       "dataset": "D",
       "n_points": 8,
-      "family": "translation",
-      "kind": "translation",
-      "det": 1.0,
-      "T_size": 2502,
-      "shortened_T_size": 721,
-      "n_near_zero_values": 1,
-      "code_scale": 39.43511881112684,
-      "max_abs_difference": 7.105427357601002e-15,
-      "max_difference_over_scale": 1.8018019399490603e-16,
-      "shortened_max_difference_over_scale": 9.006392241586567e-16,
-      "invariant_full": true,
-      "invariant_shortened": true
-    },
-    {
-      "dataset": "D",
-      "n_points": 8,
-      "family": "rotation",
-      "kind": "rotation",
-      "det": 1.0,
-      "T_size": 2502,
-      "shortened_T_size": 721,
-      "n_near_zero_values": 1,
-      "code_scale": 39.43511881112685,
-      "max_abs_difference": 2.1316282072803006e-14,
-      "max_difference_over_scale": 5.405405819847179e-16,
-      "shortened_max_difference_over_scale": 4.912577586319944e-16,
-      "invariant_full": true,
-      "invariant_shortened": true
-    },
-    {
-      "dataset": "D",
-      "n_points": 8,
-      "family": "reflection",
-      "kind": "reflection",
-      "det": -1.0,
-      "T_size": 2502,
-      "shortened_T_size": 721,
-      "n_near_zero_values": 1,
-      "code_scale": 39.435118811126834,
-      "max_abs_difference": 4.973799150320701e-14,
-      "max_difference_over_scale": 1.2612613579643423e-15,
-      "shortened_max_difference_over_scale": 1.3100206896853189e-15,
-      "invariant_full": true,
-      "invariant_shortened": true
-    },
-    {
-      "dataset": "D",
-      "n_points": 8,
-      "family": "similarity",
-      "kind": "similarity",
-      "det": 6.250000000000001,
-      "T_size": 2502,
-      "shortened_T_size": 721,
-      "n_near_zero_values": 1,
-      "code_scale": 39.435118811126834,
-      "max_abs_difference": 3.552713678800501e-14,
-      "max_difference_over_scale": 9.009009699745302e-16,
-      "shortened_max_difference_over_scale": 1.146268103474654e-15,
-      "invariant_full": true,
-      "invariant_shortened": true
-    },
-    {
-      "dataset": "D",
-      "n_points": 8,
-      "family": "scale_nonuniform",
-      "kind": "affine",
-      "det": 1.0,
-      "T_size": 2502,
-      "shortened_T_size": 721,
-      "n_near_zero_values": 1,
-      "code_scale": 39.435118811126834,
-      "max_abs_difference": 8.881784197001252e-15,
-      "max_difference_over_scale": 2.2522524249363254e-16,
-      "shortened_max_difference_over_scale": 4.0938146552666217e-16,
-      "invariant_full": true,
-      "invariant_shortened": true
-    },
-    {
-      "dataset": "D",
-      "n_points": 8,
-      "family": "shear",
-      "kind": "affine",
-      "det": 1.1600000000000001,
-      "T_size": 2502,
-      "shortened_T_size": 721,
-      "n_near_zero_values": 1,
-      "code_scale": 39.435118811126834,
-      "max_abs_difference": 4.263256414560601e-14,
-      "max_difference_over_scale": 1.0810811639694362e-15,
-      "shortened_max_difference_over_scale": 1.4737732758959838e-15,
-      "invariant_full": true,
-      "invariant_shortened": true
-    },
-    {
-      "dataset": "D",
-      "n_points": 8,
-      "family": "affine_general",
-      "kind": "affine",
-      "det": 1.26,
-      "T_size": 2502,
-      "shortened_T_size": 721,
-      "n_near_zero_values": 1,
-      "code_scale": 39.435118811126834,
-      "max_abs_difference": 1.4210854715202004e-14,
-      "max_difference_over_scale": 3.603603879898121e-16,
-      "shortened_max_difference_over_scale": 4.912577586319946e-16,
-      "invariant_full": true,
-      "invariant_shortened": true
-    },
-    {
-      "dataset": "D",
-      "n_points": 8,
-      "family": "random",
-      "kind": "affine",
-      "det": 0.1701204488244772,
-      "T_size": 2502,
-      "shortened_T_size": 721,
-      "n_near_zero_values": 1,
-      "code_scale": 39.435118811126834,
-      "max_abs_difference": 1.4139800441625994e-12,
-      "max_difference_over_scale": 3.5855858604986307e-14,
-      "shortened_max_difference_over_scale": 3.569806379392494e-14,
-      "invariant_full": true,
-      "invariant_shortened": true
+      "layer": "refused",
+      "reason": "NonExactCoordinateError",
+      "note": "the coordinate 0.33 is not integer-valued. The exact layer cannot represent it without inventing precision: Fraction(0.1) is the binary rational 3602879701896397/36028797018963968, not one tenth. Pass"
     },
     {
       "dataset": "E",
       "n_points": 12,
-      "family": "translation",
-      "kind": "translation",
-      "det": 1.0,
-      "T_size": 48181,
-      "shortened_T_size": 5940,
-      "n_near_zero_values": 0,
-      "code_scale": 620.7138624941457,
-      "max_abs_difference": 2.8421709430404007e-13,
-      "max_difference_over_scale": 4.578874606763284e-16,
-      "shortened_max_difference_over_scale": 4.846494859469347e-16,
-      "invariant_full": true,
-      "invariant_shortened": true
-    },
-    {
-      "dataset": "E",
-      "n_points": 12,
-      "family": "rotation",
-      "kind": "rotation",
-      "det": 1.0,
-      "T_size": 48181,
-      "shortened_T_size": 5940,
-      "n_near_zero_values": 0,
-      "code_scale": 620.7138624941629,
-      "max_abs_difference": 1.716671249596402e-11,
-      "max_difference_over_scale": 2.7656402624849472e-14,
-      "shortened_max_difference_over_scale": 2.72894941317805e-14,
-      "invariant_full": true,
-      "invariant_shortened": true
-    },
-    {
-      "dataset": "E",
-      "n_points": 12,
-      "family": "reflection",
-      "kind": "reflection",
-      "det": -1.0,
-      "T_size": 48181,
-      "shortened_T_size": 5940,
-      "n_near_zero_values": 0,
-      "code_scale": 620.7138624941553,
-      "max_abs_difference": 9.549694368615746e-12,
-      "max_difference_over_scale": 1.5385018678724398e-14,
-      "shortened_max_difference_over_scale": 1.5210537712795873e-14,
-      "invariant_full": true,
-      "invariant_shortened": true
-    },
-    {
-      "dataset": "E",
-      "n_points": 12,
-      "family": "similarity",
-      "kind": "similarity",
-      "det": 6.250000000000001,
-      "T_size": 48181,
-      "shortened_T_size": 5940,
-      "n_near_zero_values": 0,
-      "code_scale": 620.7138624941457,
-      "max_abs_difference": 1.921307557495311e-11,
-      "max_difference_over_scale": 3.0953192341719805e-14,
-      "shortened_max_difference_over_scale": 3.0719321263098014e-14,
-      "invariant_full": true,
-      "invariant_shortened": true
-    },
-    {
-      "dataset": "E",
-      "n_points": 12,
-      "family": "scale_nonuniform",
-      "kind": "affine",
-      "det": 1.0,
-      "T_size": 48181,
-      "shortened_T_size": 5940,
-      "n_near_zero_values": 0,
-      "code_scale": 620.7138624941457,
-      "max_abs_difference": 1.6768808563938364e-12,
-      "max_difference_over_scale": 2.701536017990338e-15,
-      "shortened_max_difference_over_scale": 2.907896915681608e-15,
-      "invariant_full": true,
-      "invariant_shortened": true
-    },
-    {
-      "dataset": "E",
-      "n_points": 12,
-      "family": "shear",
-      "kind": "affine",
-      "det": 1.1600000000000001,
-      "T_size": 48181,
-      "shortened_T_size": 5940,
-      "n_near_zero_values": 0,
-      "code_scale": 620.7138624941543,
-      "max_abs_difference": 8.640199666842818e-12,
-      "max_difference_over_scale": 1.3919778804560191e-14,
-      "shortened_max_difference_over_scale": 1.4017554362772684e-14,
-      "invariant_full": true,
-      "invariant_shortened": true
-    },
-    {
-      "dataset": "E",
-      "n_points": 12,
-      "family": "affine_general",
-      "kind": "affine",
-      "det": 1.26,
-      "T_size": 48181,
-      "shortened_T_size": 5940,
-      "n_near_zero_values": 0,
-      "code_scale": 620.7138624941473,
-      "max_abs_difference": 4.519051799434237e-12,
-      "max_difference_over_scale": 7.280410624753603e-15,
-      "shortened_max_difference_over_scale": 7.828953234527387e-15,
-      "invariant_full": true,
-      "invariant_shortened": true
-    },
-    {
-      "dataset": "E",
-      "n_points": 12,
-      "family": "random",
-      "kind": "affine",
-      "det": 0.1701204488244772,
-      "T_size": 48181,
-      "shortened_T_size": 5940,
-      "n_near_zero_values": 0,
-      "code_scale": 620.7138624942046,
-      "max_abs_difference": 5.88897819397971e-11,
-      "max_difference_over_scale": 9.487428185212625e-14,
-      "shortened_max_difference_over_scale": 9.454393048933155e-14,
-      "invariant_full": true,
-      "invariant_shortened": true
+      "layer": "refused",
+      "reason": "NonExactCoordinateError",
+      "note": "the coordinate -0.073432559969973 is not integer-valued. The exact layer cannot represent it without inventing precision: Fraction(0.1) is the binary rational 3602879701896397/36028797018963968, not o"
     }
   ],
   "dataset_summary": {
     "A": {
+      "dataset": "A",
       "n_points": 9,
-      "n_triples": 84,
-      "n_admissible_denominators": 82,
-      "n_degenerate_triples": 2,
-      "degenerate_triples": [
-        [
-          0,
-          1,
-          3
-        ],
-        [
-          0,
-          4,
-          5
-        ]
-      ],
-      "unfiltered_rho_scale": {
-        "min_non_zero_area": 0.005250000000000005,
-        "max_area": 4.109999999999999,
-        "max_rho": 782.8571428571421
-      },
-      "full_code_seconds": 0.0019964000093750656,
-      "T_size": 4925,
-      "shortened_T_size": 1157,
-      "shortened_is_subset": true,
-      "teaching_code_frames": 82,
-      "families": {
-        "translation": {
-          "kind": "translation",
-          "det": 1.0,
-          "max_abs_difference": 3.893774191965349e-12,
-          "max_difference_over_scale": 4.973799150320693e-15,
-          "scale": 782.8571428571441,
-          "n_near_zero": 1,
-          "shortened_max_difference_over_scale": 1.0484837930118562e-14,
-          "invariant": true,
-          "shortened_invariant": true
-        },
-        "rotation": {
-          "kind": "rotation",
-          "det": 1.0,
-          "max_abs_difference": 1.5347723092418164e-12,
-          "max_difference_over_scale": 1.96047557749867e-15,
-          "scale": 782.8571428571431,
-          "n_near_zero": 1,
-          "shortened_max_difference_over_scale": 3.4660621256590288e-15,
-          "invariant": true,
-          "shortened_invariant": true
-        },
-        "reflection": {
-          "kind": "reflection",
-          "det": -1.0,
-          "max_abs_difference": 2.0463630789890885e-12,
-          "max_difference_over_scale": 2.6139674366648967e-15,
-          "scale": 782.8571428571421,
-          "n_near_zero": 1,
-          "shortened_max_difference_over_scale": 2.9461528068101745e-15,
-          "invariant": true,
-          "shortened_invariant": true
-        },
-        "similarity": {
-          "kind": "similarity",
-          "det": 6.250000000000001,
-          "max_abs_difference": 2.6147972675971687e-12,
-          "max_difference_over_scale": 3.340069502405138e-15,
-          "scale": 782.8571428571439,
-          "n_near_zero": 1,
-          "shortened_max_difference_over_scale": 7.01877580445952e-15,
-          "invariant": true,
-          "shortened_invariant": true
-        },
-        "scale_nonuniform": {
-          "kind": "affine",
-          "det": 1.0,
-          "max_abs_difference": 2.1032064978498966e-12,
-          "max_difference_over_scale": 2.6865776432389217e-15,
-          "scale": 782.8571428571421,
-          "n_near_zero": 1,
-          "shortened_max_difference_over_scale": 2.7728497005272223e-15,
-          "invariant": true,
-          "shortened_invariant": true
-        },
-        "shear": {
-          "kind": "affine",
-          "det": 1.1600000000000001,
-          "max_abs_difference": 2.6147972675971687e-12,
-          "max_difference_over_scale": 3.3400695024051457e-15,
-          "scale": 782.8571428571421,
-          "n_near_zero": 1,
-          "shortened_max_difference_over_scale": 5.545699401054446e-15,
-          "invariant": true,
-          "shortened_invariant": true
-        },
-        "affine_general": {
-          "kind": "affine",
-          "det": 1.26,
-          "max_abs_difference": 1.7621459846850485e-11,
-          "max_difference_over_scale": 2.250916403794698e-14,
-          "scale": 782.8571428571679,
-          "n_near_zero": 1,
-          "shortened_max_difference_over_scale": 3.292759019375969e-14,
-          "invariant": true,
-          "shortened_invariant": true
-        },
-        "random": {
-          "kind": "affine",
-          "det": 0.1701204488244772,
-          "max_abs_difference": 1.1112888387287967e-11,
-          "max_difference_over_scale": 1.419529538522187e-14,
-          "scale": 782.8571428571421,
-          "n_near_zero": 1,
-          "shortened_max_difference_over_scale": 2.937487651496027e-14,
-          "invariant": true,
-          "shortened_invariant": true
-        }
-      }
+      "layer": "refused",
+      "reason": "NonExactCoordinateError",
+      "note": "the coordinate 3.1 is not integer-valued. The exact layer cannot represent it without inventing precision: Fraction(0.1) is the binary rational 3602879701896397/36028797018963968, not one tenth. Pass "
     },
     "B": {
+      "dataset": "B",
       "n_points": 10,
-      "n_triples": 120,
-      "n_admissible_denominators": 109,
-      "n_degenerate_triples": 11,
-      "degenerate_triples": [
-        [
-          0,
-          1,
-          4
-        ],
-        [
-          0,
-          1,
-          5
-        ],
-        [
-          0,
-          1,
-          6
-        ],
-        [
-          0,
-          4,
-          5
-        ],
-        [
-          0,
-          4,
-          6
-        ],
-        [
-          0,
-          5,
-          6
-        ],
-        [
-          1,
-          4,
-          5
-        ],
-        [
-          1,
-          4,
-          6
-        ],
-        [
-          1,
-          5,
-          6
-        ],
-        [
-          2,
-          3,
-          7
-        ],
-        [
-          4,
-          5,
-          6
-        ]
-      ],
-      "unfiltered_rho_scale": {
-        "min_non_zero_area": 1.1102230246251565e-16,
-        "max_area": 3.4125,
-        "max_rho": 3.0737067456803636e+16
-      },
-      "full_code_seconds": 0.0031165000109467655,
-      "T_size": 4036,
-      "shortened_T_size": 1170,
-      "shortened_is_subset": true,
-      "teaching_code_frames": 109,
-      "families": {
-        "translation": {
-          "kind": "translation",
-          "det": 1.0,
-          "max_abs_difference": 1.978150976356119e-11,
-          "max_difference_over_scale": 2.5360909953284322e-14,
-          "scale": 779.999999999977,
-          "n_near_zero": 1,
-          "shortened_max_difference_over_scale": 2.5360909953284325e-14,
-          "invariant": true,
-          "shortened_invariant": true
-        },
-        "rotation": {
-          "kind": "rotation",
-          "det": 1.0,
-          "max_abs_difference": 3.467448550509289e-11,
-          "max_difference_over_scale": 4.445446859627424e-14,
-          "scale": 779.999999999977,
-          "n_near_zero": 1,
-          "shortened_max_difference_over_scale": 4.460022095232761e-14,
-          "invariant": true,
-          "shortened_invariant": true
-        },
-        "reflection": {
-          "kind": "reflection",
-          "det": -1.0,
-          "max_abs_difference": 1.978150976356119e-11,
-          "max_difference_over_scale": 2.5360909953283675e-14,
-          "scale": 779.9999999999969,
-          "n_near_zero": 1,
-          "shortened_max_difference_over_scale": 2.5360909953283685e-14,
-          "invariant": true,
-          "shortened_invariant": true
-        },
-        "similarity": {
-          "kind": "similarity",
-          "det": 6.250000000000001,
-          "max_abs_difference": 9.43600753089413e-12,
-          "max_difference_over_scale": 1.209744555242858e-14,
-          "scale": 779.9999999999866,
-          "n_near_zero": 1,
-          "shortened_max_difference_over_scale": 1.2388950264535293e-14,
-          "invariant": true,
-          "shortened_invariant": true
-        },
-        "scale_nonuniform": {
-          "kind": "affine",
-          "det": 1.0,
-          "max_abs_difference": 1.7053025658242404e-13,
-          "max_difference_over_scale": 2.1862853408003727e-16,
-          "scale": 779.999999999977,
-          "n_near_zero": 1,
-          "shortened_max_difference_over_scale": 1.457523560533582e-16,
-          "invariant": true,
-          "shortened_invariant": true
-        },
-        "shear": {
-          "kind": "affine",
-          "det": 1.1600000000000001,
-          "max_abs_difference": 2.0463630789890885e-12,
-          "max_difference_over_scale": 2.623542408960447e-15,
-          "scale": 779.999999999977,
-          "n_near_zero": 1,
-          "shortened_max_difference_over_scale": 2.4777900529070893e-15,
-          "invariant": true,
-          "shortened_invariant": true
-        },
-        "affine_general": {
-          "kind": "affine",
-          "det": 1.26,
-          "max_abs_difference": 4.4224179873708636e-11,
-          "max_difference_over_scale": 5.669766650475633e-14,
-          "scale": 779.999999999977,
-          "n_near_zero": 1,
-          "shortened_max_difference_over_scale": 5.669766650475634e-14,
-          "invariant": true,
-          "shortened_invariant": true
-        },
-        "random": {
-          "kind": "affine",
-          "det": 0.1701204488244772,
-          "max_abs_difference": 3.410605131648481e-12,
-          "max_difference_over_scale": 4.372570681600745e-15,
-          "scale": 779.999999999977,
-          "n_near_zero": 1,
-          "shortened_max_difference_over_scale": 4.226818325547388e-15,
-          "invariant": true,
-          "shortened_invariant": true
-        }
-      }
+      "layer": "refused",
+      "reason": "NonExactCoordinateError",
+      "note": "the coordinate 0.5 is not integer-valued. The exact layer cannot represent it without inventing precision: Fraction(0.1) is the binary rational 3602879701896397/36028797018963968, not one tenth. Pass "
     },
     "C": {
+      "dataset": "C",
       "n_points": 7,
-      "n_triples": 35,
-      "n_admissible_denominators": 34,
-      "n_degenerate_triples": 1,
-      "degenerate_triples": [
-        [
-          0,
-          1,
-          5
-        ]
-      ],
-      "unfiltered_rho_scale": {
-        "min_non_zero_area": 0.3061875000000002,
-        "max_area": 2.895,
-        "max_rho": 9.454990814451921
-      },
-      "full_code_seconds": 0.0007699999987380579,
-      "T_size": 1101,
-      "shortened_T_size": 374,
-      "shortened_is_subset": true,
-      "teaching_code_frames": 34,
-      "families": {
-        "translation": {
-          "kind": "translation",
-          "det": 1.0,
-          "max_abs_difference": 8.881784197001252e-15,
-          "max_difference_over_scale": 9.393752327527887e-16,
-          "scale": 9.454990814451921,
-          "n_near_zero": 1,
-          "shortened_max_difference_over_scale": 7.326462498923921e-16,
-          "invariant": true,
-          "shortened_invariant": true
-        },
-        "rotation": {
-          "kind": "rotation",
-          "det": 1.0,
-          "max_abs_difference": 8.881784197001252e-15,
-          "max_difference_over_scale": 9.393752327527879e-16,
-          "scale": 9.454990814451929,
-          "n_near_zero": 1,
-          "shortened_max_difference_over_scale": 9.768616665231886e-16,
-          "invariant": true,
-          "shortened_invariant": true
-        },
-        "reflection": {
-          "kind": "reflection",
-          "det": -1.0,
-          "max_abs_difference": 7.105427357601002e-15,
-          "max_difference_over_scale": 7.515001862022309e-16,
-          "scale": 9.454990814451921,
-          "n_near_zero": 1,
-          "shortened_max_difference_over_scale": 4.884308332615947e-16,
-          "invariant": true,
-          "shortened_invariant": true
-        },
-        "similarity": {
-          "kind": "similarity",
-          "det": 6.250000000000001,
-          "max_abs_difference": 8.881784197001252e-15,
-          "max_difference_over_scale": 9.393752327527887e-16,
-          "scale": 9.454990814451921,
-          "n_near_zero": 1,
-          "shortened_max_difference_over_scale": 8.547539582077908e-16,
-          "invariant": true,
-          "shortened_invariant": true
-        },
-        "scale_nonuniform": {
-          "kind": "affine",
-          "det": 1.0,
-          "max_abs_difference": 2.6645352591003757e-15,
-          "max_difference_over_scale": 2.818125698258366e-16,
-          "scale": 9.454990814451921,
-          "n_near_zero": 1,
-          "shortened_max_difference_over_scale": 2.442154166307973e-16,
-          "invariant": true,
-          "shortened_invariant": true
-        },
-        "shear": {
-          "kind": "affine",
-          "det": 1.1600000000000001,
-          "max_abs_difference": 8.881784197001252e-15,
-          "max_difference_over_scale": 9.393752327527877e-16,
-          "scale": 9.45499081445193,
-          "n_near_zero": 1,
-          "shortened_max_difference_over_scale": 8.547539582077901e-16,
-          "invariant": true,
-          "shortened_invariant": true
-        },
-        "affine_general": {
-          "kind": "affine",
-          "det": 1.26,
-          "max_abs_difference": 6.217248937900877e-15,
-          "max_difference_over_scale": 6.57562662926952e-16,
-          "scale": 9.454990814451921,
-          "n_near_zero": 1,
-          "shortened_max_difference_over_scale": 5.494846874192941e-16,
-          "invariant": true,
-          "shortened_invariant": true
-        },
-        "random": {
-          "kind": "affine",
-          "det": 0.1701204488244772,
-          "max_abs_difference": 1.2434497875801753e-14,
-          "max_difference_over_scale": 1.3151253258539023e-15,
-          "scale": 9.454990814451934,
-          "n_near_zero": 1,
-          "shortened_max_difference_over_scale": 1.037915520680888e-15,
-          "invariant": true,
-          "shortened_invariant": true
-        }
-      }
+      "layer": "refused",
+      "reason": "NonExactCoordinateError",
+      "note": "the coordinate 2.3 is not integer-valued. The exact layer cannot represent it without inventing precision: Fraction(0.1) is the binary rational 3602879701896397/36028797018963968, not one tenth. Pass "
     },
     "D": {
+      "dataset": "D",
       "n_points": 8,
-      "n_triples": 56,
-      "n_admissible_denominators": 55,
-      "n_degenerate_triples": 1,
-      "degenerate_triples": [
-        [
-          0,
-          1,
-          7
-        ]
-      ],
-      "unfiltered_rho_scale": {
-        "min_non_zero_area": 0.0945639808812091,
-        "max_area": 3.729141821303607,
-        "max_rho": 39.435118811126834
-      },
-      "full_code_seconds": 0.0012109000090276822,
-      "T_size": 2502,
-      "shortened_T_size": 721,
-      "shortened_is_subset": true,
-      "teaching_code_frames": 55,
-      "families": {
-        "translation": {
-          "kind": "translation",
-          "det": 1.0,
-          "max_abs_difference": 7.105427357601002e-15,
-          "max_difference_over_scale": 1.8018019399490603e-16,
-          "scale": 39.43511881112684,
-          "n_near_zero": 1,
-          "shortened_max_difference_over_scale": 9.006392241586567e-16,
-          "invariant": true,
-          "shortened_invariant": true
-        },
-        "rotation": {
-          "kind": "rotation",
-          "det": 1.0,
-          "max_abs_difference": 2.1316282072803006e-14,
-          "max_difference_over_scale": 5.405405819847179e-16,
-          "scale": 39.43511881112685,
-          "n_near_zero": 1,
-          "shortened_max_difference_over_scale": 4.912577586319944e-16,
-          "invariant": true,
-          "shortened_invariant": true
-        },
-        "reflection": {
-          "kind": "reflection",
-          "det": -1.0,
-          "max_abs_difference": 4.973799150320701e-14,
-          "max_difference_over_scale": 1.2612613579643423e-15,
-          "scale": 39.435118811126834,
-          "n_near_zero": 1,
-          "shortened_max_difference_over_scale": 1.3100206896853189e-15,
-          "invariant": true,
-          "shortened_invariant": true
-        },
-        "similarity": {
-          "kind": "similarity",
-          "det": 6.250000000000001,
-          "max_abs_difference": 3.552713678800501e-14,
-          "max_difference_over_scale": 9.009009699745302e-16,
-          "scale": 39.435118811126834,
-          "n_near_zero": 1,
-          "shortened_max_difference_over_scale": 1.146268103474654e-15,
-          "invariant": true,
-          "shortened_invariant": true
-        },
-        "scale_nonuniform": {
-          "kind": "affine",
-          "det": 1.0,
-          "max_abs_difference": 8.881784197001252e-15,
-          "max_difference_over_scale": 2.2522524249363254e-16,
-          "scale": 39.435118811126834,
-          "n_near_zero": 1,
-          "shortened_max_difference_over_scale": 4.0938146552666217e-16,
-          "invariant": true,
-          "shortened_invariant": true
-        },
-        "shear": {
-          "kind": "affine",
-          "det": 1.1600000000000001,
-          "max_abs_difference": 4.263256414560601e-14,
-          "max_difference_over_scale": 1.0810811639694362e-15,
-          "scale": 39.435118811126834,
-          "n_near_zero": 1,
-          "shortened_max_difference_over_scale": 1.4737732758959838e-15,
-          "invariant": true,
-          "shortened_invariant": true
-        },
-        "affine_general": {
-          "kind": "affine",
-          "det": 1.26,
-          "max_abs_difference": 1.4210854715202004e-14,
-          "max_difference_over_scale": 3.603603879898121e-16,
-          "scale": 39.435118811126834,
-          "n_near_zero": 1,
-          "shortened_max_difference_over_scale": 4.912577586319946e-16,
-          "invariant": true,
-          "shortened_invariant": true
-        },
-        "random": {
-          "kind": "affine",
-          "det": 0.1701204488244772,
-          "max_abs_difference": 1.4139800441625994e-12,
-          "max_difference_over_scale": 3.5855858604986307e-14,
-          "scale": 39.435118811126834,
-          "n_near_zero": 1,
-          "shortened_max_difference_over_scale": 3.569806379392494e-14,
-          "invariant": true,
-          "shortened_invariant": true
-        }
-      }
+      "layer": "refused",
+      "reason": "NonExactCoordinateError",
+      "note": "the coordinate 0.33 is not integer-valued. The exact layer cannot represent it without inventing precision: Fraction(0.1) is the binary rational 3602879701896397/36028797018963968, not one tenth. Pass"
     },
     "E": {
+      "dataset": "E",
       "n_points": 12,
-      "n_triples": 220,
-      "n_admissible_denominators": 220,
-      "n_degenerate_triples": 0,
-      "degenerate_triples": [],
-      "unfiltered_rho_scale": {
-        "min_non_zero_area": 0.00904546142974852,
-        "max_area": 5.614643302101021,
-        "max_rho": 620.7138624941457
-      },
-      "full_code_seconds": 0.008016799998586066,
-      "T_size": 48181,
-      "shortened_T_size": 5940,
-      "shortened_is_subset": true,
-      "teaching_code_frames": 220,
-      "families": {
-        "translation": {
-          "kind": "translation",
-          "det": 1.0,
-          "max_abs_difference": 2.8421709430404007e-13,
-          "max_difference_over_scale": 4.578874606763284e-16,
-          "scale": 620.7138624941457,
-          "n_near_zero": 0,
-          "shortened_max_difference_over_scale": 4.846494859469347e-16,
-          "invariant": true,
-          "shortened_invariant": true
-        },
-        "rotation": {
-          "kind": "rotation",
-          "det": 1.0,
-          "max_abs_difference": 1.716671249596402e-11,
-          "max_difference_over_scale": 2.7656402624849472e-14,
-          "scale": 620.7138624941629,
-          "n_near_zero": 0,
-          "shortened_max_difference_over_scale": 2.72894941317805e-14,
-          "invariant": true,
-          "shortened_invariant": true
-        },
-        "reflection": {
-          "kind": "reflection",
-          "det": -1.0,
-          "max_abs_difference": 9.549694368615746e-12,
-          "max_difference_over_scale": 1.5385018678724398e-14,
-          "scale": 620.7138624941553,
-          "n_near_zero": 0,
-          "shortened_max_difference_over_scale": 1.5210537712795873e-14,
-          "invariant": true,
-          "shortened_invariant": true
-        },
-        "similarity": {
-          "kind": "similarity",
-          "det": 6.250000000000001,
-          "max_abs_difference": 1.921307557495311e-11,
-          "max_difference_over_scale": 3.0953192341719805e-14,
-          "scale": 620.7138624941457,
-          "n_near_zero": 0,
-          "shortened_max_difference_over_scale": 3.0719321263098014e-14,
-          "invariant": true,
-          "shortened_invariant": true
-        },
-        "scale_nonuniform": {
-          "kind": "affine",
-          "det": 1.0,
-          "max_abs_difference": 1.6768808563938364e-12,
-          "max_difference_over_scale": 2.701536017990338e-15,
-          "scale": 620.7138624941457,
-          "n_near_zero": 0,
-          "shortened_max_difference_over_scale": 2.907896915681608e-15,
-          "invariant": true,
-          "shortened_invariant": true
-        },
-        "shear": {
-          "kind": "affine",
-          "det": 1.1600000000000001,
-          "max_abs_difference": 8.640199666842818e-12,
-          "max_difference_over_scale": 1.3919778804560191e-14,
-          "scale": 620.7138624941543,
-          "n_near_zero": 0,
-          "shortened_max_difference_over_scale": 1.4017554362772684e-14,
-          "invariant": true,
-          "shortened_invariant": true
-        },
-        "affine_general": {
-          "kind": "affine",
-          "det": 1.26,
-          "max_abs_difference": 4.519051799434237e-12,
-          "max_difference_over_scale": 7.280410624753603e-15,
-          "scale": 620.7138624941473,
-          "n_near_zero": 0,
-          "shortened_max_difference_over_scale": 7.828953234527387e-15,
-          "invariant": true,
-          "shortened_invariant": true
-        },
-        "random": {
-          "kind": "affine",
-          "det": 0.1701204488244772,
-          "max_abs_difference": 5.88897819397971e-11,
-          "max_difference_over_scale": 9.487428185212625e-14,
-          "scale": 620.7138624942046,
-          "n_near_zero": 0,
-          "shortened_max_difference_over_scale": 9.454393048933155e-14,
-          "invariant": true,
-          "shortened_invariant": true
-        }
-      }
+      "layer": "refused",
+      "reason": "NonExactCoordinateError",
+      "note": "the coordinate -0.073432559969973 is not integer-valued. The exact layer cannot represent it without inventing precision: Fraction(0.1) is the binary rational 3602879701896397/36028797018963968, not o"
+    },
+    "rational_trapezoid": {
+      "layer": "exact",
+      "n_points": 5,
+      "domain": "two_parallel_lines",
+      "code_definable": true,
+      "theorem_applicable": false,
+      "note": "the two bases are parallel exactly, so the code exists but theorem 1 does not apply"
     }
   },
   "verdicts": {
     "g3_6_two_worked_examples": true,
     "g3_7_expressible_as_testable_spec": true,
-    "hand_example_matches_definition": true,
-    "affine_invariance_verified": true,
-    "relabelling_invariance_verified": true,
-    "shortened_code_is_a_subset_and_invariant": true,
-    "phase3_unlocked": false,
-    "phase3_blocking_gate": "G3.1 (source tier: patent vs. textbook) — decision required",
-    "note": "This script verifies the *definition* from a primary source. It is not an implementation of Kozlov's formal image code: Phase 3 remains gated on the G3.1 source-tier decision recorded in docs/specs/official_image_code.md."
-  }
+    "hand_example_matches": true,
+    "affine_map_preserves_entries_exactly": true,
+    "both_routes_agree_on_relabelling": true,
+    "three_layers_are_distinguished": true,
+    "phase3_unlocked": true,
+    "authoritative_tests": "tests/test_kozlov_exact_oracle.py, test_kozlov_domain_and_validation.py, test_kozlov_equivalence.py",
+    "note": "This script produces gate evidence (G3.6, G3.7) by calling the Phase 3 library. It contains no implementation of the definition: two implementations of one definition would eventually diverge, and the library plus tests/test_kozlov_exact_oracle.py are the single source of truth."
+  },
+  "elapsed_seconds": 0.028290000002016313
 }

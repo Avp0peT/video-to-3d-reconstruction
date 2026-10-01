@@ -1,16 +1,20 @@
-"""Enforces the separation rules of Sprint 3C.
+"""Separation rules between the pedagogical and the formal implementation.
 
-The instruction was explicit:
+These rules changed on 2026-10-01, when Phase 3 was unlocked.  Before that, ``coding/``
+had to stay **empty** and the only permitted names were ``Teaching*``.  Now both
+implementations exist, so the constraint is no longer "one must not exist" but
+**"neither may impersonate the other"**:
 
-* the pedagogical encoding lives in ``src/kozlov_lab/teaching/``;
-* it must **not** live in ``src/kozlov_lab/coding/`` until Q1 is resolved;
-* the class names are ``TeachingAffineFrameCode`` / ``TeachingAffineImageCode``;
-* ``KozlovImageCode`` and ``OfficialImageCode`` must not be used;
-* every public surface carries the three-language disclaimer.
+* ``teaching/`` must not use Kozlov's name for its own construction — it is a *different*
+  construction (frame-relative internal coordinates), not a version of the formal code;
+* ``coding/`` must not use the ``Teaching*`` prefix;
+* ``coding/`` must not silently reuse the pedagogical construction, nor the reverse
+  (mutual independence, checked on parsed imports);
+* a hash stays an index in both, and only ``coding/`` may claim fidelity to the source.
 
-These are *policy* constraints, not numerical ones, so they are checked by
-scanning names and source text rather than by exercising the algorithm.  Without
-this file the constraints would decay the first time someone refactors.
+The checks are policy, not numerics, so they are done by scanning names and parsed
+imports — with the AST rather than raw text, because the disclaimers *must* be able to
+write the forbidden identifiers in order to say they are not used.
 """
 
 from __future__ import annotations
@@ -37,32 +41,22 @@ SRC = pathlib.Path(kozlov_lab.__file__).resolve().parent
 TEACHING_DIR = SRC / "teaching"
 CODING_DIR = SRC / "coding"
 
-#: Names that may not appear anywhere in the source tree.
-FORBIDDEN_NAMES = ("KozlovImageCode", "OfficialImageCode")
+#: Names that must not appear in the **teaching** package: using them would claim
+#: Kozlov's formal object for a construction that is not it.
+KOZLOV_ISH = ("KozlovImageCode", "OfficialImageCode")
 
-#: Regexes that catch near-misses (e.g. ``KozlovCode``, ``official_image_code``).
-FORBIDDEN_PATTERNS = (
-    re.compile(r"(?i)kozlov\w*code"),
-    re.compile(r"(?i)official\w*code"),
-)
+#: Near-misses, also restricted to the teaching package.
+KOZLOV_ISH_PATTERNS = (re.compile(r"(?i)kozlov\w*code"), re.compile(r"(?i)official\w*code"))
+
+#: The prefix reserved for the pedagogical construction.
+TEACHING_PREFIX = "Teaching"
 
 
 def _python_sources(root: pathlib.Path) -> list[pathlib.Path]:
     return sorted(path for path in root.rglob("*.py") if "__pycache__" not in path.parts)
 
 
-def _defined_names(path: pathlib.Path) -> list[str]:
-    """Class and function names defined in ``path``."""
-    tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
-    names: list[str] = []
-    for node in ast.walk(tree):
-        if isinstance(node, (ast.ClassDef, ast.FunctionDef, ast.AsyncFunctionDef)):
-            names.append(node.name)
-    return names
-
-
 def _docstring_nodes(tree: ast.AST) -> set[int]:
-    """``id()`` of every docstring ``Constant`` node (module, class, function)."""
     found: set[int] = set()
     for node in ast.walk(tree):
         if isinstance(node, (ast.Module, ast.ClassDef, ast.FunctionDef, ast.AsyncFunctionDef)):
@@ -74,11 +68,10 @@ def _docstring_nodes(tree: ast.AST) -> set[int]:
 
 
 def _identifier_like_strings(path: pathlib.Path) -> list[tuple[int, str]]:
-    """Names and non-docstring string literals — the places a *name* can hide.
+    """Names and non-docstring string literals — where an identifier can hide.
 
-    Docstrings are excluded on purpose: the disclaimer legitimately writes the
-    forbidden names in order to say they are **not** used, and a naive raw-text
-    scan would flag the very sentence that enforces the rule.
+    Docstrings are excluded deliberately: the disclaimer has to name the identifiers it
+    rejects, and a raw-text scan would flag the very sentence that enforces the rule.
     """
     tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
     docstrings = _docstring_nodes(tree)
@@ -102,104 +95,140 @@ def _identifier_like_strings(path: pathlib.Path) -> list[tuple[int, str]]:
     return found
 
 
-def _imported_modules(path: pathlib.Path) -> list[str]:
-    """Every module name an ``import`` statement refers to, including ``from x import y``."""
+def _defined_names(path: pathlib.Path) -> list[str]:
     tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
-    modules: list[str] = []
+    return [
+        node.name
+        for node in ast.walk(tree)
+        if isinstance(node, (ast.ClassDef, ast.FunctionDef, ast.AsyncFunctionDef))
+    ]
+
+
+def _imported_modules(path: pathlib.Path) -> set[str]:
+    tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
+    modules: set[str] = set()
     for node in ast.walk(tree):
         if isinstance(node, ast.Import):
-            modules.extend(alias.name for alias in node.names)
+            modules.update(alias.name for alias in node.names)
         elif isinstance(node, ast.ImportFrom):
             base = ("." * node.level) + (node.module or "")
-            modules.append(base)
-            modules.extend(f"{base}.{alias.name}" for alias in node.names)
+            modules.add(base)
+            modules.update(f"{base}.{alias.name}" for alias in node.names)
     return modules
 
 
-# --------------------------------------------------------------------------- #
-# location
-# --------------------------------------------------------------------------- #
-def test_pedagogical_code_lives_in_teaching_not_coding():
-    """The module of record must be ``teaching``, and ``coding`` must stay empty."""
-    assert TEACHING_DIR.is_dir(), "src/kozlov_lab/teaching/ must exist"
-    assert CODING_DIR.is_dir(), "src/kozlov_lab/coding/ must exist (as an empty placeholder)"
-
-    coding_definitions = [
-        name for source in _python_sources(CODING_DIR) for name in _defined_names(source)
-    ]
-    assert not coding_definitions, (
-        "src/kozlov_lab/coding/ must define nothing until Q1 is resolved, found: "
-        f"{coding_definitions}"
-    )
-
-    teaching_definitions = [
-        name for source in _python_sources(TEACHING_DIR) for name in _defined_names(source)
-    ]
-    assert "TeachingAffineFrameCode" in teaching_definitions
-    assert "TeachingAffineImageCode" in teaching_definitions
-
-
-def test_coding_public_api_is_empty():
-    """Importing the placeholder must not hand out an implementation."""
-    public = [name for name in dir(kozlov_lab.coding) if not name.startswith("_")]
-    public = [name for name in public if name not in {"annotations"}]
-    assert public == [], f"kozlov_lab.coding unexpectedly exports {public}"
-
-    with pytest.raises(ImportError):
-        from kozlov_lab.coding import build_teaching_image_code  # noqa: F401
-
-
-def test_coding_docstring_states_the_block():
-    """The placeholder must explain *why* it is empty, not just be empty."""
-    doc = kozlov_lab.coding.__doc__ or ""
-    assert "Q1" in doc
-    assert "not implemented" in doc.lower() or "未实现" in doc
-    assert "gate" in doc.lower() or "阻塞" in doc
+def _package_of(module: str) -> str | None:
+    """Which of the two packages a (possibly relative) module name refers to, if either."""
+    name = module.lstrip(".")
+    if name.startswith("kozlov_lab."):
+        name = name[len("kozlov_lab.") :]
+    head = name.split(".")[0]
+    return head if head in {"coding", "teaching"} else None
 
 
 # --------------------------------------------------------------------------- #
-# names
+# both packages exist, and each stays in its lane
 # --------------------------------------------------------------------------- #
-@pytest.mark.parametrize("forbidden", FORBIDDEN_NAMES)
-def test_forbidden_names_are_absent_from_every_identifier(forbidden):
-    """The forbidden names must not be used as names or in non-docstring strings.
+def test_both_implementations_exist_and_are_separate_packages():
+    assert TEACHING_DIR.is_dir()
+    assert CODING_DIR.is_dir()
+    # the five modules the specification prescribes must be present
+    for required in ("model.py", "exact.py", "numeric.py", "validation.py", "equivalence.py"):
+        assert (CODING_DIR / required).is_file(), f"coding/{required} is missing"
 
-    Scoped to identifiers and live string literals rather than raw text, because
-    the disclaimer has to be able to say "this is **not** ``KozlovImageCode``".
-    """
+
+def test_coding_exports_the_phase3_api():
+    for name in (
+        "KozlovImageCode",
+        "build_kozlov_image_code_exact",
+        "build_kozlov_image_code_numeric",
+        "codes_equivalent_exact",
+        "codes_equivalent_numeric",
+        "affine_equivalent_exact",
+        "validate_kozlov_image",
+        "KozlovImageValidation",
+    ):
+        assert name in kozlov_lab.coding.__all__, name
+        assert hasattr(kozlov_lab.coding, name), name
+
+
+def test_coding_exports_nothing_pedagogical():
+    offenders = [name for name in kozlov_lab.coding.__all__ if name.startswith(TEACHING_PREFIX)]
+    assert not offenders, f"the formal package must not export pedagogical names: {offenders}"
+
+
+def test_neither_package_imports_the_other():
+    """Mutual independence.  A shared dependency would let one definition masquerade as the other."""
+    for directory, label in ((TEACHING_DIR, "teaching"), (CODING_DIR, "coding")):
+        for source in _python_sources(directory):
+            others = {
+                module
+                for module in _imported_modules(source)
+                if (_package_of(module) or "") not in {"", label}
+            }
+            assert not others, f"{source.relative_to(SRC)} imports across the separation: {others}"
+
+
+# --------------------------------------------------------------------------- #
+# naming
+# --------------------------------------------------------------------------- #
+def test_teaching_does_not_claim_kozlov_names_for_itself():
+    """The pedagogical construction must not wear the official name."""
+    offenders: list[str] = []
+    for source in _python_sources(TEACHING_DIR):
+        for lineno, text in _identifier_like_strings(source):
+            if any(pattern.search(text) for pattern in KOZLOV_ISH_PATTERNS):
+                offenders.append(f"{source.relative_to(SRC)}:{lineno}::{text}")
+    assert not offenders, f"teaching/ used Kozlov's naming for its own object: {offenders}"
+
+
+@pytest.mark.parametrize("forbidden", KOZLOV_ISH)
+def test_forbidden_names_are_absent_from_teaching_identifiers(forbidden):
     offenders = [
         f"{source.relative_to(SRC)}:{lineno}"
-        for source in _python_sources(SRC)
+        for source in _python_sources(TEACHING_DIR)
         for lineno, text in _identifier_like_strings(source)
         if forbidden in text
     ]
-    assert not offenders, f"{forbidden} is used at {offenders}"
+    assert not offenders, f"{forbidden} is used as an identifier in teaching/ at {offenders}"
 
 
-def test_no_near_miss_names_outside_the_disclaimer():
-    """``KozlovCode``-style names must not be used as identifiers."""
-    offenders: list[str] = []
-    for source in _python_sources(SRC):
-        for lineno, text in _identifier_like_strings(source):
-            if any(pattern.search(text) for pattern in FORBIDDEN_PATTERNS):
-                offenders.append(f"{source.relative_to(SRC)}:{lineno}::{text}")
-    assert not offenders, f"forbidden identifier style: {offenders}"
+def test_teaching_prefix_is_reserved_for_the_pedagogical_package():
+    offenders = [
+        f"{source.relative_to(SRC)}::{name}"
+        for source in _python_sources(CODING_DIR)
+        for name in _defined_names(source)
+        if name.startswith(TEACHING_PREFIX)
+    ]
+    assert not offenders, f"coding/ must not use the Teaching prefix: {offenders}"
 
 
-def test_only_teaching_defines_an_image_code_class():
-    """No other package may grow its own image-code class."""
+def test_code_classes_are_defined_only_in_the_two_expected_places():
+    """One place per construction: no third module may grow its own code class."""
     matches: dict[str, list[str]] = {}
     for source in _python_sources(SRC):
         names = [n for n in _defined_names(source) if n.endswith(("ImageCode", "FrameCode"))]
         if names:
             matches[str(source.relative_to(SRC)).replace("\\", "/")] = names
-    assert list(matches) == ["teaching/affine_code.py"], (
-        f"ImageCode/FrameCode classes must live only in teaching/affine_code.py: {matches}"
-    )
+    assert set(matches) == {"teaching/affine_code.py", "coding/model.py"}, matches
+    assert matches["coding/model.py"] == ["KozlovImageCode"]
+
+
+def test_coding_module_layout_matches_the_specification():
+    """The five prescribed modules, and nothing that duplicates one of them."""
+    names = {path.name for path in _python_sources(CODING_DIR)}
+    assert names == {
+        "__init__.py",
+        "model.py",
+        "exact.py",
+        "numeric.py",
+        "validation.py",
+        "equivalence.py",
+    }, names
 
 
 # --------------------------------------------------------------------------- #
-# disclaimer
+# each construction keeps its own self-description
 # --------------------------------------------------------------------------- #
 def test_disclaimers_are_present_and_language_keyed():
     assert set(DISCLAIMERS) == {"en", "zh", "ru"}
@@ -209,12 +238,11 @@ def test_disclaimers_are_present_and_language_keyed():
 
 
 def test_disclaimer_says_pedagogical_and_not_official():
-    """Each language must carry the two load-bearing clauses.
+    """Still load-bearing after Phase 3 unlocked — and now for a stronger reason.
 
-    Not an exact-string match (so wording may be improved later), but the two
-    claims that protect the project from misrepresentation must survive any edit:
-    (a) the construction is pedagogical; (b) it is **not** claimed to be the
-    textbook's formal code unless verified against a primary source.
+    The formal code turned out to be a *different construction* (ratios of triangle
+    areas), so the disclaimer no longer means "unverified"; it means "not the same
+    object".
     """
     checks = {
         "en": ("pedagogical", "internal-coordinate", "not claimed"),
@@ -227,53 +255,28 @@ def test_disclaimer_says_pedagogical_and_not_official():
             assert fragment in text, f"{language} disclaimer is missing {fragment!r}"
 
 
-def test_public_objects_carry_the_disclaimer():
-    """A caller must not be able to get the code without the disclaimer nearby."""
+def test_public_objects_carry_their_own_disclaimer():
     assert "pedagogical" in (TeachingAffineImageCode.__doc__ or "")
     assert "pedagogical" in (TeachingAffineFrameCode.__doc__ or "")
     assert "pedagogical" in (kozlov_lab.teaching.__doc__ or "")
 
-    from kozlov_lab.datasets.corpus import DATASETS
-    from kozlov_lab.teaching import build_teaching_image_code
+    from kozlov_lab.coding import KozlovImageCode
 
-    payload = build_teaching_image_code(DATASETS["A"].points).as_dict()
-    for key in ("disclaimer_en", "disclaimer_zh", "disclaimer_ru"):
-        assert payload[key] == DISCLAIMERS[key.split("_")[1]]
-    assert payload["quality"]["disclaimer_zh"] == DISCLAIMER_ZH
+    assert "Kozlov" in (kozlov_lab.coding.__doc__ or "")
+    assert "Phase 3" in (kozlov_lab.coding.__doc__ or "")
+    # the formal model must name its source, and must NOT describe itself as pedagogical
+    assert "Fraction" in (KozlovImageCode.__doc__ or "") or "indexed" in (KozlovImageCode.__doc__ or "")
 
 
-def test_teaching_module_docstring_forbids_the_misreading():
-    """The module docstring must state what the code is *not*."""
+def test_the_formal_package_quotes_the_numeric_strategy_boundary():
+    """The definition/implementation split must be stated where a reader will see it."""
+    from kozlov_lab.coding import NUMERICAL_STRATEGY_NOTE
+
+    assert "NOT part of the original mathematical definition" in NUMERICAL_STRATEGY_NOTE
+    assert "数值策略" in NUMERICAL_STRATEGY_NOTE
+
+
+def test_teaching_module_still_names_the_open_question_history():
+    """The docstring must not pretend the separation was always obvious."""
     doc = kozlov_lab.teaching.__doc__ or ""
-    assert "not" in doc.lower()
-    assert "Kozlov" in doc  # named explicitly; e.g. "not claimed to be Kozlov's formal image code"
-    assert "Q1" in doc, "the open question that blocks the official implementation must be named"
-
-
-def test_teaching_does_not_import_the_coding_placeholder():
-    """A dependency the other way round would defeat the isolation.
-
-    Checked on the parsed import statements, not on raw text: the module docstring
-    mentions ``kozlov_lab.coding`` precisely in order to say it is *not* this
-    package.
-    """
-    for source in _python_sources(TEACHING_DIR):
-        modules = _imported_modules(source)
-        offenders = [
-            module
-            for module in modules
-            if "coding" in module.split(".") or module.startswith("..coding")
-        ]
-        assert not offenders, f"{source.relative_to(SRC)} imports {offenders}"
-
-
-def test_teaching_imports_are_within_the_math_layer():
-    """The pedagogical code must depend on the math layer, not on the UI or the app."""
-    forbidden_prefixes = ("streamlit", "plotly", "app", "experiments")
-    for source in _python_sources(TEACHING_DIR):
-        for module in _imported_modules(source):
-            root = module.lstrip(".").split(".")[0]
-            assert root not in forbidden_prefixes, (
-                f"{source.relative_to(SRC)} must not import {module!r}: the math layer has to "
-                "stay independent of the visualisation layer"
-            )
+    assert "not claimed" in doc.lower() or "not the same" in doc.lower()

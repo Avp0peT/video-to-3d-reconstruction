@@ -22,42 +22,53 @@ $$
 | 0 | 数学规格（Theory Agent 输出） | ✅ 完成 |
 | 1 | 有限点集 + 几何变换 | ✅ 完成 |
 | 2 | 内部仿射坐标（**项目核心**） | ✅ 完成，**Gate 通过** |
-| 3 | 图像代码（正式） | ⛔ **LOCKED：待 G3.1 裁定**（定义已取得，见下） |
-| 4 | 仿射等价识别 | ⛔ 阻塞（Phase 3） |
+| 3 | 图像代码（正式，`coding/`） | ✅ **完成**（Phase 3 已解锁 2026-10-01） |
+| 4 | 仿射等价识别 | ⛔ 仍锁定（依赖 Phase 3 的官方测试全通过；代码等价判定本轮已可用） |
 | 5 | 信息压缩 | ⛔ 阻塞（Phase 4） |
 | 6 | 立体视觉 | ⛔ 阻塞（未决问题 Q4） |
-| 7 | Streamlit Web UI（M1/M2/M3/M4/M6） | ✅ 完成 5 页 |
+| 7 | Streamlit Web UI（M1/M2/M3/M4/M5/M6） | ✅ 完成 6 页（含正式编码页） |
 | 8 | 多形状不变量验证 + 统一可复现产物 | ✅ 完成 |
 | 9 | 完整报告 + 答辩 Demo | ⏳ 阶段报告 |
 | 10 | 2026 扩展模块 E1–E5 | ⛔ 未开始 |
 
-**测试**：343 passed ｜ **实验**：5 个可复现实验全部通过 ｜ **教学型编码**：✅ 完成（Pedagogical Extension）
+**测试**：415 passed ｜ **实验**：5 个可复现实验全部通过 ｜ **教学型编码**：✅ ｜ **正式编码**：✅
 
-### ★ Q1 的进展（重要）
+### ★ Q1 已结案：Phase 3 解锁
 
-未决问题 **Q1（正式「код изображения」的定义）已取得逐字可读的一手文本**：
+未决问题 **Q1** 已由 **Kozlov 2009 论文全文**（一手来源）解决：
 
-$$\langle M_A,\ T_A\rangle,\qquad T_A=\{\,S_{mnu}/S_{ksp}\ \}\ \text{（遍历所有三元组对，分母非退化）}$$
+$$\langle M_A,\ T_A\rangle,\qquad T_A=\{\,S_{mnu}/S_{ksp}\,\}$$
 
-来源为 **Kozlov 本人的专利说明书 RU2779379C1**（作者自撰、可实施），
-其中把定理归给教材《Введение в математическую теорию зрительного восприятия》(МГУ, 2007)；
-2009 年论文摘要（出版社页面）独立确认"编码对离散点集的仿射变换不变"。
+三个约束来自论文正文，且都影响实现：三元组**内部顺序不重要**（无序集合）；
+两个三元组必须**不同**（故 $n=3$ 时 $T_A=\varnothing$）；$S_{ksp}=0$ 时比值**不定义**。
+等价关系是「存在重编号双射 $\psi:M_A\to M_B$ 保持所有面积比」——
+**不是**要求代码逐字相同。
 
-G3.1–G3.7 七个 Gate 中 **6 项明确满足**，唯一开口是 **G3.1 的来源层级**
-（专利能否替代教材作为一手依据）。因此：
+来源：В. Н. Козлов，《Распознавание изображений, представляемых конечным множеством точек》，
+Фундам. прикл. матем. **15**:5 (2009) 95–110（英译 J. Math. Sci. 172:5, 690–699）。
+专利 RU2779379C1 **降为交叉验证来源**。
+
+G3.1–G3.7 **七个 Gate 全部满足**：
 
 ```text
-Phase 3 = LOCKED（待 G3.1 裁定）
+Phase 3 = UNLOCKED
 ```
 
-裁定前 `src/kozlov_lab/coding/` 保持为空。定义本身的数值验证已完成
-（两个手算例子 + 五个数据集），产物见 `experiments/results/official_code_definition.json`。
-**详见 [`docs/specs/official_image_code.md`](docs/specs/official_image_code.md)。**
+`src/kozlov_lab/coding/` 实现五个模块，**数学定义与数值近似分开放**：
 
-> Phase 3 的阻塞有两层，且必须分开看：
-> ① **工程阻塞**：Phase 2 的性质测试（Phase 2 Gate）——**已解除**；
-> ② **数学阻塞**：教材正式编码定义尚未由一手资料确认（未决问题 Q1）——**未解除**。
-> 只解除第一层就动手实现编码，等于「凭猜测实现教材算法」，被 README 第 23 节禁止。
+| 模块 | 角色 |
+|---|---|
+| `model.py` | `K(A) = <M_A, T_A>`；`RatioEntry` **保持索引**（等价关系作用在索引上） |
+| `exact.py` | **`Fraction` 精确层**：`D = 0` 是精确判据 —— 数学正确性的 **oracle** |
+| `numeric.py` | 浮点层 + flatness 退化**策略**（明确标注：不属于原始数学定义） |
+| `validation.py` | 严格适配层：**拒绝重复点**（A8 裁定）；三层适用域判定 |
+| `equivalence.py` | 重编号双射 ψ 的搜索 + **独立的几何路线** + 交叉校验 |
+
+`KozlovImageValidation` 分别回答三个**不可合并**的问题：
+
+$$\text{代码是否可定义}\ \ne\ \text{定理 1 的 iff 是否成立}\ \ne\ \text{数值是否良态}$$
+
+**详见 [`docs/specs/official_image_code.md`](docs/specs/official_image_code.md)。**
 
 ---
 
@@ -133,8 +144,8 @@ kozlov-visual-lab/
 │   ├── datasets/
 │   │   ├── shapes.py             图形注册表（triangle/star/grid/…）
 │   │   └── corpus.py             实验数据集 A–E（非对称性**实测**）
-│   ├── teaching/                 ✅ 教学型编码（Pedagogical Extension，与正式理论隔离）
-│   ├── coding/                   ⛔ Phase 3（待 G3.1 裁定，必须为空）
+│   ├── teaching/                 ✅ 教学型编码（Pedagogical Extension，与正式实现隔离）
+│   ├── coding/                   ✅ 正式编码（model/exact/numeric/validation/equivalence）
 │   ├── recognition/              ⛔ Phase 4
 │   ├── compression/              ⛔ Phase 5
 │   └── stereo/                   ⛔ Phase 6
@@ -145,7 +156,8 @@ kozlov-visual-lab/
 │       ├── 01_Point_Set.py       M1 点集实验室
 │       ├── 02_Transformations.py M2 变换实验室
 │       ├── 03_Affine_Coordinates.py  M3 内部仿射坐标（核心）
-│       ├── 04_Teaching_Code.py   M4 教学型编码
+│       ├── 04_Teaching_Code.py   M4 教学型编码（Pedagogical construction）
+│       ├── 05_Kozlov_Official_Code.py  M5 正式图像代码（Козлов 2009）
 │       └── 06_Invariants.py      M6 不变量实验中心
 ├── tests/                        343 个测试
 ├── experiments/                  可执行实验与演示
@@ -218,7 +230,7 @@ UI 层**不得**重新实现任何数学算法（README 第 18 节）。
 | 每次运行写 `provenance.json` | 让报告里的数字可追溯 |
 | 每个"保持"断言必须配一个"破坏"断言 | 否则测试无法区分"实现正确"与"实现撒谎" |
 | 哈希只是索引，**不是**数学图像代码 | README 第 7、23 节 |
-| 教学型编码与正式理论**目录隔离**，由测试强制 | 未决问题 Q1 未裁定前不得混淆 |
+| 教学型编码与正式实现**互不冒充**，由 AST 扫描测试强制 | 两种构造不同，命名混淆会让读者误以为是同一个对象 |
 
 ---
 

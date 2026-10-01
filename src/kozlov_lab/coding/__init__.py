@@ -1,34 +1,152 @@
-"""Image-code layer — **not implemented yet** (Phase 3, README section 7).
-
-Status: BLOCKED on open question **Q1** (the exact definition of Kozlov's formal
-image code) and gated by the Phase 2 acceptance gate.  The permission gate for
-implementing anything here is ``docs/specs/official_image_code.md``: while it is
-absent or incomplete, Phase 3 stays LOCKED and this package stays empty.  The
-pedagogical construction that *is* allowed lives in :mod:`kozlov_lab.teaching`.
+"""Kozlov's formal image code — **Phase 3 implementation** (unlocked 2026-10-01).
 
 Status
 ------
-Blocked by the Phase 2 gate:
+``Phase 3`` is **unlocked**.  The permission gate was open question Q1, now resolved
+from a **primary full text**: V. N. Kozlov,
+«Распознавание изображений, представляемых конечным множеством точек»,
+Фундаментальная и прикладная математика 15:5 (2009) 95–110.  See
+``docs/specs/official_image_code.md`` for the verbatim definition, the equivalence
+relation, the theorem and its domain, and the gate table (G3.1–G3.7 all met).
 
-    "Phase 2 没有通过性质测试，不允许进入 Phase 3。"
+The object
+----------
+.. math::
 
-The gate is verified by ``tests/test_gate_phase2.py``.  Once it passes, this
-package implements::
+    K(A) = \\langle M_A,\\ T_A \\rangle,
+    \\qquad T_A = \\{\\, \\rho_{mnu,ksp} = S_{mnu}/S_{ksp} \\,\\}
 
-    frame_code.py    AffineFrameCode  = (frame, internal coordinates of all points)
-    image_code.py    ImageCode        = canonical ordering of all frame codes
-    canonical.py     quantisation + canonical representation (+ SHA-256 as an *index only*)
+with the numerator and denominator triples **unordered and distinct**, and the ratio
+undefined when :math:`S_{ksp} = 0`.  ``T_A`` stays **indexed**: a bag of numbers is not
+the code, and the equivalence relation is defined through a bijection on the indices.
 
-Non-negotiable requirement carried by README section 7: a hash is **not** the
-mathematical image code, only a computer index for it.  That sentence must
-appear in the user documentation as well, not just in a docstring.
+Layering — the point of the package
+-----------------------------------
+=========================================  ==========================================
+module                                     role
+=========================================  ==========================================
+:mod:`~kozlov_lab.coding.model`            the shared object ``<M_A, T_A>``
+:mod:`~kozlov_lab.coding.exact`            ``Fraction`` implementation — the **oracle**
+:mod:`~kozlov_lab.coding.numeric`          ``float`` implementation + a *strategy* for ``S = 0``
+:mod:`~kozlov_lab.coding.validation`       the strict adapter and the domain classification
+:mod:`~kozlov_lab.coding.equivalence`      the bijection psi, plus an independent geometric check
+=========================================  ==========================================
 
-Also blocked: the exact encoding definition of the textbook.  README section 16
-forbids inventing it — the specification must come from
-``docs/specs/image_code.md`` after a Theory-Agent pass over the primary
-sources (Kozlov 2009; Kozlov 2026).  Until that spec is marked
-``status: verified``, only the *teaching* encoder may be implemented, and it
-must say so in the UI.
+The mathematical definition and its numerical approximation are kept in **different
+modules on purpose**.  A project that computes a formal invariant with floats and then
+describes the result as "the definition" has lost the ability to say when it is wrong;
+here the exact layer is the arbiter and the numeric layer is tested against it.
+
+Two facts that are easy to conflate, and that the API refuses to conflate
+------------------------------------------------------------------------
+1. **"The code could be computed" is not "the theorem applies".**
+   :func:`~kozlov_lab.coding.validation.validate_kozlov_image` returns a three-valued
+   domain: ``code_undefined`` (all points collinear), ``two_parallel_lines``
+   (computable, but theorem 1's iff is *not* in force), and ``general_position`` (the
+   theorem's actual hypothesis).  :attr:`KozlovImageCode.theorem_applies` exposes it.
+2. **Repeated points are not part of the model.**  The formal object is a finite
+   *set*; duplicates are refused by the validator, never merged silently.
+   Deduplication, if wanted, is an explicit preprocessing step whose point-count
+   change must be shown.
+
+The pedagogical construction in :mod:`kozlov_lab.teaching` is a **different**
+construction (frame-relative internal coordinates) and remains labelled as such; it is
+not re-exported here and must not be confused with the formal code.
 """
 
 from __future__ import annotations
+
+from .equivalence import (
+    DEFAULT_SEARCH_BUDGET,
+    AffineEquivalenceResult,
+    KozlovCodeEquivalence,
+    affine_equivalent_exact,
+    codes_equivalent_exact,
+    codes_equivalent_numeric,
+    cross_check_exact,
+    find_bijection,
+    images_equivalent_by_code_exact,
+)
+from .exact import (
+    DEFAULT_MAX_ENTRIES,
+    build_kozlov_image_code_exact,
+    double_area,
+    exact_ratio,
+    max_entries_for,
+    triple_double_areas,
+)
+from .model import (
+    CODE_FORMAT_VERSION,
+    DOMAIN_CODE_UNDEFINED,
+    DOMAIN_GENERAL_POSITION,
+    DOMAIN_TWO_PARALLEL_LINES,
+    DomainVerdict,
+    KozlovImageCode,
+    RatioEntry,
+    Triple,
+    triple_key,
+)
+from .numeric import (
+    NUMERICAL_STRATEGY_NOTE,
+    build_kozlov_image_code_numeric,
+    numeric_double_areas,
+)
+from .validation import (
+    CollinearImageError,
+    DuplicatePointError,
+    KozlovImageError,
+    KozlovImageValidation,
+    NonExactCoordinateError,
+    TheoremDomainError,
+    TooFewPointsError,
+    classify_domain_exact,
+    classify_domain_numeric,
+    validate_kozlov_image,
+    validate_kozlov_image_numeric,
+)
+
+__all__ = [
+    # model
+    "CODE_FORMAT_VERSION",
+    "Triple",
+    "RatioEntry",
+    "KozlovImageCode",
+    "DomainVerdict",
+    "triple_key",
+    "DOMAIN_CODE_UNDEFINED",
+    "DOMAIN_TWO_PARALLEL_LINES",
+    "DOMAIN_GENERAL_POSITION",
+    # exact layer (the oracle)
+    "build_kozlov_image_code_exact",
+    "triple_double_areas",
+    "double_area",
+    "exact_ratio",
+    "max_entries_for",
+    "DEFAULT_MAX_ENTRIES",
+    # numeric layer
+    "build_kozlov_image_code_numeric",
+    "numeric_double_areas",
+    "NUMERICAL_STRATEGY_NOTE",
+    # validation / domain
+    "validate_kozlov_image",
+    "validate_kozlov_image_numeric",
+    "classify_domain_exact",
+    "classify_domain_numeric",
+    "KozlovImageValidation",
+    "KozlovImageError",
+    "NonExactCoordinateError",
+    "DuplicatePointError",
+    "TooFewPointsError",
+    "CollinearImageError",
+    "TheoremDomainError",
+    # equivalence
+    "KozlovCodeEquivalence",
+    "AffineEquivalenceResult",
+    "codes_equivalent_exact",
+    "codes_equivalent_numeric",
+    "images_equivalent_by_code_exact",
+    "find_bijection",
+    "affine_equivalent_exact",
+    "cross_check_exact",
+    "DEFAULT_SEARCH_BUDGET",
+]

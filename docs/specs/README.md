@@ -39,8 +39,8 @@
 | [`transforms.md`](transforms.md) | M2 几何变换实验室 | `verified` (S0) | Phase 1 |
 | [`affine_coordinates.md`](affine_coordinates.md) | M3 内部仿射坐标 | `verified` (S0) | Phase 2 |
 | [`invariants.md`](invariants.md) | M6 不变量实验中心 | `verified` (S0) | Phase 2 |
-| [`image_code.md`](image_code.md) | M4 图像代码 | `unverified` | Phase 3（**待 G3.1 裁定**） |
-| [`official_image_code.md`](official_image_code.md) | **Q1：正式「код изображения」定义** | `verified_with_recorded_substitution` | Phase 3 的权限闸门 |
+| [`image_code.md`](image_code.md) | M4 图像代码（旧规格，已被 official_image_code.md 取代） | `superseded` | — |
+| [`official_image_code.md`](official_image_code.md) | **Q1：正式「код изображения」定义** | `verified`（2009 全文，一手） | Phase 3（**已解锁**） |
 | [`teaching_affine_code.md`](teaching_affine_code.md) | M4 教学型编码（Pedagogical Extension） | `pedagogical` | Sprint 3C（已完成） |
 | [`recognition.md`](recognition.md) | M5 仿射等价识别 | `planned` | Phase 4（**被 Gate 阻塞**） |
 | [`compression.md`](compression.md) | M7 图像信息压缩 | `planned` | Phase 5 |

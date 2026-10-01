@@ -42,6 +42,7 @@ PAGES = {
     "m2_transformations": APP_DIR / "pages" / "02_Transformations.py",
     "m3_affine_coordinates": APP_DIR / "pages" / "03_Affine_Coordinates.py",
     "m4_teaching_code": APP_DIR / "pages" / "04_Teaching_Code.py",
+    "m5_official_code": APP_DIR / "pages" / "05_Kozlov_Official_Code.py",
     "m6_invariants": APP_DIR / "pages" / "06_Invariants.py",
 }
 
@@ -396,3 +397,50 @@ def test_pages_only_import_the_public_math_api():
                 if "._" in stripped:
                     offenders.append(f"{path.name}: {stripped}")
     assert not offenders, f"pages touched private math helpers: {offenders}"
+
+
+# --------------------------------------------------------------------------- #
+# M5 — the formal construction, and the separation from M4
+# --------------------------------------------------------------------------- #
+def test_m5_states_its_primary_source():
+    text = _all_text(_run("m5_official_code"))
+    assert "2009" in text
+    assert "正式" in text or "正本" in text
+    assert "M_A" in text or "M_A" in text.replace("$", "")
+    assert "T_A" in text
+
+
+def test_m5_shows_the_three_independent_questions():
+    """The specification's boxed distinction must be visible, not just implemented."""
+    text = _all_text(_run("m5_official_code"))
+    assert "代码是否可定义" in text
+    assert "定理 1" in text
+    assert "数值是否良态" in text
+
+
+def test_m5_and_m4_each_declare_which_construction_they_are():
+    teaching = _all_text(_run("m4_teaching_code"))
+    formal = _all_text(_run("m5_official_code"))
+    # the teaching page must point at the formal one and disclaim equivalence
+    assert "M5" in teaching and "不同的构造" in teaching
+    # the formal page must point back and disclaim being the pedagogical one
+    assert "M4" in formal
+    assert "教学型" in formal
+
+
+def test_m5_explains_the_empty_code_for_three_points():
+    """With the default 5-point input there is a code; the explanation must still be present.
+
+    ``|T_A| = 0`` for ``n = 3`` follows from the "two distinct triples" clause, and the
+    page has to explain it rather than let it look like a failure.
+    """
+    text = _all_text(_run("m5_official_code"))
+    assert "不同" in text  # "两个三元组必须不同"
+    assert "n = 3" in text, "the page must explain the empty-code case where it is always visible"
+
+
+def test_m5_labels_the_numeric_layer_as_a_strategy():
+    text = _all_text(_run("m5_official_code"))
+    # the exact layer is the default, so the strategy note appears only when selected;
+    # the page must at least offer the switch
+    assert "整数" in text and "浮点" in text
