@@ -1,0 +1,11 @@
+# 行尾与二进制约定
+#
+# 本仓库的源文件与产物必须是 LF：JSON 示例文件需要逐位往返一致，
+# 文档需要跨平台 diff 干净。Windows 上 `core.autocrlf=true` 会静默改写
+# 工作区文件，因此显式声明。
+* text=auto eol=lf
+
+*.png binary
+*.jpg binary
+*.pdf binary
+*.gguf binary
