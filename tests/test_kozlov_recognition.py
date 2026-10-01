@@ -53,6 +53,7 @@ def test_status_vocabulary_covers_every_required_case():
         "NUMERIC_AFFINE_MATCH",
         "NUMERIC_NON_MATCH",
         "NUMERIC_INDETERMINATE",
+        "CODE_COLLISION_OUTSIDE_THEOREM_DOMAIN",
         "CODE_UNDEFINED",
         "INVALID_INPUT",
     }
@@ -161,14 +162,14 @@ def test_code_equivalent_theorem_not_applicable_is_reachable_when_the_oracle_abs
     """The vocabulary entry exists for the case where the oracle *cannot* upgrade the gap.
 
     In the current implementation the geometric oracle decides every non-degenerate case
-    exhaustively, so the status is reached only through the decision logic with an abstaining
-    verdict.  Testing the mapping directly is the honest option: asserting reachability that
-    the oracle prevents would be asserting a falsehood, and dropping the entry would lose the
-    specification's vocabulary.
+    exhaustively, so the status is reached through the decision logic with an abstaining verdict
+    rather than through a concrete pair.  Testing the mapping directly is the honest option:
+    asserting reachability the oracle prevents would be asserting a falsehood, and dropping the
+    entry would lose the specification's vocabulary.
     """
     from kozlov_lab.coding import KozlovCodeEquivalence
     from kozlov_lab.coding.geometric import AffineEquivalenceVerdict
-    from kozlov_lab.coding.recognition import _status_outside_theorem_domain
+    from kozlov_lab.coding.recognition import _resolve_status
 
     code_result = KozlovCodeEquivalence(
         equivalent=True, undecided=False, reason="fabricated", bijection=None,
@@ -178,93 +179,47 @@ def test_code_equivalent_theorem_not_applicable_is_reachable_when_the_oracle_abs
         equivalent=False, exhaustive=False, undecided=True, witness=None,
         candidates_tried=0, reason="fabricated abstention",
     )
-    assert (
-        _status_outside_theorem_domain(code_result, abstaining)
-        is RecognitionStatus.CODE_EQUIVALENT_THEOREM_NOT_APPLICABLE
-    )
+    status, _, _ = _resolve_status(code_result, abstaining, theorem_applicable=False, x=1, y=2)
+    assert status is RecognitionStatus.CODE_EQUIVALENT_THEOREM_NOT_APPLICABLE
 
 
-def test_theorem_gap_is_distinguishable_from_undecidable():
-    """The specification's boxed point: theorem not applicable ≠ no other method can decide.
-
-    When the geometric oracle is exhaustive it *can* decide, so the status must be the exact
-    negative rather than "undecidable".
-    """
-    witness_result = recognize_affine_exact(TWO_PARALLEL, [TWO_PARALLEL[i] for i in [4, 3, 2, 1, 0]])
-    assert witness_result.theorem_applicable is False
-    assert witness_result.theorem_applicable != witness_result.code_definable
-    assert witness_result.status is RecognitionStatus.EXACT_AFFINE_EQUIVALENT
-    assert witness_result.witnessed, "the oracle decided, so the status is the witnessed one"
-
-    negative = recognize_affine_exact(
-        TWO_PARALLEL,
-        [(Fraction(0), Fraction(0)), (Fraction(4), Fraction(1, 2)), (Fraction(11, 4), Fraction(41, 20)),
-         (Fraction(3, 4), Fraction(9, 5)), (Fraction(9), Fraction(9))],
-    )
-    assert negative.theorem_applicable is False
-    assert negative.status is RecognitionStatus.EXACT_NOT_AFFINE_EQUIVALENT, (
-        "the oracle's negative is exhaustive, so 'theorem not applicable' must not be reported "
-        "as 'undecidable' — that is the specification's boxed distinction"
-    )
-
-
-# --------------------------------------------------------------------------- #
-# 4H — cross-check discipline
-# --------------------------------------------------------------------------- #
-def test_cross_check_agrees_on_the_ordinary_cases():
-    for other in (X, [X[i] for i in [3, 1, 4, 0, 2]], [[0, 0], [5, 0], [0, 5], [2, 2], [7, 3]]):
-        result = recognize_affine_exact(X, other)
-        assert "cross_check_note" not in result.diagnostics
-
-
-def test_internal_consistency_error_carries_a_reproduction_artifact(tmp_path):
-    """The error must be actionable without a re-run: it carries inputs, both routes, commit."""
-    artifact = {
-        "inputs": {"x": X, "y": Y_MAPPED},
-        "code_route": {"equivalent": True},
-        "geometric_route": {"equivalent": False},
-        "theorem_applicable": True,
-    }
-    error = InternalConsistencyError("routes disagree", artifact)
-    assert error.artifact["theorem_applicable"] is True
-    path = error.write_artifact(tmp_path)
-    assert path.exists()
-    import json
-
-    payload = json.loads(path.read_text(encoding="utf-8"))
-    assert payload["inputs"]["x"] == X
-    assert payload["code_route"]["equivalent"] is True
-    assert "geometric_route" in payload
-
-
-def test_cross_check_raises_inside_the_domain_and_only_reports_outside_it():
-    """The scope rule, stated as a test: inside → error, outside → diagnostic.
-
-    Inside theorem 1's domain the routes are guaranteed to agree, so a mismatch is a defect.
-    Outside it, the hypothesis is exactly what rules out agreement, so raising would be wrong.
-    """
-    from kozlov_lab.coding import KozlovCodeEquivalence, check_geometric_equivalence
+def test_the_f42_truth_table_has_exactly_the_five_rows():
+    """F4.2 is a table, so it is tested as a table — including its asymmetries."""
+    from kozlov_lab.coding import KozlovCodeEquivalence
     from kozlov_lab.coding.geometric import AffineEquivalenceVerdict
-    from kozlov_lab.coding.recognition import _cross_check
+    from kozlov_lab.coding.recognition import _resolve_status
 
-    fake_code = KozlovCodeEquivalence(
-        equivalent=True,
-        undecided=False,
-        reason="fabricated for the test",
-        bijection=None,
-        candidates_examined=0,
-        n_entries_a=0,
-        n_entries_b=0,
-        tolerance=None,
+    def code(equivalent: bool, undecided: bool = False) -> KozlovCodeEquivalence:
+        return KozlovCodeEquivalence(
+            equivalent=equivalent, undecided=undecided, reason="fabricated", bijection=None,
+            candidates_examined=0, n_entries_a=0, n_entries_b=0, tolerance=None,
+        )
+
+    def geometric(equivalent: bool, undecided: bool = False) -> AffineEquivalenceVerdict:
+        return AffineEquivalenceVerdict(
+            equivalent=equivalent, exhaustive=not undecided, undecided=undecided, witness=None,
+            candidates_tried=0, reason="fabricated",
+        )
+
+    # row 1 and 2
+    assert _resolve_status(code(True), geometric(True), theorem_applicable=True, x=1, y=2)[0] is (
+        RecognitionStatus.EXACT_AFFINE_EQUIVALENT
     )
-    real = check_geometric_equivalence(X, [[0, 0], [5, 0], [0, 5], [2, 2], [7, 3]])
-    assert real.equivalent is False
-
+    assert _resolve_status(code(False), geometric(False), theorem_applicable=True, x=1, y=2)[0] is (
+        RecognitionStatus.EXACT_NOT_AFFINE_EQUIVALENT
+    )
+    # row 5: outside the domain a code collision is reported, not raised
+    assert _resolve_status(code(True), geometric(False), theorem_applicable=False, x=1, y=2)[0] is (
+        RecognitionStatus.CODE_COLLISION_OUTSIDE_THEOREM_DOMAIN
+    )
+    # row 4: inside the domain the same disagreement is a defect
     with pytest.raises(InternalConsistencyError):
-        _cross_check(fake_code, real, theorem_applicable=True, x=X, y=X)
-
-    note = _cross_check(fake_code, real, theorem_applicable=False, x=X, y=X)
-    assert note is not None and "expected" in note
+        _resolve_status(code(True), geometric(False), theorem_applicable=True, x=1, y=2)
+    # row 3: a witness with a code mismatch raises **regardless of the domain**, because
+    # "affine equivalent implies code equivalent" needs no hypothesis
+    for domain in (True, False):
+        with pytest.raises(InternalConsistencyError):
+            _resolve_status(code(False), geometric(True), theorem_applicable=domain, x=1, y=2)
 
 
 # --------------------------------------------------------------------------- #

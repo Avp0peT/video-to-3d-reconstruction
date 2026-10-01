@@ -38,6 +38,7 @@ SCRIPTS: tuple[tuple[str, str], ...] = (
     ("official_code_definition", "exp_official_code_definition.py"),
     ("phase4_scaling", "exp_phase4_scaling.py"),
     ("phase4_differential", "exp_phase4_differential.py"),
+    ("phase5_compression", "exp_phase5_compression.py"),
 )
 
 #: Required result files (Sprint 3E names them explicitly).
@@ -52,13 +53,17 @@ REQUIRED = (
     # phase 4: the O(n^6) structure and the differential gate
     "phase4_scaling.csv",
     "phase4_differential.json",
+    # phase 5: equivariance and recognition preservation under compression
+    "phase5_equivariance.csv",
+    "phase5_recognition.csv",
 )
 
 QUICK_FLAGS: dict[str, tuple[str, ...]] = {
     "exp_phase2_gate.py": ("--n", "200", "--falsifiability-n", "100"),
     "exp_shape_generalization.py": ("--repetitions", "3"),
     "exp_phase4_scaling.py": ("--max-n", "12", "--entry-cap", "60000"),
-    "exp_phase4_differential.py": ("--cases", "600"),
+    "exp_phase4_differential.py": ("--accepted", "600"),
+    "exp_phase5_compression.py": ("--quick",),
 }
 
 

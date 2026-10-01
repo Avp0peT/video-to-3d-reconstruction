@@ -325,3 +325,75 @@ def test_geometric_route_dependencies():
     assert not offenders, f"the geometric oracle must not import {offenders}"
     assert any("geometry" in name for name in imported), "it should use the geometry layer"
     assert any("validation" in name for name in imported), "one shared coordinate coercion"
+
+
+# --------------------------------------------------------------------------- #
+# F4.3 — collision injection: a hash must not be able to change an answer
+# --------------------------------------------------------------------------- #
+def test_colour_hash_collisions_cannot_change_an_answer():
+    """Force every structural key into one bucket and require every answer to survive.
+
+    This is F4.3's mandatory test.  The refinement interns *structural* keys in a shared
+    registry and uses the hash only to choose a bucket, confirming each candidate by a full key
+    comparison — so a collision can cost comparisons and can never change a verdict.
+
+    If this test ever fails, a hash has reached the mathematical semantics: the prune would then
+    be able to exclude the true correspondence and the engine would report a false negative.
+    """
+    from kozlov_lab.coding import build_kozlov_image_code_exact, kozlov_codes_equivalent
+    from kozlov_lab.coding.equivalence import ColourRegistry, refine_colours_joint, set_colour_hash
+
+    images = [
+        [[0, 0], [3, 0], [0, 4], [1, 1], [5, 2]],
+        [[0, 0], [5, 0], [0, 5], [2, 2], [6, 3], [3, 7]],
+        [[0, 0], [2, 0], [0, 2], [1, 1]],
+    ]
+    cases = []
+    for points in images:
+        n = len(points)
+        reference = build_kozlov_image_code_exact(points)
+        relabelled = build_kozlov_image_code_exact([points[i] for i in reversed(range(n))])
+        unrelated = build_kozlov_image_code_exact(
+            [[3 * i + 1, (i * i) % 7 + 2] for i in range(n)]
+        )
+        cases.append((reference, relabelled, True))
+        cases.append((reference, unrelated, None))
+
+    try:
+        baseline = [kozlov_codes_equivalent(a, b).equivalent for a, b, _ in cases]
+
+        set_colour_hash(lambda key: 0)  # every key in one bucket
+        registry = ColourRegistry()
+        injected: list[bool] = []
+        comparisons = 0
+        for a, b, _ in cases:
+            result = kozlov_codes_equivalent(a, b)
+            injected.append(result.equivalent)
+            colours_a, colours_b, registry = refine_colours_joint(a, b, rounds=1, registry=ColourRegistry())
+            registry.verify_injective()
+            comparisons += registry.comparisons
+
+        assert injected == baseline, (
+            "a forced hash collision changed an answer, so the hash is inside the mathematical "
+            f"semantics: baseline={baseline}, injected={injected}"
+        )
+        assert comparisons > 0, "the injection must actually exercise the comparison path"
+        # the equivalence verdicts themselves are the claim, checked structurally as well
+        for (a, b, expected), value in zip(cases, injected):
+            if expected is not None:
+                assert value is expected
+    finally:
+        set_colour_hash(None)
+
+
+def test_the_colour_registry_is_injective():
+    """Equal ids must imply equal structural keys, or the interning lost a distinction."""
+    from kozlov_lab.coding import build_kozlov_image_code_exact
+    from kozlov_lab.coding.equivalence import refine_colours_joint
+
+    points = [[0, 0], [5, 0], [0, 5], [2, 2], [6, 3], [3, 7]]
+    a = build_kozlov_image_code_exact(points)
+    b = build_kozlov_image_code_exact([points[i] for i in [3, 1, 5, 0, 4, 2]])
+    for rounds in (0, 1, 2):
+        _, _, registry = refine_colours_joint(a, b, rounds=rounds)
+        registry.verify_injective()

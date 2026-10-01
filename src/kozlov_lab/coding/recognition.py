@@ -90,6 +90,10 @@ class RecognitionStatus(str, Enum):
     NUMERIC_AFFINE_MATCH = "NUMERIC_AFFINE_MATCH"
     NUMERIC_NON_MATCH = "NUMERIC_NON_MATCH"
     NUMERIC_INDETERMINATE = "NUMERIC_INDETERMINATE"
+    #: The codes match while no affine map exists, **outside** theorem 1's domain.  A
+    #: mathematical phenomenon rather than a defect: the theorem's hypothesis is precisely what
+    #: rules out "code-equivalent yet not affine-equivalent".
+    CODE_COLLISION_OUTSIDE_THEOREM_DOMAIN = "CODE_COLLISION_OUTSIDE_THEOREM_DOMAIN"
     CODE_UNDEFINED = "CODE_UNDEFINED"
     INVALID_INPUT = "INVALID_INPUT"
 
@@ -244,58 +248,127 @@ def _build_codes_exact(x: Any, y: Any) -> tuple[KozlovImageCode | None, KozlovIm
     return codes[0], codes[1], info, {}
 
 
-def _cross_check(
+def _build_disagreement_artifact(
+    code_result: KozlovCodeEquivalence, geometric: Any, *, x: Any, y: Any, theorem_applicable: bool
+) -> dict:
+    """Self-contained reproduction record for a disagreement that must not be resolved.
+
+    Includes the inputs verbatim: the point of the artifact is that the case can be minimised
+    and re-run without any further access to the session that found it.
+    """
+    return {
+        "inputs": {"x": x, "y": y},
+        "code_route": code_result.as_dict(),
+        "geometric_route": geometric.as_dict(),
+        "theorem_applicable": theorem_applicable,
+        "truth_table_row": {
+            "code_equivalent": code_result.equivalent,
+            "geometric_equivalent": geometric.equivalent,
+        },
+    }
+
+
+def _resolve_status(
     code_result: KozlovCodeEquivalence,
     geometric: Any,
     *,
     theorem_applicable: bool,
     x: Any,
     y: Any,
-) -> str | None:
-    """Compare the two routes; raise inside the domain, report outside it.
+) -> tuple[RecognitionStatus, tuple[EvidenceKind, ...], str | None]:
+    """The F4.2 truth table, written out rather than implied by control flow.
 
-    Returns a diagnostic string when a *non-actionable* mismatch occurred (outside the
-    domain), or ``None`` when the routes agree or one of them abstained.
+    ====================  ==================================  ======================================
+    code                  geometric                           outcome
+    ====================  ==================================  ======================================
+    ``True``              ``True``                            ``EXACT_AFFINE_EQUIVALENT``
+    ``False``             ``False``                           ``EXACT_NOT_AFFINE_EQUIVALENT``
+    ``False``             ``True``                            ``InternalConsistencyError`` (unconditional)
+    ``True``              ``False``, theorem applies          ``InternalConsistencyError``
+    ``True``              ``False``, theorem does not apply   ``CODE_COLLISION_OUTSIDE_THEOREM_DOMAIN``
+    abstention            —                                   reported as ``..._NOT_APPLICABLE`` / ``..._INDETERMINATE``
+    ====================  ==================================  ======================================
+
+    Two asymmetries are deliberate and worth stating:
+
+    * ``code=False, geometry=True`` raises **regardless of the theorem domain**.  Affine
+      equivalence *must* preserve formal code equivalence — that implication needs no
+      hypothesis — so a witness alongside a code mismatch is a defect wherever it occurs.  An
+      earlier version of this function only raised inside the domain, which would have let a
+      real defect pass outside it.
+    * ``code=True, geometry=False`` outside the domain is **not** a defect.  The theorem's
+      hypothesis is exactly what rules out agreement, so the case gets its own status and the
+      constructive route decides.
+
+    The last row is the third asymmetry: an abstention is not a disagreement, in either
+    direction, and must not be turned into one.
     """
-    if code_result.undecided or geometric.undecided:
-        return None
-    if code_result.equivalent == geometric.equivalent:
-        return None
+    witness = geometric.witness
+    code_equivalent = None if code_result.undecided else code_result.equivalent
+    geometric_equivalent = None if geometric.undecided else geometric.equivalent
+
+    # -- one route abstained: not a disagreement, but a weaker answer ------------------ #
+    if code_equivalent is None or geometric_equivalent is None:
+        if witness is not None:
+            return RecognitionStatus.EXACT_AFFINE_EQUIVALENT, (EvidenceKind.GEOMETRIC_WITNESS,), None
+        if code_equivalent:
+            return (
+                RecognitionStatus.CODE_EQUIVALENT_THEOREM_NOT_APPLICABLE,
+                (EvidenceKind.CODE_EQUIVALENCE,),
+                "the code route answered while the geometric oracle did not; the code verdict is "
+                "reported as such and must not be promoted to an affine statement without the "
+                "theorem's hypothesis",
+            )
+        if geometric.undecided:
+            return (
+                RecognitionStatus.NUMERIC_INDETERMINATE,
+                (EvidenceKind.NONE,),
+                "the geometric oracle could not decide and the code route did not answer either",
+            )
+        return (
+            RecognitionStatus.NUMERIC_INDETERMINATE,
+            (EvidenceKind.NONE,),
+            "no route reached a verdict",
+        )
+
+    # -- both routes answered: the table ------------------------------------------------ #
+    if code_equivalent and geometric_equivalent:
+        return (
+            RecognitionStatus.EXACT_AFFINE_EQUIVALENT,
+            (EvidenceKind.CODE_EQUIVALENCE, EvidenceKind.GEOMETRIC_WITNESS),
+            None,
+        )
+    if not code_equivalent and not geometric_equivalent:
+        return RecognitionStatus.EXACT_NOT_AFFINE_EQUIVALENT, (EvidenceKind.CODE_EQUIVALENCE,), None
+
+    if not code_equivalent and geometric_equivalent:
+        raise InternalConsistencyError(
+            "an explicit affine map was found, yet the formal codes are not equivalent. Affine "
+            "equivalence must preserve code equivalence unconditionally — that implication needs "
+            "no hypothesis — so one of the two implementations is wrong. The pipeline refuses to "
+            "choose, and this holds regardless of theorem 1's domain.",
+            _build_disagreement_artifact(
+                code_result, geometric, x=x, y=y, theorem_applicable=theorem_applicable
+            ),
+        )
+
     if theorem_applicable:
         raise InternalConsistencyError(
-            "the code route and the geometric route disagree inside theorem 1's domain, where "
-            f"they are guaranteed to agree: code_equivalent={code_result.equivalent}, "
-            f"geometric_equivalent={geometric.equivalent}. One of the two implementations is "
-            "wrong; the pipeline refuses to choose.",
-            {
-                "inputs": {"x": x, "y": y},
-                "code_route": code_result.as_dict(),
-                "geometric_route": geometric.as_dict(),
-                "theorem_applicable": theorem_applicable,
-                "note": (
-                    "inside the theorem domain the two routes must agree, so this is a defect "
-                    "rather than a boundary case"
-                ),
-            },
+            "the codes are equivalent while no affine map exists, *inside* theorem 1's domain, "
+            "where the two are guaranteed to agree. One of the two implementations is wrong; the "
+            "pipeline refuses to choose.",
+            _build_disagreement_artifact(
+                code_result, geometric, x=x, y=y, theorem_applicable=theorem_applicable
+            ),
         )
+
     return (
-        "the two routes disagree, which is *expected* here: theorem 1's hypothesis is not "
-        "satisfied, so code equivalence does not imply affine equivalence. Reported rather "
-        "than raised, and the constructive evidence decides the status."
+        RecognitionStatus.CODE_COLLISION_OUTSIDE_THEOREM_DOMAIN,
+        (EvidenceKind.CODE_EQUIVALENCE,),
+        "the codes are equivalent but no affine map exists, and theorem 1's hypothesis is not "
+        "satisfied — so this is precisely the situation the hypothesis excludes. Reported rather "
+        "than raised: the code verdict is real, it simply does not imply an affine statement here.",
     )
-
-
-def _status_outside_theorem_domain(
-    code_result: KozlovCodeEquivalence, geometric: Any
-) -> RecognitionStatus:
-    """Status when the theorem does not apply: prefer constructive evidence, then the oracle."""
-    if geometric.witness is not None:
-        return RecognitionStatus.EXACT_AFFINE_EQUIVALENT
-    if geometric.undecided:
-        return RecognitionStatus.CODE_EQUIVALENT_THEOREM_NOT_APPLICABLE
-    if geometric.exhaustive and not geometric.equivalent:
-        return RecognitionStatus.EXACT_NOT_AFFINE_EQUIVALENT
-    return RecognitionStatus.CODE_EQUIVALENT_THEOREM_NOT_APPLICABLE
 
 
 # --------------------------------------------------------------------------- #
@@ -406,47 +479,14 @@ def recognize_affine_exact(
     # -- geometric route --------------------------------------------------- #
     geometric = check_geometric_equivalence(x, y)
     diagnostics["geometric_route"] = geometric.as_dict()
-    mismatch = _cross_check(
+
+    # -- F4.2 truth table -------------------------------------------------- #
+    status, evidence, note = _resolve_status(
         code_result, geometric, theorem_applicable=theorem_applicable, x=x, y=y
     )
-    if mismatch:
-        diagnostics["cross_check_note"] = mismatch
-
-    # -- status ------------------------------------------------------------ #
+    if note:
+        diagnostics["resolution_note"] = note
     witness = geometric.witness
-    if theorem_applicable:
-        if code_result.undecided:
-            # Inside the domain the code route is the definition; a budget exhaustion means the
-            # answer is *unknown*, and the geometric route is allowed to supply it.
-            status = (
-                RecognitionStatus.EXACT_AFFINE_EQUIVALENT
-                if geometric.equivalent
-                else RecognitionStatus.EXACT_NOT_AFFINE_EQUIVALENT
-                if geometric.exhaustive
-                else RecognitionStatus.NUMERIC_INDETERMINATE
-            )
-            evidence = (EvidenceKind.GEOMETRIC_WITNESS,) if witness else (EvidenceKind.NONE,)
-            diagnostics["code_route_undecided"] = True
-        else:
-            status = (
-                RecognitionStatus.EXACT_AFFINE_EQUIVALENT
-                if code_result.equivalent
-                else RecognitionStatus.EXACT_NOT_AFFINE_EQUIVALENT
-            )
-            evidence = (
-                (EvidenceKind.CODE_EQUIVALENCE, EvidenceKind.GEOMETRIC_WITNESS)
-                if witness
-                else (EvidenceKind.CODE_EQUIVALENCE,)
-            )
-    else:
-        status = _status_outside_theorem_domain(code_result, geometric)
-        evidence = (EvidenceKind.GEOMETRIC_WITNESS,) if witness else (EvidenceKind.CODE_EQUIVALENCE,)
-        if status is RecognitionStatus.CODE_EQUIVALENT_THEOREM_NOT_APPLICABLE:
-            diagnostics["theorem_gap"] = (
-                "the code exists and its verdict is reported, but theorem 1's iff guarantee does "
-                "not apply to these images — so 'code equivalent' must not be read as 'affine "
-                "equivalent'. The independent geometric route was run and abstained."
-            )
 
     residual = None
     if witness is not None:

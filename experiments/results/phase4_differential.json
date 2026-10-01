@@ -1,9 +1,9 @@
 {
   "name": "phase4_differential",
   "provenance": {
-    "timestamp_utc": "2026-10-01T08:16:50+00:00",
+    "timestamp_utc": "2026-10-01T08:36:17+00:00",
     "package_version": "0.2.0",
-    "git_commit": "055542e3d3b5e60eb1975974351f0912d22796b8",
+    "git_commit": "17bdb04db13a88e60fa21e3657e9851f5bd228d0",
     "git_dirty": true,
     "git_branch": "master",
     "python_version": "3.13.14",
@@ -22,7 +22,8 @@
       "TEACHING_CODE_DECIMALS": 9
     },
     "experiment_config": {
-      "cases_requested": 10000,
+      "accepted_target": 10000,
+      "max_attempts": 40000,
       "n_weights": [
         [
           4,
@@ -42,31 +43,39 @@
         ]
       ],
       "coordinate_box": 20,
-      "generator": "50% affine image, 50% independent draw; oracle supplies ground truth",
+      "generator": "50% affine image, 50% independent draw; ~12% on two parallel lines",
       "shrink_budget": 8
     }
   },
   "experiment": "phase4_differential",
-  "title": "code route vs geometric route on exact small cases",
-  "counts": {
-    "cases": 9796,
-    "equivalent": 4876,
-    "not_equivalent": 4920,
-    "skipped": 204,
-    "outside_theorem_domain": 1030
+  "title": "differential gate counted by accepted cases (F4.1)",
+  "counters": {
+    "generated": 10256,
+    "accepted": 10000,
+    "skipped_degenerate": 256,
+    "inside_theorem_domain": 8874,
+    "outside_theorem_domain": 1126,
+    "code_equal_geometry_equal": 5057,
+    "code_unequal_geometry_unequal": 4943,
+    "code_equal_geometry_unequal": 0,
+    "code_unequal_geometry_equal": 0,
+    "indeterminate": 0,
+    "unexplained_disagreements": 0
   },
-  "verdicts": {
-    "cases": 9796,
-    "outside_theorem_domain_cases": 1030,
-    "domain_case_exercised": true,
+  "gate": {
+    "accepted": 10000,
+    "required_accepted": 10000,
     "unexplained_disagreements": 0,
-    "explained_disagreements": 0,
-    "gate_requirement": "0 unexplained disagreements",
+    "accepted_requirement_met": true,
+    "zero_unexplained_requirement_met": true,
     "gate_passed": true,
-    "elapsed_seconds": 99.5815411000076,
-    "artifact_paths": [],
-    "note": "an 'explained' disagreement is one outside theorem 1's domain, where the hypothesis is exactly what rules out agreement; it is recorded, never tolerated away by widening a tolerance"
+    "partition_is_complete": true,
+    "classified": 10000,
+    "domain_branch_exercised": true,
+    "elapsed_seconds": 87.53021799999988
   },
+  "explained": [],
   "unexplained": [],
-  "explained": []
+  "artifact_paths": [],
+  "note": "verdicts come from recognize_affine_exact, so this harness exercises the F4.2 truth table rather than re-deriving it"
 }

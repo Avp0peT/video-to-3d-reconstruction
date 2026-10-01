@@ -70,7 +70,9 @@ from .equivalence import (
     find_bijection,
     images_equivalent_by_code_exact,
     kozlov_codes_equivalent,
-    refine_colours,
+    refine_colours_joint,
+    set_colour_hash,
+    ColourRegistry,
 )
 from .geometric import (
     AffineEquivalenceVerdict,
@@ -194,7 +196,9 @@ __all__ = [
     # equivalence
     "kozlov_codes_equivalent",
     "entries_touching",
-    "refine_colours",
+    "refine_colours_joint",
+    "ColourRegistry",
+    "set_colour_hash",
     "brute_force_bijection",
     "GEOMETRIC_ROUTE_DEPENDENCIES",
     "KozlovCodeEquivalence",

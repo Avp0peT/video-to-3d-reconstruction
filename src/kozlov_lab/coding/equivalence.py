@@ -36,7 +36,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from fractions import Fraction
 import itertools
-from typing import Any, Iterable, Iterator, Mapping, Sequence
+from typing import Any, Callable, Iterable, Iterator, Mapping, Sequence
 
 from .model import (
     KozlovImageCode,
@@ -51,7 +51,9 @@ __all__ = [
     "KozlovCodeEquivalence",
     "kozlov_codes_equivalent",
     "entries_touching",
-    "refine_colours",
+    "refine_colours_joint",
+    "ColourRegistry",
+    "set_colour_hash",
     "brute_force_bijection",
     "GEOMETRIC_ROUTE_DEPENDENCIES",
     "AffineEquivalenceResult",
@@ -201,45 +203,107 @@ def entries_touching(code: KozlovImageCode) -> dict[int, list[RatioEntry]]:
 def _value_key(value: Any, tolerance: float | None) -> str:
     """A value's contribution to a colour, quantised when a tolerance is in force.
 
-    For exact codes the exact spelling is used: ``str(Fraction(1, 2))`` is ``"1/2"`` and
+    For exact codes the exact spelling is used: ``str(Fraction(1, 2))`` is ``"1/2"``, so
     identical rationals give identical strings.
 
-    For **numeric** codes the value must *not* be used verbatim.  Two equivalent images whose
-    float codes differ in the last bit would then land in different colour classes, the prune
-    would exclude the true correspondence, and the engine would report a false negative —
-    the prune itself becoming the bug.  Quantising to the comparison's own tolerance keeps
-    the colour consistent with what the comparison is willing to accept.
+    For **numeric** codes the value must not be used verbatim: two equivalent images whose
+    float codes differ in the last bit would land in different colour classes, the prune would
+    exclude the true correspondence, and the engine would report a false negative — the prune
+    itself becoming the bug.  Quantising to the comparison's own tolerance keeps the colour
+    consistent with what the comparison is willing to accept.
     """
-    if tolerance is None:
-        return str(value)
-    if tolerance <= 0:
+    if tolerance is None or tolerance <= 0:
         return str(value)
     return repr(round(float(value) / tolerance))
 
 
-def _digest(value: Any) -> str:
-    """Fixed-size, content-addressed colour identifier.
+#: Injectable hash used **only to bucket** structural keys.  Overriding it can change how
+#: fast the refinement runs, and can never change what it concludes — see
+#: :class:`ColourRegistry`.  It exists so that a test can force every key into one bucket and
+#: demonstrate exactly that.
+_COLOUR_HASH: "Callable[[Any], Any]" = hash
 
-    **Why this is not a detail.**  A first version stored the refined colour as the nested
-    tuple itself and stringified it again on the next round.  Each round then embedded the
-    previous round's *entire* colour (itself of size ``O(|T_A|)``) once per incident entry, so
-    the object grew like ``O(|T_A|^2) = O(n^12)``.  Measured: 1.2 s at ``n = 5`` and **110 s at
-    ``n = 6``** — an algorithm that was correct and unusable.
 
-    Hashing each colour to 8 bytes keeps every round ``O(incident entries)`` and keeps the
-    identifiers *content-based*, so equal colours get equal digests in both codes without any
-    shared registry.  A collision would only merge two colour classes, which makes the prune
-    weaker (more candidates) and never unsound, because the full verification still decides.
+def set_colour_hash(hash_fn: "Callable[[Any], Any] | None") -> None:
+    """Replace the bucket hash (tests, and nothing else should need this).
+
+    See ``tests/test_kozlov_refinement_collisions.py``: with ``lambda key: 0`` every key lands
+    in a single bucket, so equality is decided purely by the full structural comparison, and
+    every exact equivalence answer must remain correct.  If that injection ever changed an
+    answer, then a hash would have reached the mathematical semantics — which F4.3 forbids.
     """
-    import hashlib
+    global _COLOUR_HASH
+    _COLOUR_HASH = hash if hash_fn is None else hash_fn
 
-    return hashlib.blake2b(repr(value).encode("utf-8"), digest_size=8).hexdigest()
+
+class ColourRegistry:
+    """Shared interning of structural colour keys into small integer ids.
+
+    The design the specification asks for, and the reason for each part:
+
+    * the **structural key** is an exact nested tuple of small integers and value strings —
+      no hashing anywhere in it, so the key *is* the structure;
+    * keys are interned in **one registry shared by both codes** (``X ∪ Y``), so "colour 17"
+      means the same structure in ``X`` and in ``Y`` by construction rather than by luck;
+    * the injectable hash is used **only to choose a bucket**, and every bucket entry is
+      confirmed by a full key comparison.  A collision therefore costs a comparison and never
+      a wrong answer — which is what makes the collision-injection test meaningful rather
+      than decorative;
+    * ids are small integers, so the next refinement round embeds integers rather than
+      strings.  (An earlier version embedded stringified colours, which grew like
+      ``O(|T_A|^2)``: 110 s at ``n = 6``.  The structural key has the same asymptotic cost as
+      the digest version and is collision-proof.)
+    """
+
+    __slots__ = ("_buckets", "_next", "comparisons")
+
+    def __init__(self) -> None:
+        self._buckets: dict[Any, list[tuple[Any, int]]] = {}
+        self._next = 0
+        #: Counted so the tests can show that a forced collision adds comparisons rather than
+        #: changing results.
+        self.comparisons = 0
+
+    def intern(self, key: Any) -> int:
+        bucket = self._buckets.setdefault(_COLOUR_HASH(key), [])
+        for existing_key, identifier in bucket:
+            self.comparisons += 1
+            if existing_key == key:
+                return identifier
+        identifier = self._next
+        self._next += 1
+        bucket.append((key, identifier))
+        return identifier
+
+    @property
+    def n_colours(self) -> int:
+        return self._next
+
+    def verify_injective(self) -> None:
+        """Assert equal ids imply equal keys — i.e. the interning lost no distinctions."""
+        seen: dict[int, Any] = {}
+        for bucket in self._buckets.values():
+            for key, identifier in bucket:
+                if identifier in seen:
+                    raise AssertionError(
+                        f"two different structural keys were interned to id {identifier}: "
+                        "the registry is not injective"
+                    )
+                seen[identifier] = key
 
 
-def refine_colours(
-    code: KozlovImageCode, *, rounds: int = 1, tolerance: float | None = None
-) -> dict[int, str]:
-    """Iterative colour refinement of the labels — a **co-invariant** of the code.
+def refine_colours_joint(
+    a: KozlovImageCode,
+    b: KozlovImageCode,
+    *,
+    rounds: int = 1,
+    tolerance: float | None = None,
+    registry: "ColourRegistry | None" = None,
+) -> tuple[dict[int, int], dict[int, int], ColourRegistry]:
+    """Iterative colour refinement of two codes **in one shared universe**.
+
+    Returns ``(colours_a, colours_b, registry)`` where the colours are integer ids drawn from
+    the same registry.
 
     "Co-invariant" is the property that makes the pruning legitimate: if ``psi`` is a valid
     equivalence then ``colour_A(i) == colour_B(psi(i))`` for every ``i``, so labels of
@@ -249,37 +313,52 @@ def refine_colours(
     Round 0 — the label's own fingerprint: the multiset of ``(role, value)`` over the entries
     it takes part in.
 
-    Round *r* — ``(previous colour, multiset over entries of (role, value, sorted previous
-    colours of the other labels in that entry))``.  Using the other labels' *colours* rather
-    than their names is what keeps the quantity invariant under relabelling.
+    Round *r* — ``(previous id, multiset over entries of (role, value, sorted previous ids of
+    the other labels in that entry))``.  Using the other labels' *ids* rather than their names
+    is what keeps the quantity invariant under relabelling; using the **same registry for both
+    codes** is what makes ids comparable across them.
 
-    Each round's colour is reduced to a :func:`_digest`, so cost is ``O(rounds * incident
-    entries)`` rather than growing with the size of the previous colour.
+    Note that a single-code version would be meaningless: ids from two independent registries
+    are not comparable, so the co-invariance is a property of the *pair*.
     """
-    groups = entries_touching(code)
-    colours: dict[int, str] = {}
-    for label in code.labels:
-        terms = []
-        for entry in groups[label]:
-            role = ("n" if label in entry.numerator else "") + ("d" if label in entry.denominator else "")
-            terms.append((role, _value_key(entry.value, tolerance)))
-        terms.sort()
-        colours[label] = _digest(tuple(terms))
+    registry = registry or ColourRegistry()
+    groups_a = entries_touching(a)
+    groups_b = entries_touching(b)
 
-    for _ in range(rounds):
-        refined: dict[int, str] = {}
-        for label in code.labels:
+    def _round_zero(groups: dict[int, list[RatioEntry]], labels: frozenset[int]) -> dict[int, int]:
+        result: dict[int, int] = {}
+        for label in sorted(labels):
             terms = []
             for entry in groups[label]:
                 role = ("n" if label in entry.numerator else "") + ("d" if label in entry.denominator else "")
-                others = tuple(
-                    sorted(colours[other] for other in (entry.numerator | entry.denominator) if other != label)
-                )
-                terms.append((role, _value_key(entry.value, tolerance), others))
+                terms.append((role, _value_key(entry.value, tolerance)))
             terms.sort()
-            refined[label] = _digest(tuple(terms))
-        colours = refined
-    return colours
+            result[label] = registry.intern(("r0", tuple(terms)))
+        return result
+
+    colours_a = _round_zero(groups_a, a.labels)
+    colours_b = _round_zero(groups_b, b.labels)
+
+    for _ in range(rounds):
+        def _refine(groups: dict[int, list[RatioEntry]], current: dict[int, int], labels: frozenset[int]) -> dict[int, int]:
+            result: dict[int, int] = {}
+            for label in sorted(labels):
+                terms = []
+                for entry in groups[label]:
+                    role = ("n" if label in entry.numerator else "") + ("d" if label in entry.denominator else "")
+                    others = tuple(
+                        sorted(current[other] for other in (entry.numerator | entry.denominator) if other != label)
+                    )
+                    terms.append((role, _value_key(entry.value, tolerance), others))
+                terms.sort()
+                result[label] = registry.intern(("r", current[label], tuple(terms)))
+            return result
+
+        colours_a = _refine(groups_a, colours_a, a.labels)
+        colours_b = _refine(groups_b, colours_b, b.labels)
+
+    registry.verify_injective()
+    return colours_a, colours_b, registry
 
 
 def find_bijection(
@@ -332,8 +411,9 @@ def find_bijection(
     if a.exact and b.exact and a.value_multiset() != b.value_multiset():
         return None, "the multisets of rho values differ (necessary condition fails)", 0, False
 
-    colours_a = refine_colours(a, rounds=refinement_rounds, tolerance=tolerance)
-    colours_b = refine_colours(b, rounds=refinement_rounds, tolerance=tolerance)
+    colours_a, colours_b, registry = refine_colours_joint(
+        a, b, rounds=refinement_rounds, tolerance=tolerance
+    )
     groups: dict[Any, tuple[list[int], list[int]]] = {}
     for label in sorted(a.labels):
         groups.setdefault(colours_a[label], ([], []))[0].append(label)

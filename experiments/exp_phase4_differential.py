@@ -1,32 +1,28 @@
-"""4O — differential testing, the Phase 4 gate.
+"""F4.1 — differential test gate, counted by **accepted** cases.
 
-Generates a large corpus of **exact** small cases and runs both routes:
+Earlier versions reported the *requested* case count, which is not the same thing: a skipped
+degenerate draw is not a compared case.  The gate is satisfied by
 
-* the **code route** — the formal definition, via the pruned ``psi`` search;
-* the **geometric route** — an exact affine-map search that knows nothing about codes.
+    accepted_and_compared >= 10_000   and   unexplained_disagreements == 0
 
-Requirement: **0 unexplained disagreements.**
+so this script keeps generating until **accepted** reaches the target, and reports the full
+breakdown the specification lists::
 
-What "unexplained" means, precisely
------------------------------------
-Inside theorem 1's domain the two routes are guaranteed to agree, so any disagreement there is
-a defect in one of them and is reported as **unexplained** — this script then exits non-zero,
-saves a full reproduction artifact, and shrinks it.
+    generated, accepted, skipped_degenerate,
+    inside_theorem_domain, outside_theorem_domain,
+    code_equal_geometry_equal, code_unequal_geometry_unequal,
+    code_equal_geometry_unequal, code_unequal_geometry_equal,
+    unexplained_disagreements
 
-Outside the domain (an image lying on two parallel lines) a disagreement is *expected*: the
-theorem's hypothesis is exactly what rules out code-equivalence without affine equivalence.
-Those cases are counted separately as **explained**. Treating them as failures would be as
-wrong as treating them as successes — which is why the split is explicit rather than a
-tolerance someone could widen.
-
-Ground truth is always the geometric oracle. Random images are **not** assumed to be
-non-equivalent: whether a random draw happens to be affinely equivalent is a question the
-oracle answers, not an assumption.
+Each verdict comes from :func:`~kozlov_lab.coding.recognize_affine_exact` — the production
+pipeline — so this harness exercises the F4.2 truth table instead of re-deriving it.  A
+partition check asserts every accepted case lands in exactly one bucket, because a counter that
+silently loses cases is how a "0 disagreements" result stops meaning anything.
 
 Run::
 
-    python experiments/exp_phase4_differential.py                 # 10 000 cases
-    python experiments/exp_phase4_differential.py --cases 500     # quick pass
+    python experiments/exp_phase4_differential.py                 # accepted >= 10 000
+    python experiments/exp_phase4_differential.py --accepted 600  # quick pass
 """
 
 from __future__ import annotations
@@ -42,19 +38,33 @@ import numpy as np
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 
 from kozlov_lab.coding import (  # noqa: E402
-    build_kozlov_image_code_exact,
-    check_geometric_equivalence,
-    kozlov_codes_equivalent,
+    InternalConsistencyError,
+    RecognitionStatus,
+    recognize_affine_exact,
     validate_kozlov_image,
 )
 from _common import print_header, write_json  # noqa: E402
 
-#: ``n`` is drawn from this table.  Weighted towards small ``n`` because both routes are
-#: ``O(|T_A|)``-ish in their setup, and a uniform draw over ``{4..7}`` would spend most of the
-#: budget on ``n = 7`` while exploring far fewer distinct configurations.
+#: ``n`` is drawn from this table, weighted towards small ``n``: both routes do
+#: ``O(|T_A|)``-ish setup work, so a uniform draw over ``{4..7}`` would spend most of the budget
+#: on ``n = 7`` while exploring far fewer distinct configurations.
 N_WEIGHTS: tuple[tuple[int, int], ...] = ((4, 4000), (5, 3000), (6, 2000), (7, 1000))
 
 BOX = 20
+
+COUNTERS: tuple[str, ...] = (
+    "generated",
+    "accepted",
+    "skipped_degenerate",
+    "inside_theorem_domain",
+    "outside_theorem_domain",
+    "code_equal_geometry_equal",
+    "code_unequal_geometry_unequal",
+    "code_equal_geometry_unequal",
+    "code_unequal_geometry_equal",
+    "indeterminate",
+    "unexplained_disagreements",
+)
 
 
 def _random_integer_map(rng: np.random.Generator) -> tuple[tuple[int, int, int, int], tuple[int, int]]:
@@ -65,52 +75,37 @@ def _random_integer_map(rng: np.random.Generator) -> tuple[tuple[int, int, int, 
 
 
 def _random_image(rng: np.random.Generator, n: int) -> list[list[int]] | None:
-    """A random integer image in general position, or ``None`` if the draw is degenerate.
-
-    General position is requested explicitly (via the validator) rather than assumed, so the
-    corpus does not silently accumulate collinear draws that would be skipped anyway.
-    """
-    for _ in range(50):
-        points = [
-            [int(rng.integers(-BOX, BOX + 1)), int(rng.integers(-BOX, BOX + 1))] for _ in range(n)
-        ]
-        try:
-            validate_kozlov_image(points)
-        except Exception:  # noqa: BLE001 - a degenerate draw is simply retried
-            continue
-        return points
-    return None
+    """A random integer image the code can be built for, or ``None`` for a degenerate draw."""
+    points = [
+        [int(rng.integers(-BOX, BOX + 1)), int(rng.integers(-BOX, BOX + 1))] for _ in range(n)
+    ]
+    try:
+        validate_kozlov_image(points)
+    except Exception:  # noqa: BLE001 - a degenerate draw is skipped and counted as such
+        return None
+    return points
 
 
 def _two_parallel_image(rng: np.random.Generator, n: int) -> list[list[int]] | None:
-    """An image whose points lie on exactly two parallel lines.
+    """An image on exactly two parallel lines, so the out-of-domain branch is exercised.
 
-    Needed because the "unexplained vs explained" split is only meaningful if the
-    outside-the-theorem-domain case actually occurs.  With random coordinates it effectively
-    never does: a generic random point set is in general position, so the *explained* counter
-    would stay at zero and the classification would be untested.
-
-    The lines are ``x + y = 0`` and ``x + y = m``, both of direction ``(1, -1)``.
+    Without a family like this the "outside the theorem domain" counter stays at zero for a
+    random integer corpus: the branch never runs, yet the run looks complete.
     """
     if n < 3:
         return None
-    split = int(rng.integers(1, n - 1))  # at least one point on each line
-    first, second = split, n - split
-    if first < 1 or second < 1:
-        return None
+    split = int(rng.integers(1, n - 1))
     offset = int(rng.integers(1, 9))
-    points: list[list[int]] = []
-    for index in range(first):
-        value = int(rng.integers(-BOX, BOX + 1))
-        points.append([value, -value])
-    for index in range(second):
-        value = int(rng.integers(-BOX, BOX + 1))
-        points.append([value, offset - value])
+    points = [[value, -value] for value in (int(rng.integers(-BOX, BOX + 1)) for _ in range(split))]
+    points += [
+        [value, offset - value]
+        for value in (int(rng.integers(-BOX, BOX + 1)) for _ in range(n - split))
+    ]
     if len({tuple(point) for point in points}) != n:
         return None
     try:
         validate_kozlov_image(points)
-    except Exception:  # noqa: BLE001 - e.g. all points landed on one line
+    except Exception:  # noqa: BLE001
         return None
     return points
 
@@ -123,57 +118,30 @@ def _apply(
     return [[a * x + b * y + tx, c * x + d * y + ty] for x, y in points]
 
 
-def _disagrees(x: list[list[int]], y: list[list[int]]) -> dict | None:
-    """Run both routes and report a disagreement, or ``None`` if they agree / abstain."""
-    code_x = build_kozlov_image_code_exact(x)
-    code_y = build_kozlov_image_code_exact(y)
-    if code_x.domain != code_y.domain:
-        # differing domain classes cannot correspond, and both routes know it
-        return None
-    code_result = kozlov_codes_equivalent(code_x, code_y)
-    geometric = check_geometric_equivalence(x, y)
-    if code_result.undecided or geometric.undecided:
-        return None
-    if code_result.equivalent == geometric.equivalent:
-        return None
-    return {
-        "x": x,
-        "y": y,
-        "domain_x": code_x.domain,
-        "domain_y": code_y.domain,
-        "theorem_applicable": code_x.theorem_applies and code_y.theorem_applies,
-        "code_equivalent": code_result.equivalent,
-        "geometric_equivalent": geometric.equivalent,
-        "code_route": code_result.as_dict(),
-        "geometric_route": {
-            "equivalent": geometric.equivalent,
-            "exhaustive": geometric.exhaustive,
-            "reason": geometric.reason,
-            "candidates_tried": geometric.candidates_tried,
-        },
-    }
+def _still_disagrees(x: list[list[int]], y: list[list[int]]) -> bool:
+    try:
+        recognize_affine_exact(x, y)
+        return False
+    except InternalConsistencyError:
+        return True
+    except Exception:  # noqa: BLE001 - a reduced case may become degenerate, which is not a finding
+        return False
 
 
 def shrink(x: list[list[int]], y: list[list[int]]) -> dict | None:
-    """Greedily drop point pairs while the disagreement persists.
+    """Greedily drop point pairs while the disagreement persists (delta debugging).
 
-    Standard delta debugging: the counterexample is only useful if it is small enough to read.
-    A pair (``x_i``, ``y_i``) is removed together because the two images are expected to
-    correspond positionally in the generated corpus; if the disagreement survives, the smaller
-    pair is kept and the process repeats.
+    A counterexample is only useful if it is small enough to read.  A removal is kept only when
+    the disagreement survives it, so whatever is returned is still a genuine counterexample.
     """
-    if len(x) != len(y) or len(x) <= 4:
+    if len(x) != len(y) or len(x) <= 4 or not _still_disagrees(x, y):
         return None
     improved = False
     index = 0
     while index < len(x) and len(x) > 4:
         candidate_x = x[:index] + x[index + 1 :]
         candidate_y = y[:index] + y[index + 1 :]
-        try:
-            reduced = _disagrees(candidate_x, candidate_y)
-        except Exception:  # noqa: BLE001 - the reduced case may become degenerate
-            reduced = None
-        if reduced is not None:
+        if _still_disagrees(candidate_x, candidate_y):
             x, y = candidate_x, candidate_y
             improved = True
         else:
@@ -183,158 +151,174 @@ def shrink(x: list[list[int]], y: list[list[int]]) -> dict | None:
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    parser.add_argument("--cases", type=int, default=10_000)
+    parser.add_argument("--accepted", type=int, default=10_000,
+                        help="required number of ACCEPTED (compared) cases")
+    parser.add_argument("--max-attempts", type=int, default=0,
+                        help="generation cap; 0 means 4x the accepted target")
     parser.add_argument("--seed", type=int, default=20261005)
     parser.add_argument("--shrink-budget", type=int, default=8)
     args = parser.parse_args(argv)
 
-    print_header("Phase 4O — differential testing (code route vs geometric route)")
+    attempts_cap = args.max_attempts or args.accepted * 4
+    print_header("F4.1 — differential gate (accepted-based)")
     rng = np.random.default_rng(args.seed)
-    schedule = [n for n, weight in N_WEIGHTS for _ in range(max(1, weight * args.cases // 10_000))]
+    schedule = [n for n, weight in N_WEIGHTS for _ in range(max(1, weight * 1000 // 10_000))]
 
-    counts = {
-        "cases": 0,
-        "equivalent": 0,
-        "not_equivalent": 0,
-        "skipped": 0,
-        "outside_theorem_domain": 0,
-    }
+    counts = {name: 0 for name in COUNTERS}
     unexplained: list[dict] = []
     explained: list[dict] = []
     started = time.perf_counter()
+    next_report = 2000
 
-    for index in range(args.cases):
+    while counts["accepted"] < args.accepted and counts["generated"] < attempts_cap:
+        index = counts["generated"]
+        counts["generated"] += 1
         n = schedule[index % len(schedule)]
-        # ~12% of the corpus is drawn on two parallel lines, so the
-        # "code computable but theorem not applicable" case is actually exercised
         use_two_parallel = rng.random() < 0.12
+
         x = _two_parallel_image(rng, n) if use_two_parallel else _random_image(rng, n)
         if x is None:
-            counts["skipped"] += 1
+            counts["skipped_degenerate"] += 1
             continue
         if rng.random() < 0.5:
             y = _apply(*_random_integer_map(rng), x)
         else:
             y = _two_parallel_image(rng, n) if use_two_parallel else _random_image(rng, n)
             if y is None:
-                counts["skipped"] += 1
+                counts["skipped_degenerate"] += 1
                 continue
+
         try:
-            if not validate_kozlov_image(x).theorem_applicable:
-                counts["outside_theorem_domain"] += 1
+            pair_theorem = (
+                validate_kozlov_image(x).theorem_applicable
+                and validate_kozlov_image(y).theorem_applicable
+            )
         except Exception:  # noqa: BLE001
-            pass
-
-        try:
-            disagreement = _disagrees(x, y)
-        except Exception as exc:  # noqa: BLE001 - an exception is itself a finding
-            disagreement = {
-                "x": x,
-                "y": y,
-                "exception": f"{type(exc).__name__}: {exc}",
-                "theorem_applicable": None,
-            }
-
-        counts["cases"] += 1
-        if disagreement is None:
-            geometric = check_geometric_equivalence(x, y)
-            counts["equivalent" if geometric.equivalent else "not_equivalent"] += 1
+            counts["skipped_degenerate"] += 1
             continue
 
-        record = {"index": index, "n": n, **disagreement}
-        if disagreement.get("theorem_applicable"):
-            unexplained.append(record)
-        else:
-            explained.append(record)
+        counts["inside_theorem_domain" if pair_theorem else "outside_theorem_domain"] += 1
+        counts["accepted"] += 1
 
-        if (index + 1) % 2000 == 0:
-            elapsed = time.perf_counter() - started
-            print(
-                f"    {index + 1:>6} cases  ({elapsed:>6.1f}s)  unexplained={len(unexplained)}  "
-                f"explained={len(explained)}"
+        try:
+            result = recognize_affine_exact(x, y)
+            status = result.status
+        except InternalConsistencyError as exc:
+            counts["unexplained_disagreements"] += 1
+            unexplained.append({"index": index, "n": n, "artifact": exc.artifact})
+            status = None
+        except Exception as exc:  # noqa: BLE001 - any other exception is also a finding
+            counts["unexplained_disagreements"] += 1
+            unexplained.append(
+                {"index": index, "n": n, "exception": f"{type(exc).__name__}: {exc}",
+                 "artifact": {"inputs": {"x": x, "y": y}}}
             )
+            status = None
+
+        if status is RecognitionStatus.EXACT_AFFINE_EQUIVALENT:
+            counts["code_equal_geometry_equal"] += 1
+        elif status is RecognitionStatus.EXACT_NOT_AFFINE_EQUIVALENT:
+            counts["code_unequal_geometry_unequal"] += 1
+        elif status is RecognitionStatus.CODE_COLLISION_OUTSIDE_THEOREM_DOMAIN:
+            counts["code_equal_geometry_unequal"] += 1
+            explained.append({"index": index, "n": n, "status": status.value})
+        elif status in (
+            RecognitionStatus.NUMERIC_INDETERMINATE,
+            RecognitionStatus.CODE_EQUIVALENT_THEOREM_NOT_APPLICABLE,
+        ):
+            counts["indeterminate"] += 1
+
+        if counts["accepted"] >= next_report:
+            elapsed = time.perf_counter() - started
+            print(f"    accepted={counts['accepted']:>6}  ({elapsed:>6.1f}s)  "
+                  f"unexplained={counts['unexplained_disagreements']}")
+            next_report += 2000
 
     elapsed = time.perf_counter() - started
+    print("\n  counters")
+    for name in COUNTERS:
+        print(f"    {name:<32} {counts[name]}")
 
-    # -- shrink the unexplained cases -------------------------------------- #
+    classified = (
+        counts["code_equal_geometry_equal"]
+        + counts["code_unequal_geometry_unequal"]
+        + counts["code_equal_geometry_unequal"]
+        + counts["code_unequal_geometry_equal"]
+        + counts["indeterminate"]
+        + counts["unexplained_disagreements"]
+    )
+    gate = {
+        "accepted": counts["accepted"],
+        "required_accepted": args.accepted,
+        "unexplained_disagreements": counts["unexplained_disagreements"],
+        "accepted_requirement_met": counts["accepted"] >= args.accepted,
+        "zero_unexplained_requirement_met": counts["unexplained_disagreements"] == 0,
+        "gate_passed": (
+            counts["accepted"] >= args.accepted and counts["unexplained_disagreements"] == 0
+        ),
+        "partition_is_complete": classified == counts["accepted"],
+        "classified": classified,
+        "domain_branch_exercised": counts["outside_theorem_domain"] > 0,
+        "elapsed_seconds": elapsed,
+    }
+    print(f"\n  gate: accepted {counts['accepted']} >= {args.accepted} ? "
+          f"{gate['accepted_requirement_met']}  |  unexplained == 0 ? "
+          f"{gate['zero_unexplained_requirement_met']}")
+    print(f"  partition complete ({classified}/{counts['accepted']} classified): "
+          f"{gate['partition_is_complete']}")
+
     shrunk: list[dict] = []
-    for record in unexplained[: args.shrink_budget]:
-        try:
-            minimal = shrink(record["x"], record["y"])
-        except Exception:  # noqa: BLE001
-            minimal = None
-        shrunk.append({**record, "minimal": minimal})
-
-    print("\n  corpus")
-    print(f"    cases run            : {counts['cases']}")
-    print(f"    affinely equivalent  : {counts['equivalent']}")
-    print(f"    not equivalent       : {counts['not_equivalent']}")
-    print(f"    skipped (degenerate) : {counts['skipped']}")
-    print(f"    outside theorem domain: {counts['outside_theorem_domain']}")
-    print(f"    elapsed              : {elapsed:.1f}s")
-    print(f"\n  disagreements: unexplained={len(unexplained)}  explained(theorem domain)={len(explained)}")
-
     artifact_paths: list[str] = []
     if unexplained:
         target_dir = Path(__file__).resolve().parent / "results" / "discrepancies"
         target_dir.mkdir(parents=True, exist_ok=True)
-        for position, record in enumerate(shrunk):
+        for position, record in enumerate(unexplained[: args.shrink_budget]):
+            inputs = record.get("artifact", {}).get("inputs", {})
+            minimal = None
+            if inputs.get("x") and inputs.get("y"):
+                try:
+                    minimal = shrink(inputs["x"], inputs["y"])
+                except Exception:  # noqa: BLE001
+                    minimal = None
+            shrunk.append({**record, "minimal": minimal})
             path = target_dir / f"phase4_unexplained_{args.seed}_{position}.json"
             path.write_text(
-                json.dumps(record, indent=2, ensure_ascii=False, default=str) + "\n",
+                json.dumps({**record, "minimal": minimal}, indent=2, ensure_ascii=False, default=str)
+                + "\n",
                 encoding="utf-8",
                 newline="\n",
             )
             artifact_paths.append(str(path))
-        print("    artifacts written:")
-        for path in artifact_paths:
-            print(f"      {path}")
-
-    verdicts = {
-        "cases": counts["cases"],
-        "outside_theorem_domain_cases": counts["outside_theorem_domain"],
-        "domain_case_exercised": counts["outside_theorem_domain"] > 0,
-        "unexplained_disagreements": len(unexplained),
-        "explained_disagreements": len(explained),
-        "gate_requirement": "0 unexplained disagreements",
-        "gate_passed": not unexplained,
-        "elapsed_seconds": elapsed,
-        "artifact_paths": artifact_paths,
-        "note": (
-            "an 'explained' disagreement is one outside theorem 1's domain, where the "
-            "hypothesis is exactly what rules out agreement; it is recorded, never tolerated "
-            "away by widening a tolerance"
-        ),
-    }
+        print(f"  {len(artifact_paths)} artifact(s) written to {target_dir}")
 
     target, meta = write_json(
         "phase4_differential",
         {
             "experiment": "phase4_differential",
-            "title": "code route vs geometric route on exact small cases",
-            "counts": counts,
-            "verdicts": verdicts,
-            "unexplained": [
-                {k: v for k, v in record.items() if k not in {"code_route", "geometric_route"}}
-                for record in shrunk
-            ],
-            "explained": [
-                {k: v for k, v in record.items() if k not in {"code_route", "geometric_route"}}
-                for record in explained[:20]
-            ],
+            "title": "differential gate counted by accepted cases (F4.1)",
+            "counters": counts,
+            "gate": gate,
+            "explained": explained[:20],
+            "unexplained": [{k: v for k, v in record.items() if k != "artifact"} for record in shrunk],
+            "artifact_paths": artifact_paths,
+            "note": (
+                "verdicts come from recognize_affine_exact, so this harness exercises the F4.2 "
+                "truth table rather than re-deriving it"
+            ),
         },
         seed=args.seed,
         config={
-            "cases_requested": args.cases,
+            "accepted_target": args.accepted,
+            "max_attempts": attempts_cap,
             "n_weights": N_WEIGHTS,
             "coordinate_box": BOX,
-            "generator": "50% affine image, 50% independent draw; oracle supplies ground truth",
+            "generator": "50% affine image, 50% independent draw; ~12% on two parallel lines",
             "shrink_budget": args.shrink_budget,
         },
     )
     print(f"\n  [written] {target}")
     print(f"  [written] {meta}")
-    return 0 if not unexplained else 1
+    return 0 if gate["gate_passed"] else 1
 
 
 if __name__ == "__main__":

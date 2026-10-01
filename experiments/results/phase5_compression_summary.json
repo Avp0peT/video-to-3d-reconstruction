@@ -1,0 +1,198 @@
+{
+  "name": "phase5_compression_summary",
+  "provenance": {
+    "timestamp_utc": "2026-10-01T08:46:10+00:00",
+    "package_version": "0.2.0",
+    "git_commit": "17bdb04db13a88e60fa21e3657e9851f5bd228d0",
+    "git_dirty": true,
+    "git_branch": "master",
+    "python_version": "3.13.14",
+    "numpy_version": "2.5.3",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "cpu_count": 32,
+    "seed": 20261006,
+    "tolerances": {
+      "FLOAT_TOL": 1e-12,
+      "COLLINEAR_TOL": 1e-09,
+      "MATCH_TOL": 1e-09,
+      "SIGNATURE_DECIMALS": 9,
+      "MAX_CONDITION_NUMBER": 1000000.0,
+      "UNUSABLE_CONDITION_NUMBER": 1000000000000.0,
+      "UNUSABLE_ACCURACY": 0.001,
+      "TEACHING_CODE_DECIMALS": 9
+    },
+    "experiment_config": {
+      "quick": false
+    }
+  },
+  "experiment": "phase5_compression",
+  "title": "equivariance and recognition preservation under compression",
+  "verdicts": {
+    "KozlovSketch|translation": {
+      "exact": 36
+    },
+    "KozlovSketch|rotation": {
+      "exact": 36
+    },
+    "KozlovSketch|similarity": {
+      "exact": 23,
+      "not": 13
+    },
+    "KozlovSketch|affine": {
+      "exact": 26,
+      "not": 10
+    },
+    "KozlovSkeleton|translation": {
+      "exact": 30
+    },
+    "KozlovSkeleton|rotation": {
+      "exact": 30
+    },
+    "KozlovSkeleton|similarity": {
+      "exact": 23,
+      "not": 7
+    },
+    "KozlovSkeleton|affine": {
+      "exact": 25,
+      "not": 5
+    },
+    "TeachingEpsilonCover|translation": {
+      "exact": 36
+    },
+    "TeachingEpsilonCover|rotation": {
+      "exact": 28,
+      "not": 8
+    },
+    "TeachingEpsilonCover|similarity": {
+      "exact": 14,
+      "not": 22
+    },
+    "TeachingEpsilonCover|affine": {
+      "exact": 14,
+      "approximately": 2,
+      "not": 20
+    },
+    "TeachingFarthestPoint|translation": {
+      "exact": 30
+    },
+    "TeachingFarthestPoint|rotation": {
+      "exact": 30
+    },
+    "TeachingFarthestPoint|similarity": {
+      "exact": 30
+    },
+    "TeachingFarthestPoint|affine": {
+      "not": 15,
+      "exact": 15
+    },
+    "TeachingGridReduce|translation": {
+      "exact": 24,
+      "not": 6
+    },
+    "TeachingGridReduce|rotation": {
+      "exact": 23,
+      "not": 7
+    },
+    "TeachingGridReduce|similarity": {
+      "exact": 24,
+      "not": 6
+    },
+    "TeachingGridReduce|affine": {
+      "exact": 22,
+      "not": 8
+    },
+    "TeachingGridReduce|-": {
+      "refused": 6
+    },
+    "AffineAwareSampler|translation": {
+      "exact": 30
+    },
+    "AffineAwareSampler|rotation": {
+      "exact": 30
+    },
+    "AffineAwareSampler|similarity": {
+      "exact": 30
+    },
+    "AffineAwareSampler|affine": {
+      "exact": 30
+    }
+  },
+  "reasons": {
+    "CODE_UNDEFINED_AFTER_COMPRESSION": 682,
+    "STRUCTURE_LOST": 86
+  },
+  "contracts": [
+    {
+      "name": "AffineAwareSampler",
+      "family": "experimental",
+      "surjective_on": true,
+      "cover_guarantee": "guaranteed_normalized",
+      "cardinality_guarantee": "upper_bound",
+      "deterministic": true,
+      "complexity": "O(n^3) for the importance weights, O(n^2) for the cover",
+      "source": "this project's own exploratory construction; NO author attribution",
+      "transform_equivariance": {}
+    },
+    {
+      "name": "KozlovSkeleton",
+      "family": "official",
+      "surjective_on": true,
+      "cover_guarantee": "guaranteed",
+      "cardinality_guarantee": "minimum",
+      "deterministic": true,
+      "complexity": "exact branch and bound (sets: O(n^2)); greedy fallback O(n^2)",
+      "source": "Kozlov 2002, «Об одном подходе к сжатию информации при обработке и распознавании изображений», ЖВМиМФ 42:2, 256-268 (primary full text) (definition); solver is this project's",
+      "transform_equivariance": {
+        "measured_in": "experiments/results/phase5_equivariance.csv"
+      }
+    },
+    {
+      "name": "KozlovSketch",
+      "family": "official",
+      "surjective_on": true,
+      "cover_guarantee": "guaranteed",
+      "cardinality_guarantee": "upper_bound",
+      "deterministic": true,
+      "complexity": "O(n^2) to build the distance matrix, O(n^2) for the cover",
+      "source": "Kozlov 2002, «Об одном подходе к сжатию информации при обработке и распознавании изображений», ЖВМиМФ 42:2, 256-268 (primary full text) (definition); greedy solver is this project's",
+      "transform_equivariance": {
+        "measured_in": "experiments/results/phase5_equivariance.csv"
+      }
+    },
+    {
+      "name": "TeachingEpsilonCover",
+      "family": "teaching",
+      "surjective_on": false,
+      "cover_guarantee": "guaranteed",
+      "cardinality_guarantee": "upper_bound",
+      "deterministic": true,
+      "complexity": "O(k n m) with k = |cover|, m = |candidate centres|",
+      "source": "greedy set cover over input points plus a lattice (classical); NOT from Kozlov 2002",
+      "transform_equivariance": {}
+    },
+    {
+      "name": "TeachingFarthestPoint",
+      "family": "teaching",
+      "surjective_on": true,
+      "cover_guarantee": "measured",
+      "cardinality_guarantee": "fixed",
+      "deterministic": true,
+      "complexity": "O(k n)",
+      "source": "maximin / farthest-point sampling (classical); NOT from Kozlov 2002",
+      "transform_equivariance": {}
+    },
+    {
+      "name": "TeachingGridReduce",
+      "family": "teaching",
+      "surjective_on": true,
+      "cover_guarantee": "measured",
+      "cardinality_guarantee": "upper_bound",
+      "deterministic": true,
+      "complexity": "O(n)",
+      "source": "grid downsampling (engineering baseline); NOT from Kozlov 2002",
+      "transform_equivariance": {}
+    }
+  ],
+  "elapsed_seconds": 56.29158419999294,
+  "note": "Euclidean-distance-based compressors are not expected to be affine-equivariant; the measurement is the result. STRUCTURE_LOST is kept apart from a genuine recognition failure."
+}

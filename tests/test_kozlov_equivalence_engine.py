@@ -31,7 +31,7 @@ from kozlov_lab.coding import (
     find_bijection,
     images_equivalent_by_code_exact,
     kozlov_codes_equivalent,
-    refine_colours,
+    refine_colours_joint,
 )
 
 #: Small general-position images.  ``n <= 7`` keeps the ``n!`` oracle affordable
@@ -147,9 +147,11 @@ def test_refinement_colours_are_a_co_invariant():
     psi, _, _, _ = find_bijection(reference, other)
     assert psi is not None
 
+    # the colours live in a registry **shared by the two codes**, which is what makes ids
+    # comparable across them: the co-invariance is a property of the pair, not of one code
     for rounds in (0, 1, 2):
-        colours_a = refine_colours(reference, rounds=rounds)
-        colours_b = refine_colours(other, rounds=rounds)
+        colours_a, colours_b, registry = refine_colours_joint(reference, other, rounds=rounds)
+        assert registry.n_colours > 0
         for label, target in psi.items():
             assert colours_a[label] == colours_b[target], (rounds, label, target)
 
