@@ -1,9 +1,9 @@
 {
   "name": "phase5_compression_summary",
   "provenance": {
-    "timestamp_utc": "2026-10-01T08:46:10+00:00",
+    "timestamp_utc": "2026-10-01T09:20:50+00:00",
     "package_version": "0.2.0",
-    "git_commit": "17bdb04db13a88e60fa21e3657e9851f5bd228d0",
+    "git_commit": "ad85715338580fbf9827f2564fe06aee3974fed0",
     "git_dirty": true,
     "git_branch": "master",
     "python_version": "3.13.14",
@@ -26,100 +26,139 @@
     }
   },
   "experiment": "phase5_compression",
-  "title": "equivariance and recognition preservation under compression",
-  "verdicts": {
+  "title": "compression: equivariance and recognition preservation (controls separated)",
+  "controls": {
+    "counts": {
+      "EXACTLY_PRESERVED": 90
+    },
+    "total": 90,
+    "preserved": 90
+  },
+  "nontrivial": {
+    "counts": {
+      "EXACTLY_PRESERVED": 552,
+      "STRUCTURE_LOST_CARDINALITY": 99,
+      "AFFINE_EQUIVALENCE_LOST": 32,
+      "INVALID_INPUT_AFTER_COMPRESSION": 22
+    },
+    "total": 705,
+    "preserved": 552,
+    "preservation_rate": 0.7829787234042553
+  },
+  "equivariance_by_family": {
     "KozlovSketch|translation": {
-      "exact": 36
+      "exact": 30
     },
     "KozlovSketch|rotation": {
-      "exact": 36
+      "exact": 30
     },
     "KozlovSketch|similarity": {
-      "exact": 23,
-      "not": 13
+      "exact": 19,
+      "not": 11
     },
     "KozlovSketch|affine": {
-      "exact": 26,
-      "not": 10
+      "exact": 19,
+      "not": 11
+    },
+    "KozlovSketch|affine_shear": {
+      "exact": 19,
+      "not": 11
     },
     "KozlovSkeleton|translation": {
-      "exact": 30
+      "exact": 24
     },
     "KozlovSkeleton|rotation": {
-      "exact": 30
+      "exact": 24
     },
     "KozlovSkeleton|similarity": {
-      "exact": 23,
-      "not": 7
+      "exact": 19,
+      "not": 5
     },
     "KozlovSkeleton|affine": {
-      "exact": 25,
+      "exact": 19,
+      "not": 5
+    },
+    "KozlovSkeleton|affine_shear": {
+      "exact": 19,
       "not": 5
     },
     "TeachingEpsilonCover|translation": {
-      "exact": 36
+      "exact": 24
     },
     "TeachingEpsilonCover|rotation": {
-      "exact": 28,
-      "not": 8
+      "exact": 18,
+      "not": 6
     },
     "TeachingEpsilonCover|similarity": {
       "exact": 14,
-      "not": 22
+      "not": 10
     },
     "TeachingEpsilonCover|affine": {
       "exact": 14,
-      "approximately": 2,
-      "not": 20
+      "not": 10
+    },
+    "TeachingEpsilonCover|affine_shear": {
+      "exact": 14,
+      "not": 10
     },
     "TeachingFarthestPoint|translation": {
-      "exact": 30
+      "exact": 23,
+      "not": 1
     },
     "TeachingFarthestPoint|rotation": {
-      "exact": 30
+      "exact": 23,
+      "not": 1
     },
     "TeachingFarthestPoint|similarity": {
-      "exact": 30
+      "exact": 23,
+      "not": 1
     },
     "TeachingFarthestPoint|affine": {
-      "not": 15,
-      "exact": 15
+      "exact": 11,
+      "not": 13
+    },
+    "TeachingFarthestPoint|affine_shear": {
+      "exact": 6,
+      "not": 18
     },
     "TeachingGridReduce|translation": {
-      "exact": 24,
-      "not": 6
+      "exact": 17,
+      "not": 4
     },
     "TeachingGridReduce|rotation": {
-      "exact": 23,
-      "not": 7
+      "exact": 16,
+      "not": 5
     },
     "TeachingGridReduce|similarity": {
-      "exact": 24,
-      "not": 6
+      "exact": 16,
+      "not": 5
     },
     "TeachingGridReduce|affine": {
-      "exact": 22,
-      "not": 8
+      "exact": 16,
+      "not": 5
+    },
+    "TeachingGridReduce|affine_shear": {
+      "exact": 16,
+      "not": 5
     },
     "TeachingGridReduce|-": {
-      "refused": 6
+      "refused": 3
     },
     "AffineAwareSampler|translation": {
-      "exact": 30
+      "exact": 18
     },
     "AffineAwareSampler|rotation": {
-      "exact": 30
+      "exact": 18
     },
     "AffineAwareSampler|similarity": {
-      "exact": 30
+      "exact": 18
     },
     "AffineAwareSampler|affine": {
-      "exact": 30
+      "exact": 18
+    },
+    "AffineAwareSampler|affine_shear": {
+      "exact": 18
     }
-  },
-  "reasons": {
-    "CODE_UNDEFINED_AFTER_COMPRESSION": 682,
-    "STRUCTURE_LOST": 86
   },
   "contracts": [
     {
@@ -131,6 +170,17 @@
       "deterministic": true,
       "complexity": "O(n^3) for the importance weights, O(n^2) for the cover",
       "source": "this project's own exploratory construction; NO author attribution",
+      "transform_equivariance": {}
+    },
+    {
+      "name": "IdentityCompressor",
+      "family": "control",
+      "surjective_on": true,
+      "cover_guarantee": "guaranteed",
+      "cardinality_guarantee": "fixed",
+      "deterministic": true,
+      "complexity": "O(1)",
+      "source": "sanity control (F5.0); NOT from Kozlov 2002 and not a compression method at all",
       "transform_equivariance": {}
     },
     {
@@ -193,6 +243,6 @@
       "transform_equivariance": {}
     }
   ],
-  "elapsed_seconds": 56.29158419999294,
-  "note": "Euclidean-distance-based compressors are not expected to be affine-equivariant; the measurement is the result. STRUCTURE_LOST is kept apart from a genuine recognition failure."
+  "elapsed_seconds": 516.1210597000027,
+  "note": "controls are reported separately on purpose: the earlier run mixed them with real compression and produced a headline that was an artefact of the harness"
 }

@@ -39,6 +39,7 @@ SCRIPTS: tuple[tuple[str, str], ...] = (
     ("phase4_scaling", "exp_phase4_scaling.py"),
     ("phase4_differential", "exp_phase4_differential.py"),
     ("phase5_compression", "exp_phase5_compression.py"),
+    ("phase5_sanity", "exp_phase5_sanity.py"),
 )
 
 #: Required result files (Sprint 3E names them explicitly).
@@ -56,6 +57,7 @@ REQUIRED = (
     # phase 5: equivariance and recognition preservation under compression
     "phase5_equivariance.csv",
     "phase5_recognition.csv",
+    "phase5_hand_trace.json",
 )
 
 QUICK_FLAGS: dict[str, tuple[str, ...]] = {

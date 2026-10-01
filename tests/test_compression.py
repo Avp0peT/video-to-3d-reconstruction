@@ -218,16 +218,17 @@ def _defined_names(path: pathlib.Path) -> list[str]:
     ]
 
 
-def test_the_three_families_exist():
-    for family in ("official", "teaching", "experimental"):
+def test_the_four_families_exist():
+    """official / teaching / experimental / control — the control family is what F5.0 audits."""
+    for family in ("official", "teaching", "experimental", "control"):
         assert (SRC / family).is_dir(), family
         assert (SRC / family / "__init__.py").is_file(), family
 
 
 def test_only_official_may_use_the_authors_name():
-    """Nothing in ``teaching/`` or ``experimental/`` may be named after Kozlov."""
+    """Nothing outside ``official/`` may be named after Kozlov."""
     offenders: list[str] = []
-    for family in ("teaching", "experimental"):
+    for family in ("teaching", "experimental", "control"):
         for source in _sources(SRC / family):
             for name in _defined_names(source):
                 lowered = name.lower()
@@ -251,7 +252,7 @@ def test_every_contract_declares_its_provenance():
     """A contract with no source is a contract nobody can check."""
     for contract in list_compressors():
         assert contract["source"], contract["name"]
-        assert contract["family"] in {"official", "teaching", "experimental"}, contract["name"]
+        assert contract["family"] in {"official", "teaching", "experimental", "control"}, contract["name"]
         if contract["family"] != "official":
             assert "NOT from Kozlov 2002" in contract["source"] or "NO author" in contract["source"] or \
                 "own" in contract["source"], contract["name"]
@@ -265,3 +266,5 @@ def test_compressor_names_carry_their_family():
             assert name.startswith("Kozlov"), name
         if cls.contract.family == "experimental":
             assert not name.startswith(("Kozlov", "Teaching")), name
+        if cls.contract.family == "control":
+            assert name.endswith(("Compressor", "Control")), name

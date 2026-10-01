@@ -41,25 +41,26 @@ class TeachingFarthestPoint(Compressor):
 
     def fit(self, points: Any, *, k: int, **_: Any) -> CompressionResult:
         matrix = self._matrix(points)
-        n = matrix.shape[0]
+        float_matrix = self._float_view(matrix)
+        n = float_matrix.shape[0]
         if k < 1:
             raise ValueError("k must be at least 1")
         k = min(int(k), n)
         tracemalloc.start()
         tracemalloc.reset_peak()
         started = time.perf_counter()
-        centre_of_mass = matrix.mean(axis=0)
-        first = int(np.argmin(((matrix - centre_of_mass) ** 2).sum(axis=1)))
+        centre_of_mass = float_matrix.mean(axis=0)
+        first = int(np.argmin(((float_matrix - centre_of_mass) ** 2).sum(axis=1)))
         chosen = [first]
-        nearest = np.linalg.norm(matrix - matrix[first], axis=1)
+        nearest = np.linalg.norm(float_matrix - float_matrix[first], axis=1)
         while len(chosen) < k:
             nxt = int(np.argmax(nearest))
             chosen.append(nxt)
-            nearest = np.minimum(nearest, np.linalg.norm(matrix - matrix[nxt], axis=1))
+            nearest = np.minimum(nearest, np.linalg.norm(float_matrix - float_matrix[nxt], axis=1))
         elapsed_ms = (time.perf_counter() - started) * 1000.0
         _, peak = tracemalloc.get_traced_memory()
         tracemalloc.stop()
-        achieved = directed_hausdorff(matrix, matrix[chosen])
+        achieved = directed_hausdorff(float_matrix, float_matrix[sorted(chosen)])
         return self._result(
             matrix, sorted(chosen), self.contract,
             requested_radius=None, achieved_radius=achieved,

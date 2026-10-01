@@ -67,28 +67,30 @@ class TeachingEpsilonCover(Compressor):
         if epsilon < 0:
             raise ValueError("epsilon must be non-negative")
         matrix = self._matrix(points)
+        float_matrix = self._float_view(matrix)
         if epsilon == 0:
             # a zero-radius cover is the image itself; no lattice can help
             candidates = matrix.copy()
         else:
             spacing = epsilon / np.sqrt(2.0)
-            low = matrix.min(axis=0) - epsilon
-            high = matrix.max(axis=0) + epsilon
+            low = float_matrix.min(axis=0) - epsilon
+            high = float_matrix.max(axis=0) + epsilon
             counts = np.maximum(np.ceil((high - low) / spacing).astype(int), 1)
             axes = [np.linspace(low[k], high[k], counts[k] + 1) for k in range(2)]
             grid = np.stack(np.meshgrid(*axes, indexing="ij"), axis=-1).reshape(-1, 2)
-            candidates = np.vstack([matrix, grid])
+            candidates = np.vstack([matrix, grid])  # object dtype if the input is rational
+        float_candidates = np.asarray(candidates, dtype=float)
 
         tracemalloc.start()
         tracemalloc.reset_peak()
         started = time.perf_counter()
-        differences = matrix[:, None, :] - candidates[None, :, :]
+        differences = float_matrix[:, None, :] - float_candidates[None, :, :]
         distances = np.sqrt(np.einsum("ijk,ijk->ij", differences, differences))
-        uncovered = set(range(matrix.shape[0]))
+        uncovered = set(range(float_matrix.shape[0]))
         chosen: list[int] = []
         while uncovered:
             best_index, best_cover = -1, -1
-            for candidate in range(candidates.shape[0]):
+            for candidate in range(float_candidates.shape[0]):
                 covered = sum(1 for j in uncovered if distances[j, candidate] <= epsilon + 1e-12)
                 if covered > best_cover:
                     best_index, best_cover = candidate, covered
@@ -100,8 +102,8 @@ class TeachingEpsilonCover(Compressor):
         _, peak = tracemalloc.get_traced_memory()
         tracemalloc.stop()
 
-        sketch = candidates[chosen]
-        achieved = directed_hausdorff(matrix, sketch)
+        sketch = candidates[chosen]  # may be rational; the float view was only for measuring
+        achieved = directed_hausdorff(float_matrix, np.asarray(sketch, dtype=float))
         if achieved > epsilon + 1e-12:
             raise AssertionError(
                 f"TeachingEpsilonCover promised epsilon={epsilon:.3e} but achieved {achieved:.3e}"
@@ -117,11 +119,11 @@ class TeachingEpsilonCover(Compressor):
             build_ms=elapsed_ms,
             peak_bytes=int(peak),
             diagnostics={
-                "n_before": int(matrix.shape[0]),
+                "n_before": int(float_matrix.shape[0]),
                 "solver": "greedy set cover",
-                "candidate_centres": int(candidates.shape[0]),
+                "candidate_centres": int(float_candidates.shape[0]),
                 "lattice_spacing": float(epsilon / np.sqrt(2.0)) if epsilon else 0.0,
                 "centre_placement": "input points plus a lattice (may be off-image)",
-                "sketch_is_subset": _is_subset(sketch, matrix),
+                "sketch_is_subset": _is_subset(np.asarray(sketch, dtype=float), float_matrix),
             },
         )

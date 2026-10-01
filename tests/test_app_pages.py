@@ -44,6 +44,7 @@ PAGES = {
     "m4_teaching_code": APP_DIR / "pages" / "04_Teaching_Code.py",
     "m5_official_code": APP_DIR / "pages" / "05_Kozlov_Official_Code.py",
     "m7_official_recognition": APP_DIR / "pages" / "07_Official_Recognition.py",
+    "compression_lab": APP_DIR / "pages" / "08_Compression_Lab.py",
     "m6_invariants": APP_DIR / "pages" / "06_Invariants.py",
 }
 
@@ -482,3 +483,40 @@ def test_m7_distinguishes_the_three_constructions():
     text = _all_text(_run("m7_official_recognition"))
     assert "M4" in text and "M5" in text
     assert "教学" in text and "正式" in text
+
+
+# --------------------------------------------------------------------------- #
+# 5J — compression laboratory
+# --------------------------------------------------------------------------- #
+def test_compression_lab_renders_and_names_every_family():
+    """G5.10: the page must show both routes and label the families."""
+    text = _all_text(_run("compression_lab"))
+    for token in ("OFFICIAL", "TEACHING", "EXPERIMENTAL", "CONTROL"):
+        assert token in text, token
+
+
+def test_compression_lab_shows_both_routes():
+    """``X → C(X) → T(C(X))`` against ``X → T(X) → C(T(X))``."""
+    text = _all_text(_run("compression_lab"))
+    assert "Route A" in text and "Route B" in text
+    assert "T(C(X))" in text and "C(T(X))" in text
+
+
+def test_compression_lab_reports_the_equivariance_verdict_and_the_taxonomy():
+    text = _all_text(_run("compression_lab"))
+    assert "Equivariant" in text
+    assert "STRUCTURE_LOST" in text
+    assert "识别失败" in text, "the page must refuse to collapse everything into one boolean"
+
+
+def test_compression_lab_has_the_complexity_panel():
+    text = _all_text(_run("compression_lab"))
+    assert "N_X" in text and "N_S" in text
+    assert "代码规模加速比" in text
+    assert "n" in text
+
+
+def test_compression_lab_shows_the_identity_control():
+    """5J requires the identity control to be visible: it is what makes the harness falsifiable."""
+    text = _all_text(_run("compression_lab"))
+    assert "IdentityCompressor" in text

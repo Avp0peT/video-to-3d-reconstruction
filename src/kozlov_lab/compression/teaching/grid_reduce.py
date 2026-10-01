@@ -43,10 +43,11 @@ class TeachingGridReduce(Compressor):
         if cell <= 0:
             raise ValueError("the grid cell size must be positive")
         matrix = self._matrix(points)
+        float_matrix = self._float_view(matrix)
         tracemalloc.start()
         tracemalloc.reset_peak()
         started = time.perf_counter()
-        keys = np.floor(matrix / cell).astype(np.int64)
+        keys = np.floor(float_matrix / cell).astype(np.int64)
         chosen: list[int] = []
         seen: dict[tuple[int, int], int] = {}
         for index, key in enumerate(map(tuple, keys)):
@@ -57,13 +58,15 @@ class TeachingGridReduce(Compressor):
             # keep the point nearest the cell centre, so the result does not depend on order
             centre = (np.asarray(key, dtype=float) + 0.5) * cell
             current = chosen[seen[key]]
-            if np.linalg.norm(matrix[index] - centre) < np.linalg.norm(matrix[current] - centre):
+            if np.linalg.norm(float_matrix[index] - centre) < np.linalg.norm(
+                float_matrix[current] - centre
+            ):
                 chosen[chosen.index(current)] = index
                 seen[key] = index
         elapsed_ms = (time.perf_counter() - started) * 1000.0
         _, peak = tracemalloc.get_traced_memory()
         tracemalloc.stop()
-        achieved = directed_hausdorff(matrix, matrix[sorted(chosen)])
+        achieved = directed_hausdorff(float_matrix, float_matrix[sorted(chosen)])
         return self._result(
             matrix, sorted(chosen), self.contract,
             requested_radius=None, achieved_radius=achieved,

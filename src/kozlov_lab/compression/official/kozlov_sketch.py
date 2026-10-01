@@ -136,7 +136,7 @@ def minimum_cover_size(
     """
     matrix = np.asarray(points, dtype=float).reshape(-1, 2)
     n = matrix.shape[0]
-    distances = distance_matrix(matrix)
+    distances = distance_matrix(matrix)  # measurement only: indices are what is returned
     covers = [
         frozenset(j for j in range(n) if distances[i, j] <= r + 1e-12) for i in range(n)
     ]

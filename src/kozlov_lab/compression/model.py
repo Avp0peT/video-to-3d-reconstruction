@@ -44,7 +44,7 @@ class CompressorContract:
     """What a compressor promises, in fields a test can check."""
 
     name: str
-    family: str  # "official" | "teaching" | "experimental"
+    family: str  # "official" | "teaching" | "experimental" | "control"
     #: Result is a subset of the input (required for the source's эскиз).
     surjective_on: bool
     #: "guaranteed" (with proof in the docstring) or "measured".
@@ -125,7 +125,18 @@ class Compressor(ABC):
     # -- shared helpers ---------------------------------------------------- #
     @staticmethod
     def _matrix(points: Any) -> np.ndarray:
-        array = np.asarray(points, dtype=float)
+        """The image **preserving its arithmetic**.
+
+        No ``dtype=float`` here, and that is a correctness requirement rather than a detail.  A
+        first version coerced to ``float64``, which meant the identity compressor turned exact
+        rationals into floats — so ``C_0(X) != X``, and the exact recogniser then refused the
+        result.  The audit's Control A and Control D both failed on that, and the same coercion
+        is why the earlier compression experiment reported universal failure.
+
+        Compressors that need to measure distances take a float view via
+        :meth:`_float_view`; the points they *return* keep the type they were given.
+        """
+        array = np.asarray(points)
         if array.ndim == 1 and array.shape == (2,):
             array = array.reshape(1, 2)
         if array.ndim != 2 or array.shape[1] != 2:
@@ -133,6 +144,11 @@ class Compressor(ABC):
         if array.shape[0] == 0:
             raise ValueError("an image must be non-empty")
         return array
+
+    @staticmethod
+    def _float_view(matrix: np.ndarray) -> np.ndarray:
+        """A float64 view for *measurement* only — never for the returned points."""
+        return np.asarray(matrix, dtype=float)
 
     @staticmethod
     def _result(
@@ -163,6 +179,7 @@ class Compressor(ABC):
 
 def _registry() -> dict[str, type[Compressor]]:
     """Import lazily so that importing this module does not pull in every compressor."""
+    from .control.identity import IdentityCompressor
     from .experimental.affine_aware import AffineAwareSampler
     from .official.kozlov_sketch import KozlovSketch, KozlovSkeleton
     from .teaching.epsilon_cover import TeachingEpsilonCover
@@ -176,6 +193,7 @@ def _registry() -> dict[str, type[Compressor]]:
         "TeachingFarthestPoint": TeachingFarthestPoint,
         "TeachingGridReduce": TeachingGridReduce,
         "AffineAwareSampler": AffineAwareSampler,
+        "IdentityCompressor": IdentityCompressor,
     }
 
 

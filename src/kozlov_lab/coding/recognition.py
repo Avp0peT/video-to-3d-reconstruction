@@ -592,12 +592,20 @@ def recognize_affine_numeric(
     if code_result.undecided:
         status = RecognitionStatus.NUMERIC_INDETERMINATE
         diagnostics["reason"] = code_result.reason
-    elif residual is not None and residual <= noise > 0:
+    elif residual is not None and 0.0 < residual <= noise > 0:
+        # A **nonzero** residual at or below the noise floor is genuinely indistinguishable from
+        # coordinate rounding.  A residual of exactly zero is not: it is a perfect fit under the
+        # recovered bijection, and reporting it as "indeterminate" would turn the best possible
+        # evidence into a refusal.  (Before this distinction the identity control on a
+        # translation came out INDETERMINATE, which is how the omission was found.)
         status = RecognitionStatus.NUMERIC_INDETERMINATE
         diagnostics["reason"] = (
-            f"the residual {residual:.3e} is at or below the coordinate noise floor "
+            f"the residual {residual:.3e} is nonzero but at or below the coordinate noise floor "
             f"{noise:.3e}: the match cannot be distinguished from coordinate rounding"
         )
+    elif residual == 0.0:
+        status = RecognitionStatus.NUMERIC_AFFINE_MATCH
+        diagnostics["reason"] = "the residual is exactly zero: a perfect fit, not a rounding artefact"
     elif residual is not None and residual <= max(tolerance, noise):
         status = RecognitionStatus.NUMERIC_AFFINE_MATCH
     elif code_result.equivalent:

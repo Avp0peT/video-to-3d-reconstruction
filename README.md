@@ -24,14 +24,14 @@ $$
 | 2 | 内部仿射坐标（**项目核心**） | ✅ 完成，**Gate 通过** |
 | 3 | 图像代码（正式，`coding/`） | ✅ **完成**（Phase 3 已解锁 2026-10-01） |
 | 4 | 仿射等价识别（正式，`recognition.py`） | ✅ **完成**（Gate G4.1–G4.10 全通过） |
-| 5 | 信息压缩 | ⛔ 阻塞（Phase 4） |
+| 5 | 信息压缩（`compression/`） | ✅ **完成**（G5.1–G5.10 全通过；见 `docs/reports/phase5_gate.md`） |
 | 6 | 立体视觉 | ⛔ 阻塞（未决问题 Q4） |
-| 7 | Streamlit Web UI（M1–M7） | ✅ 完成 7 页（含正式编码页与识别页） |
+| 7 | Streamlit Web UI（M1–M8） | ✅ 完成 8 页（含编码、识别、压缩实验室） |
 | 8 | 多形状不变量验证 + 统一可复现产物 | ✅ 完成 |
 | 9 | 完整报告 + 答辩 Demo | ⏳ 阶段报告 |
 | 10 | 2026 扩展模块 E1–E5 | ⛔ 未开始 |
 
-**测试**：460 passed ｜ **实验**：7 个可复现实验全部通过 ｜ **教学型编码 / 正式编码 / 正式识别**：✅✅✅
+**测试**：528 passed ｜ **实验**：7 个可复现实验全部通过 ｜ **教学型编码 / 正式编码 / 正式识别**：✅✅✅
 
 ### ★ Phase 4 结果
 
@@ -161,6 +161,7 @@ kozlov-visual-lab/
 │   ├── datasets/
 │   │   ├── shapes.py             图形注册表（triangle/star/grid/…）
 │   │   └── corpus.py             实验数据集 A–E（非对称性**实测**）
+│   ├── compression/              ✅ 压缩（official эскиз/остов · teaching 基线 · experimental · control）
 │   ├── teaching/                 ✅ 教学型编码（Pedagogical Extension，与正式实现隔离）
 │   ├── coding/                   ✅ 正式编码 + 识别
 │   │   ├── model.py exact.py numeric.py validation.py equivalence.py
@@ -181,7 +182,8 @@ kozlov-visual-lab/
 │       ├── 05_Kozlov_Official_Code.py  M5 正式图像代码（Козлов 2009）
 │       ├── 05_Kozlov_Official_Code.py  M5 正式图像代码
 │       ├── 06_Invariants.py      M6 不变量实验中心
-│       └── 07_Official_Recognition.py  M7 正式仿射识别
+│       ├── 07_Official_Recognition.py  M7 正式仿射识别
+│       └── 08_Compression_Lab.py  M8 压缩实验室
 ├── tests/                        343 个测试
 ├── experiments/                  可执行实验与演示
 │   └── results/                  5 个统一可复现产物 + MANIFEST.json

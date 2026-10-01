@@ -196,3 +196,45 @@ def write_outputs(
         newline="\n",
     )
     return target
+
+
+# --------------------------------------------------------------------------- #
+# exact-compatible corpora
+# --------------------------------------------------------------------------- #
+def quantized_rational_image(points, *, decimals: int = 3):
+    """Coordinates as **exact rationals** at the given decimal precision.
+
+    Why this exists: the project's synthetic images are built in floating point
+    (``A + 0.6*(B-A)``), so their stored coordinates are not integers and the *exact* recogniser
+    refuses them.  The first Phase 5 run fed those floats straight into
+    ``recognize_affine_exact``, got ``INVALID_INPUT`` for nearly every case, and the harness
+    reported the refusals as "code undefined after compression" — producing a "0 / 768 preserved"
+    headline that was entirely an artefact.
+
+    Two honest ways to fix it, and the choice matters:
+
+    * ``Fraction(float(v))`` is exact but imports binary-rounding noise into a corpus that is
+      supposed to be noise-free (``0.1`` becomes a 55-bit rational);
+    * reading the value **as the decimal it was written as** matches how the images were
+      designed, and gives denominators of ``10**decimals`` — small, exact, and free of noise.
+
+    This function does the second, and the rounding is explicit in its name so no caller can
+    think they are getting the raw float.
+    """
+    from fractions import Fraction
+
+    scale = 10**decimals
+    return [
+        (Fraction(round(float(x) * scale), scale), Fraction(round(float(y) * scale), scale))
+        for x, y in points
+    ]
+
+
+def apply_rational_affine(matrix, translation, points):
+    """Apply an affine map with **exact rational** arithmetic (integer matrices welcome)."""
+    a, b, c, d = matrix
+    tx, ty = translation
+    return [
+        (a * x + b * y + tx, c * x + d * y + ty)
+        for x, y in points
+    ]

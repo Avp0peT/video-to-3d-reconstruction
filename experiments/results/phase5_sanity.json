@@ -1,0 +1,1299 @@
+{
+  "name": "phase5_sanity",
+  "provenance": {
+    "timestamp_utc": "2026-10-01T08:58:00+00:00",
+    "package_version": "0.2.0",
+    "git_commit": "ad85715338580fbf9827f2564fe06aee3974fed0",
+    "git_dirty": true,
+    "git_branch": "master",
+    "python_version": "3.13.14",
+    "numpy_version": "2.5.3",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "cpu_count": 32,
+    "seed": 20261006,
+    "tolerances": {
+      "FLOAT_TOL": 1e-12,
+      "COLLINEAR_TOL": 1e-09,
+      "MATCH_TOL": 1e-09,
+      "SIGNATURE_DECIMALS": 9,
+      "MAX_CONDITION_NUMBER": 1000000.0,
+      "UNUSABLE_CONDITION_NUMBER": 1000000000000.0,
+      "UNUSABLE_ACCURACY": 0.001,
+      "TEACHING_CODE_DECIMALS": 9
+    },
+    "experiment_config": {
+      "families": [
+        "translation",
+        "rotation",
+        "similarity",
+        "affine",
+        "affine_shear"
+      ],
+      "corpus": [
+        "dataset_A",
+        "dataset_B",
+        "dataset_C",
+        "dataset_D",
+        "dataset_E",
+        "stair"
+      ],
+      "decimals": 3
+    }
+  },
+  "experiment": "phase5_sanity",
+  "title": "F5.0 recognition pipeline sanity audit",
+  "corpus": [
+    "dataset_A",
+    "dataset_B",
+    "dataset_C",
+    "dataset_D",
+    "dataset_E",
+    "stair"
+  ],
+  "control_a_identity": [
+    {
+      "control": "A_identity",
+      "shape": "dataset_A",
+      "family": "translation",
+      "before_status": "EXACT_AFFINE_EQUIVALENT",
+      "after_status": "EXACT_AFFINE_EQUIVALENT",
+      "preserved": true,
+      "fields_identical": true,
+      "before": {
+        "affine_equivalent": true,
+        "code_definable": true,
+        "theorem_applicable": true,
+        "code_equivalent": true,
+        "has_geometric_witness": true,
+        "status": "EXACT_AFFINE_EQUIVALENT"
+      },
+      "after": {
+        "affine_equivalent": true,
+        "code_definable": true,
+        "theorem_applicable": true,
+        "code_equivalent": true,
+        "has_geometric_witness": true,
+        "status": "EXACT_AFFINE_EQUIVALENT"
+      }
+    },
+    {
+      "control": "A_identity",
+      "shape": "dataset_A",
+      "family": "rotation",
+      "before_status": "EXACT_AFFINE_EQUIVALENT",
+      "after_status": "EXACT_AFFINE_EQUIVALENT",
+      "preserved": true,
+      "fields_identical": true,
+      "before": {
+        "affine_equivalent": true,
+        "code_definable": true,
+        "theorem_applicable": true,
+        "code_equivalent": true,
+        "has_geometric_witness": true,
+        "status": "EXACT_AFFINE_EQUIVALENT"
+      },
+      "after": {
+        "affine_equivalent": true,
+        "code_definable": true,
+        "theorem_applicable": true,
+        "code_equivalent": true,
+        "has_geometric_witness": true,
+        "status": "EXACT_AFFINE_EQUIVALENT"
+      }
+    },
+    {
+      "control": "A_identity",
+      "shape": "dataset_A",
+      "family": "similarity",
+      "before_status": "EXACT_AFFINE_EQUIVALENT",
+      "after_status": "EXACT_AFFINE_EQUIVALENT",
+      "preserved": true,
+      "fields_identical": true,
+      "before": {
+        "affine_equivalent": true,
+        "code_definable": true,
+        "theorem_applicable": true,
+        "code_equivalent": true,
+        "has_geometric_witness": true,
+        "status": "EXACT_AFFINE_EQUIVALENT"
+      },
+      "after": {
+        "affine_equivalent": true,
+        "code_definable": true,
+        "theorem_applicable": true,
+        "code_equivalent": true,
+        "has_geometric_witness": true,
+        "status": "EXACT_AFFINE_EQUIVALENT"
+      }
+    },
+    {
+      "control": "A_identity",
+      "shape": "dataset_A",
+      "family": "affine",
+      "before_status": "EXACT_AFFINE_EQUIVALENT",
+      "after_status": "EXACT_AFFINE_EQUIVALENT",
+      "preserved": true,
+      "fields_identical": true,
+      "before": {
+        "affine_equivalent": true,
+        "code_definable": true,
+        "theorem_applicable": true,
+        "code_equivalent": true,
+        "has_geometric_witness": true,
+        "status": "EXACT_AFFINE_EQUIVALENT"
+      },
+      "after": {
+        "affine_equivalent": true,
+        "code_definable": true,
+        "theorem_applicable": true,
+        "code_equivalent": true,
+        "has_geometric_witness": true,
+        "status": "EXACT_AFFINE_EQUIVALENT"
+      }
+    },
+    {
+      "control": "A_identity",
+      "shape": "dataset_A",
+      "family": "affine_shear",
+      "before_status": "EXACT_AFFINE_EQUIVALENT",
+      "after_status": "EXACT_AFFINE_EQUIVALENT",
+      "preserved": true,
+      "fields_identical": true,
+      "before": {
+        "affine_equivalent": true,
+        "code_definable": true,
+        "theorem_applicable": true,
+        "code_equivalent": true,
+        "has_geometric_witness": true,
+        "status": "EXACT_AFFINE_EQUIVALENT"
+      },
+      "after": {
+        "affine_equivalent": true,
+        "code_definable": true,
+        "theorem_applicable": true,
+        "code_equivalent": true,
+        "has_geometric_witness": true,
+        "status": "EXACT_AFFINE_EQUIVALENT"
+      }
+    },
+    {
+      "control": "A_identity",
+      "shape": "dataset_B",
+      "family": "translation",
+      "before_status": "EXACT_AFFINE_EQUIVALENT",
+      "after_status": "EXACT_AFFINE_EQUIVALENT",
+      "preserved": true,
+      "fields_identical": true,
+      "before": {
+        "affine_equivalent": true,
+        "code_definable": true,
+        "theorem_applicable": true,
+        "code_equivalent": true,
+        "has_geometric_witness": true,
+        "status": "EXACT_AFFINE_EQUIVALENT"
+      },
+      "after": {
+        "affine_equivalent": true,
+        "code_definable": true,
+        "theorem_applicable": true,
+        "code_equivalent": true,
+        "has_geometric_witness": true,
+        "status": "EXACT_AFFINE_EQUIVALENT"
+      }
+    },
+    {
+      "control": "A_identity",
+      "shape": "dataset_B",
+      "family": "rotation",
+      "before_status": "EXACT_AFFINE_EQUIVALENT",
+      "after_status": "EXACT_AFFINE_EQUIVALENT",
+      "preserved": true,
+      "fields_identical": true,
+      "before": {
+        "affine_equivalent": true,
+        "code_definable": true,
+        "theorem_applicable": true,
+        "code_equivalent": true,
+        "has_geometric_witness": true,
+        "status": "EXACT_AFFINE_EQUIVALENT"
+      },
+      "after": {
+        "affine_equivalent": true,
+        "code_definable": true,
+        "theorem_applicable": true,
+        "code_equivalent": true,
+        "has_geometric_witness": true,
+        "status": "EXACT_AFFINE_EQUIVALENT"
+      }
+    },
+    {
+      "control": "A_identity",
+      "shape": "dataset_B",
+      "family": "similarity",
+      "before_status": "EXACT_AFFINE_EQUIVALENT",
+      "after_status": "EXACT_AFFINE_EQUIVALENT",
+      "preserved": true,
+      "fields_identical": true,
+      "before": {
+        "affine_equivalent": true,
+        "code_definable": true,
+        "theorem_applicable": true,
+        "code_equivalent": true,
+        "has_geometric_witness": true,
+        "status": "EXACT_AFFINE_EQUIVALENT"
+      },
+      "after": {
+        "affine_equivalent": true,
+        "code_definable": true,
+        "theorem_applicable": true,
+        "code_equivalent": true,
+        "has_geometric_witness": true,
+        "status": "EXACT_AFFINE_EQUIVALENT"
+      }
+    },
+    {
+      "control": "A_identity",
+      "shape": "dataset_B",
+      "family": "affine",
+      "before_status": "EXACT_AFFINE_EQUIVALENT",
+      "after_status": "EXACT_AFFINE_EQUIVALENT",
+      "preserved": true,
+      "fields_identical": true,
+      "before": {
+        "affine_equivalent": true,
+        "code_definable": true,
+        "theorem_applicable": true,
+        "code_equivalent": true,
+        "has_geometric_witness": true,
+        "status": "EXACT_AFFINE_EQUIVALENT"
+      },
+      "after": {
+        "affine_equivalent": true,
+        "code_definable": true,
+        "theorem_applicable": true,
+        "code_equivalent": true,
+        "has_geometric_witness": true,
+        "status": "EXACT_AFFINE_EQUIVALENT"
+      }
+    },
+    {
+      "control": "A_identity",
+      "shape": "dataset_B",
+      "family": "affine_shear",
+      "before_status": "EXACT_AFFINE_EQUIVALENT",
+      "after_status": "EXACT_AFFINE_EQUIVALENT",
+      "preserved": true,
+      "fields_identical": true,
+      "before": {
+        "affine_equivalent": true,
+        "code_definable": true,
+        "theorem_applicable": true,
+        "code_equivalent": true,
+        "has_geometric_witness": true,
+        "status": "EXACT_AFFINE_EQUIVALENT"
+      },
+      "after": {
+        "affine_equivalent": true,
+        "code_definable": true,
+        "theorem_applicable": true,
+        "code_equivalent": true,
+        "has_geometric_witness": true,
+        "status": "EXACT_AFFINE_EQUIVALENT"
+      }
+    },
+    {
+      "control": "A_identity",
+      "shape": "dataset_C",
+      "family": "translation",
+      "before_status": "EXACT_AFFINE_EQUIVALENT",
+      "after_status": "EXACT_AFFINE_EQUIVALENT",
+      "preserved": true,
+      "fields_identical": true,
+      "before": {
+        "affine_equivalent": true,
+        "code_definable": true,
+        "theorem_applicable": true,
+        "code_equivalent": true,
+        "has_geometric_witness": true,
+        "status": "EXACT_AFFINE_EQUIVALENT"
+      },
+      "after": {
+        "affine_equivalent": true,
+        "code_definable": true,
+        "theorem_applicable": true,
+        "code_equivalent": true,
+        "has_geometric_witness": true,
+        "status": "EXACT_AFFINE_EQUIVALENT"
+      }
+    },
+    {
+      "control": "A_identity",
+      "shape": "dataset_C",
+      "family": "rotation",
+      "before_status": "EXACT_AFFINE_EQUIVALENT",
+      "after_status": "EXACT_AFFINE_EQUIVALENT",
+      "preserved": true,
+      "fields_identical": true,
+      "before": {
+        "affine_equivalent": true,
+        "code_definable": true,
+        "theorem_applicable": true,
+        "code_equivalent": true,
+        "has_geometric_witness": true,
+        "status": "EXACT_AFFINE_EQUIVALENT"
+      },
+      "after": {
+        "affine_equivalent": true,
+        "code_definable": true,
+        "theorem_applicable": true,
+        "code_equivalent": true,
+        "has_geometric_witness": true,
+        "status": "EXACT_AFFINE_EQUIVALENT"
+      }
+    },
+    {
+      "control": "A_identity",
+      "shape": "dataset_C",
+      "family": "similarity",
+      "before_status": "EXACT_AFFINE_EQUIVALENT",
+      "after_status": "EXACT_AFFINE_EQUIVALENT",
+      "preserved": true,
+      "fields_identical": true,
+      "before": {
+        "affine_equivalent": true,
+        "code_definable": true,
+        "theorem_applicable": true,
+        "code_equivalent": true,
+        "has_geometric_witness": true,
+        "status": "EXACT_AFFINE_EQUIVALENT"
+      },
+      "after": {
+        "affine_equivalent": true,
+        "code_definable": true,
+        "theorem_applicable": true,
+        "code_equivalent": true,
+        "has_geometric_witness": true,
+        "status": "EXACT_AFFINE_EQUIVALENT"
+      }
+    },
+    {
+      "control": "A_identity",
+      "shape": "dataset_C",
+      "family": "affine",
+      "before_status": "EXACT_AFFINE_EQUIVALENT",
+      "after_status": "EXACT_AFFINE_EQUIVALENT",
+      "preserved": true,
+      "fields_identical": true,
+      "before": {
+        "affine_equivalent": true,
+        "code_definable": true,
+        "theorem_applicable": true,
+        "code_equivalent": true,
+        "has_geometric_witness": true,
+        "status": "EXACT_AFFINE_EQUIVALENT"
+      },
+      "after": {
+        "affine_equivalent": true,
+        "code_definable": true,
+        "theorem_applicable": true,
+        "code_equivalent": true,
+        "has_geometric_witness": true,
+        "status": "EXACT_AFFINE_EQUIVALENT"
+      }
+    },
+    {
+      "control": "A_identity",
+      "shape": "dataset_C",
+      "family": "affine_shear",
+      "before_status": "EXACT_AFFINE_EQUIVALENT",
+      "after_status": "EXACT_AFFINE_EQUIVALENT",
+      "preserved": true,
+      "fields_identical": true,
+      "before": {
+        "affine_equivalent": true,
+        "code_definable": true,
+        "theorem_applicable": true,
+        "code_equivalent": true,
+        "has_geometric_witness": true,
+        "status": "EXACT_AFFINE_EQUIVALENT"
+      },
+      "after": {
+        "affine_equivalent": true,
+        "code_definable": true,
+        "theorem_applicable": true,
+        "code_equivalent": true,
+        "has_geometric_witness": true,
+        "status": "EXACT_AFFINE_EQUIVALENT"
+      }
+    },
+    {
+      "control": "A_identity",
+      "shape": "dataset_D",
+      "family": "translation",
+      "before_status": "EXACT_AFFINE_EQUIVALENT",
+      "after_status": "EXACT_AFFINE_EQUIVALENT",
+      "preserved": true,
+      "fields_identical": true,
+      "before": {
+        "affine_equivalent": true,
+        "code_definable": true,
+        "theorem_applicable": true,
+        "code_equivalent": true,
+        "has_geometric_witness": true,
+        "status": "EXACT_AFFINE_EQUIVALENT"
+      },
+      "after": {
+        "affine_equivalent": true,
+        "code_definable": true,
+        "theorem_applicable": true,
+        "code_equivalent": true,
+        "has_geometric_witness": true,
+        "status": "EXACT_AFFINE_EQUIVALENT"
+      }
+    },
+    {
+      "control": "A_identity",
+      "shape": "dataset_D",
+      "family": "rotation",
+      "before_status": "EXACT_AFFINE_EQUIVALENT",
+      "after_status": "EXACT_AFFINE_EQUIVALENT",
+      "preserved": true,
+      "fields_identical": true,
+      "before": {
+        "affine_equivalent": true,
+        "code_definable": true,
+        "theorem_applicable": true,
+        "code_equivalent": true,
+        "has_geometric_witness": true,
+        "status": "EXACT_AFFINE_EQUIVALENT"
+      },
+      "after": {
+        "affine_equivalent": true,
+        "code_definable": true,
+        "theorem_applicable": true,
+        "code_equivalent": true,
+        "has_geometric_witness": true,
+        "status": "EXACT_AFFINE_EQUIVALENT"
+      }
+    },
+    {
+      "control": "A_identity",
+      "shape": "dataset_D",
+      "family": "similarity",
+      "before_status": "EXACT_AFFINE_EQUIVALENT",
+      "after_status": "EXACT_AFFINE_EQUIVALENT",
+      "preserved": true,
+      "fields_identical": true,
+      "before": {
+        "affine_equivalent": true,
+        "code_definable": true,
+        "theorem_applicable": true,
+        "code_equivalent": true,
+        "has_geometric_witness": true,
+        "status": "EXACT_AFFINE_EQUIVALENT"
+      },
+      "after": {
+        "affine_equivalent": true,
+        "code_definable": true,
+        "theorem_applicable": true,
+        "code_equivalent": true,
+        "has_geometric_witness": true,
+        "status": "EXACT_AFFINE_EQUIVALENT"
+      }
+    },
+    {
+      "control": "A_identity",
+      "shape": "dataset_D",
+      "family": "affine",
+      "before_status": "EXACT_AFFINE_EQUIVALENT",
+      "after_status": "EXACT_AFFINE_EQUIVALENT",
+      "preserved": true,
+      "fields_identical": true,
+      "before": {
+        "affine_equivalent": true,
+        "code_definable": true,
+        "theorem_applicable": true,
+        "code_equivalent": true,
+        "has_geometric_witness": true,
+        "status": "EXACT_AFFINE_EQUIVALENT"
+      },
+      "after": {
+        "affine_equivalent": true,
+        "code_definable": true,
+        "theorem_applicable": true,
+        "code_equivalent": true,
+        "has_geometric_witness": true,
+        "status": "EXACT_AFFINE_EQUIVALENT"
+      }
+    },
+    {
+      "control": "A_identity",
+      "shape": "dataset_D",
+      "family": "affine_shear",
+      "before_status": "EXACT_AFFINE_EQUIVALENT",
+      "after_status": "EXACT_AFFINE_EQUIVALENT",
+      "preserved": true,
+      "fields_identical": true,
+      "before": {
+        "affine_equivalent": true,
+        "code_definable": true,
+        "theorem_applicable": true,
+        "code_equivalent": true,
+        "has_geometric_witness": true,
+        "status": "EXACT_AFFINE_EQUIVALENT"
+      },
+      "after": {
+        "affine_equivalent": true,
+        "code_definable": true,
+        "theorem_applicable": true,
+        "code_equivalent": true,
+        "has_geometric_witness": true,
+        "status": "EXACT_AFFINE_EQUIVALENT"
+      }
+    },
+    {
+      "control": "A_identity",
+      "shape": "dataset_E",
+      "family": "translation",
+      "before_status": "EXACT_AFFINE_EQUIVALENT",
+      "after_status": "EXACT_AFFINE_EQUIVALENT",
+      "preserved": true,
+      "fields_identical": true,
+      "before": {
+        "affine_equivalent": true,
+        "code_definable": true,
+        "theorem_applicable": true,
+        "code_equivalent": true,
+        "has_geometric_witness": true,
+        "status": "EXACT_AFFINE_EQUIVALENT"
+      },
+      "after": {
+        "affine_equivalent": true,
+        "code_definable": true,
+        "theorem_applicable": true,
+        "code_equivalent": true,
+        "has_geometric_witness": true,
+        "status": "EXACT_AFFINE_EQUIVALENT"
+      }
+    },
+    {
+      "control": "A_identity",
+      "shape": "dataset_E",
+      "family": "rotation",
+      "before_status": "EXACT_AFFINE_EQUIVALENT",
+      "after_status": "EXACT_AFFINE_EQUIVALENT",
+      "preserved": true,
+      "fields_identical": true,
+      "before": {
+        "affine_equivalent": true,
+        "code_definable": true,
+        "theorem_applicable": true,
+        "code_equivalent": true,
+        "has_geometric_witness": true,
+        "status": "EXACT_AFFINE_EQUIVALENT"
+      },
+      "after": {
+        "affine_equivalent": true,
+        "code_definable": true,
+        "theorem_applicable": true,
+        "code_equivalent": true,
+        "has_geometric_witness": true,
+        "status": "EXACT_AFFINE_EQUIVALENT"
+      }
+    },
+    {
+      "control": "A_identity",
+      "shape": "dataset_E",
+      "family": "similarity",
+      "before_status": "EXACT_AFFINE_EQUIVALENT",
+      "after_status": "EXACT_AFFINE_EQUIVALENT",
+      "preserved": true,
+      "fields_identical": true,
+      "before": {
+        "affine_equivalent": true,
+        "code_definable": true,
+        "theorem_applicable": true,
+        "code_equivalent": true,
+        "has_geometric_witness": true,
+        "status": "EXACT_AFFINE_EQUIVALENT"
+      },
+      "after": {
+        "affine_equivalent": true,
+        "code_definable": true,
+        "theorem_applicable": true,
+        "code_equivalent": true,
+        "has_geometric_witness": true,
+        "status": "EXACT_AFFINE_EQUIVALENT"
+      }
+    },
+    {
+      "control": "A_identity",
+      "shape": "dataset_E",
+      "family": "affine",
+      "before_status": "EXACT_AFFINE_EQUIVALENT",
+      "after_status": "EXACT_AFFINE_EQUIVALENT",
+      "preserved": true,
+      "fields_identical": true,
+      "before": {
+        "affine_equivalent": true,
+        "code_definable": true,
+        "theorem_applicable": true,
+        "code_equivalent": true,
+        "has_geometric_witness": true,
+        "status": "EXACT_AFFINE_EQUIVALENT"
+      },
+      "after": {
+        "affine_equivalent": true,
+        "code_definable": true,
+        "theorem_applicable": true,
+        "code_equivalent": true,
+        "has_geometric_witness": true,
+        "status": "EXACT_AFFINE_EQUIVALENT"
+      }
+    },
+    {
+      "control": "A_identity",
+      "shape": "dataset_E",
+      "family": "affine_shear",
+      "before_status": "EXACT_AFFINE_EQUIVALENT",
+      "after_status": "EXACT_AFFINE_EQUIVALENT",
+      "preserved": true,
+      "fields_identical": true,
+      "before": {
+        "affine_equivalent": true,
+        "code_definable": true,
+        "theorem_applicable": true,
+        "code_equivalent": true,
+        "has_geometric_witness": true,
+        "status": "EXACT_AFFINE_EQUIVALENT"
+      },
+      "after": {
+        "affine_equivalent": true,
+        "code_definable": true,
+        "theorem_applicable": true,
+        "code_equivalent": true,
+        "has_geometric_witness": true,
+        "status": "EXACT_AFFINE_EQUIVALENT"
+      }
+    },
+    {
+      "control": "A_identity",
+      "shape": "stair",
+      "family": "translation",
+      "before_status": "EXACT_AFFINE_EQUIVALENT",
+      "after_status": "EXACT_AFFINE_EQUIVALENT",
+      "preserved": true,
+      "fields_identical": true,
+      "before": {
+        "affine_equivalent": true,
+        "code_definable": true,
+        "theorem_applicable": true,
+        "code_equivalent": true,
+        "has_geometric_witness": true,
+        "status": "EXACT_AFFINE_EQUIVALENT"
+      },
+      "after": {
+        "affine_equivalent": true,
+        "code_definable": true,
+        "theorem_applicable": true,
+        "code_equivalent": true,
+        "has_geometric_witness": true,
+        "status": "EXACT_AFFINE_EQUIVALENT"
+      }
+    },
+    {
+      "control": "A_identity",
+      "shape": "stair",
+      "family": "rotation",
+      "before_status": "EXACT_AFFINE_EQUIVALENT",
+      "after_status": "EXACT_AFFINE_EQUIVALENT",
+      "preserved": true,
+      "fields_identical": true,
+      "before": {
+        "affine_equivalent": true,
+        "code_definable": true,
+        "theorem_applicable": true,
+        "code_equivalent": true,
+        "has_geometric_witness": true,
+        "status": "EXACT_AFFINE_EQUIVALENT"
+      },
+      "after": {
+        "affine_equivalent": true,
+        "code_definable": true,
+        "theorem_applicable": true,
+        "code_equivalent": true,
+        "has_geometric_witness": true,
+        "status": "EXACT_AFFINE_EQUIVALENT"
+      }
+    },
+    {
+      "control": "A_identity",
+      "shape": "stair",
+      "family": "similarity",
+      "before_status": "EXACT_AFFINE_EQUIVALENT",
+      "after_status": "EXACT_AFFINE_EQUIVALENT",
+      "preserved": true,
+      "fields_identical": true,
+      "before": {
+        "affine_equivalent": true,
+        "code_definable": true,
+        "theorem_applicable": true,
+        "code_equivalent": true,
+        "has_geometric_witness": true,
+        "status": "EXACT_AFFINE_EQUIVALENT"
+      },
+      "after": {
+        "affine_equivalent": true,
+        "code_definable": true,
+        "theorem_applicable": true,
+        "code_equivalent": true,
+        "has_geometric_witness": true,
+        "status": "EXACT_AFFINE_EQUIVALENT"
+      }
+    },
+    {
+      "control": "A_identity",
+      "shape": "stair",
+      "family": "affine",
+      "before_status": "EXACT_AFFINE_EQUIVALENT",
+      "after_status": "EXACT_AFFINE_EQUIVALENT",
+      "preserved": true,
+      "fields_identical": true,
+      "before": {
+        "affine_equivalent": true,
+        "code_definable": true,
+        "theorem_applicable": true,
+        "code_equivalent": true,
+        "has_geometric_witness": true,
+        "status": "EXACT_AFFINE_EQUIVALENT"
+      },
+      "after": {
+        "affine_equivalent": true,
+        "code_definable": true,
+        "theorem_applicable": true,
+        "code_equivalent": true,
+        "has_geometric_witness": true,
+        "status": "EXACT_AFFINE_EQUIVALENT"
+      }
+    },
+    {
+      "control": "A_identity",
+      "shape": "stair",
+      "family": "affine_shear",
+      "before_status": "EXACT_AFFINE_EQUIVALENT",
+      "after_status": "EXACT_AFFINE_EQUIVALENT",
+      "preserved": true,
+      "fields_identical": true,
+      "before": {
+        "affine_equivalent": true,
+        "code_definable": true,
+        "theorem_applicable": true,
+        "code_equivalent": true,
+        "has_geometric_witness": true,
+        "status": "EXACT_AFFINE_EQUIVALENT"
+      },
+      "after": {
+        "affine_equivalent": true,
+        "code_definable": true,
+        "theorem_applicable": true,
+        "code_equivalent": true,
+        "has_geometric_witness": true,
+        "status": "EXACT_AFFINE_EQUIVALENT"
+      }
+    }
+  ],
+  "control_b_r0_identity": [
+    {
+      "control": "B_r0",
+      "shape": "dataset_A",
+      "n_before": 9,
+      "n_after": 9,
+      "is_identity": true,
+      "achieved_radius": 0.0
+    },
+    {
+      "control": "B_r0",
+      "shape": "dataset_B",
+      "n_before": 10,
+      "n_after": 10,
+      "is_identity": true,
+      "achieved_radius": 0.0
+    },
+    {
+      "control": "B_r0",
+      "shape": "dataset_C",
+      "n_before": 7,
+      "n_after": 7,
+      "is_identity": true,
+      "achieved_radius": 0.0
+    },
+    {
+      "control": "B_r0",
+      "shape": "dataset_D",
+      "n_before": 8,
+      "n_after": 8,
+      "is_identity": true,
+      "achieved_radius": 0.0
+    },
+    {
+      "control": "B_r0",
+      "shape": "dataset_E",
+      "n_before": 12,
+      "n_after": 12,
+      "is_identity": true,
+      "achieved_radius": 0.0
+    },
+    {
+      "control": "B_r0",
+      "shape": "stair",
+      "n_before": 9,
+      "n_after": 9,
+      "is_identity": true,
+      "achieved_radius": 0.0
+    }
+  ],
+  "control_b_r0_preservation": [
+    {
+      "control": "B_r0_preservation",
+      "shape": "dataset_A",
+      "family": "translation",
+      "before_status": "EXACT_AFFINE_EQUIVALENT",
+      "after_status": "EXACT_AFFINE_EQUIVALENT",
+      "preserved": true,
+      "fields_identical": true
+    },
+    {
+      "control": "B_r0_preservation",
+      "shape": "dataset_A",
+      "family": "rotation",
+      "before_status": "EXACT_AFFINE_EQUIVALENT",
+      "after_status": "EXACT_AFFINE_EQUIVALENT",
+      "preserved": true,
+      "fields_identical": true
+    },
+    {
+      "control": "B_r0_preservation",
+      "shape": "dataset_A",
+      "family": "similarity",
+      "before_status": "EXACT_AFFINE_EQUIVALENT",
+      "after_status": "EXACT_AFFINE_EQUIVALENT",
+      "preserved": true,
+      "fields_identical": true
+    },
+    {
+      "control": "B_r0_preservation",
+      "shape": "dataset_A",
+      "family": "affine",
+      "before_status": "EXACT_AFFINE_EQUIVALENT",
+      "after_status": "EXACT_AFFINE_EQUIVALENT",
+      "preserved": true,
+      "fields_identical": true
+    },
+    {
+      "control": "B_r0_preservation",
+      "shape": "dataset_A",
+      "family": "affine_shear",
+      "before_status": "EXACT_AFFINE_EQUIVALENT",
+      "after_status": "EXACT_AFFINE_EQUIVALENT",
+      "preserved": true,
+      "fields_identical": true
+    },
+    {
+      "control": "B_r0_preservation",
+      "shape": "dataset_B",
+      "family": "translation",
+      "before_status": "EXACT_AFFINE_EQUIVALENT",
+      "after_status": "EXACT_AFFINE_EQUIVALENT",
+      "preserved": true,
+      "fields_identical": true
+    },
+    {
+      "control": "B_r0_preservation",
+      "shape": "dataset_B",
+      "family": "rotation",
+      "before_status": "EXACT_AFFINE_EQUIVALENT",
+      "after_status": "EXACT_AFFINE_EQUIVALENT",
+      "preserved": true,
+      "fields_identical": true
+    },
+    {
+      "control": "B_r0_preservation",
+      "shape": "dataset_B",
+      "family": "similarity",
+      "before_status": "EXACT_AFFINE_EQUIVALENT",
+      "after_status": "EXACT_AFFINE_EQUIVALENT",
+      "preserved": true,
+      "fields_identical": true
+    },
+    {
+      "control": "B_r0_preservation",
+      "shape": "dataset_B",
+      "family": "affine",
+      "before_status": "EXACT_AFFINE_EQUIVALENT",
+      "after_status": "EXACT_AFFINE_EQUIVALENT",
+      "preserved": true,
+      "fields_identical": true
+    },
+    {
+      "control": "B_r0_preservation",
+      "shape": "dataset_B",
+      "family": "affine_shear",
+      "before_status": "EXACT_AFFINE_EQUIVALENT",
+      "after_status": "EXACT_AFFINE_EQUIVALENT",
+      "preserved": true,
+      "fields_identical": true
+    },
+    {
+      "control": "B_r0_preservation",
+      "shape": "dataset_C",
+      "family": "translation",
+      "before_status": "EXACT_AFFINE_EQUIVALENT",
+      "after_status": "EXACT_AFFINE_EQUIVALENT",
+      "preserved": true,
+      "fields_identical": true
+    },
+    {
+      "control": "B_r0_preservation",
+      "shape": "dataset_C",
+      "family": "rotation",
+      "before_status": "EXACT_AFFINE_EQUIVALENT",
+      "after_status": "EXACT_AFFINE_EQUIVALENT",
+      "preserved": true,
+      "fields_identical": true
+    },
+    {
+      "control": "B_r0_preservation",
+      "shape": "dataset_C",
+      "family": "similarity",
+      "before_status": "EXACT_AFFINE_EQUIVALENT",
+      "after_status": "EXACT_AFFINE_EQUIVALENT",
+      "preserved": true,
+      "fields_identical": true
+    },
+    {
+      "control": "B_r0_preservation",
+      "shape": "dataset_C",
+      "family": "affine",
+      "before_status": "EXACT_AFFINE_EQUIVALENT",
+      "after_status": "EXACT_AFFINE_EQUIVALENT",
+      "preserved": true,
+      "fields_identical": true
+    },
+    {
+      "control": "B_r0_preservation",
+      "shape": "dataset_C",
+      "family": "affine_shear",
+      "before_status": "EXACT_AFFINE_EQUIVALENT",
+      "after_status": "EXACT_AFFINE_EQUIVALENT",
+      "preserved": true,
+      "fields_identical": true
+    },
+    {
+      "control": "B_r0_preservation",
+      "shape": "dataset_D",
+      "family": "translation",
+      "before_status": "EXACT_AFFINE_EQUIVALENT",
+      "after_status": "EXACT_AFFINE_EQUIVALENT",
+      "preserved": true,
+      "fields_identical": true
+    },
+    {
+      "control": "B_r0_preservation",
+      "shape": "dataset_D",
+      "family": "rotation",
+      "before_status": "EXACT_AFFINE_EQUIVALENT",
+      "after_status": "EXACT_AFFINE_EQUIVALENT",
+      "preserved": true,
+      "fields_identical": true
+    },
+    {
+      "control": "B_r0_preservation",
+      "shape": "dataset_D",
+      "family": "similarity",
+      "before_status": "EXACT_AFFINE_EQUIVALENT",
+      "after_status": "EXACT_AFFINE_EQUIVALENT",
+      "preserved": true,
+      "fields_identical": true
+    },
+    {
+      "control": "B_r0_preservation",
+      "shape": "dataset_D",
+      "family": "affine",
+      "before_status": "EXACT_AFFINE_EQUIVALENT",
+      "after_status": "EXACT_AFFINE_EQUIVALENT",
+      "preserved": true,
+      "fields_identical": true
+    },
+    {
+      "control": "B_r0_preservation",
+      "shape": "dataset_D",
+      "family": "affine_shear",
+      "before_status": "EXACT_AFFINE_EQUIVALENT",
+      "after_status": "EXACT_AFFINE_EQUIVALENT",
+      "preserved": true,
+      "fields_identical": true
+    },
+    {
+      "control": "B_r0_preservation",
+      "shape": "dataset_E",
+      "family": "translation",
+      "before_status": "EXACT_AFFINE_EQUIVALENT",
+      "after_status": "EXACT_AFFINE_EQUIVALENT",
+      "preserved": true,
+      "fields_identical": true
+    },
+    {
+      "control": "B_r0_preservation",
+      "shape": "dataset_E",
+      "family": "rotation",
+      "before_status": "EXACT_AFFINE_EQUIVALENT",
+      "after_status": "EXACT_AFFINE_EQUIVALENT",
+      "preserved": true,
+      "fields_identical": true
+    },
+    {
+      "control": "B_r0_preservation",
+      "shape": "dataset_E",
+      "family": "similarity",
+      "before_status": "EXACT_AFFINE_EQUIVALENT",
+      "after_status": "EXACT_AFFINE_EQUIVALENT",
+      "preserved": true,
+      "fields_identical": true
+    },
+    {
+      "control": "B_r0_preservation",
+      "shape": "dataset_E",
+      "family": "affine",
+      "before_status": "EXACT_AFFINE_EQUIVALENT",
+      "after_status": "EXACT_AFFINE_EQUIVALENT",
+      "preserved": true,
+      "fields_identical": true
+    },
+    {
+      "control": "B_r0_preservation",
+      "shape": "dataset_E",
+      "family": "affine_shear",
+      "before_status": "EXACT_AFFINE_EQUIVALENT",
+      "after_status": "EXACT_AFFINE_EQUIVALENT",
+      "preserved": true,
+      "fields_identical": true
+    },
+    {
+      "control": "B_r0_preservation",
+      "shape": "stair",
+      "family": "translation",
+      "before_status": "EXACT_AFFINE_EQUIVALENT",
+      "after_status": "EXACT_AFFINE_EQUIVALENT",
+      "preserved": true,
+      "fields_identical": true
+    },
+    {
+      "control": "B_r0_preservation",
+      "shape": "stair",
+      "family": "rotation",
+      "before_status": "EXACT_AFFINE_EQUIVALENT",
+      "after_status": "EXACT_AFFINE_EQUIVALENT",
+      "preserved": true,
+      "fields_identical": true
+    },
+    {
+      "control": "B_r0_preservation",
+      "shape": "stair",
+      "family": "similarity",
+      "before_status": "EXACT_AFFINE_EQUIVALENT",
+      "after_status": "EXACT_AFFINE_EQUIVALENT",
+      "preserved": true,
+      "fields_identical": true
+    },
+    {
+      "control": "B_r0_preservation",
+      "shape": "stair",
+      "family": "affine",
+      "before_status": "EXACT_AFFINE_EQUIVALENT",
+      "after_status": "EXACT_AFFINE_EQUIVALENT",
+      "preserved": true,
+      "fields_identical": true
+    },
+    {
+      "control": "B_r0_preservation",
+      "shape": "stair",
+      "family": "affine_shear",
+      "before_status": "EXACT_AFFINE_EQUIVALENT",
+      "after_status": "EXACT_AFFINE_EQUIVALENT",
+      "preserved": true,
+      "fields_identical": true
+    }
+  ],
+  "control_d_no_op": [
+    {
+      "control": "D_no_op",
+      "shape": "dataset_A",
+      "cardinality_equal": true,
+      "coordinates_equal": true,
+      "declared_radius": 0.0,
+      "achieved_radius": 0.0,
+      "metadata_alone_would_claim_no_op": true
+    },
+    {
+      "control": "D_no_op",
+      "shape": "dataset_B",
+      "cardinality_equal": true,
+      "coordinates_equal": true,
+      "declared_radius": 0.0,
+      "achieved_radius": 0.0,
+      "metadata_alone_would_claim_no_op": true
+    },
+    {
+      "control": "D_no_op",
+      "shape": "dataset_C",
+      "cardinality_equal": true,
+      "coordinates_equal": true,
+      "declared_radius": 0.0,
+      "achieved_radius": 0.0,
+      "metadata_alone_would_claim_no_op": true
+    },
+    {
+      "control": "D_no_op",
+      "shape": "dataset_D",
+      "cardinality_equal": true,
+      "coordinates_equal": true,
+      "declared_radius": 0.0,
+      "achieved_radius": 0.0,
+      "metadata_alone_would_claim_no_op": true
+    },
+    {
+      "control": "D_no_op",
+      "shape": "dataset_E",
+      "cardinality_equal": true,
+      "coordinates_equal": true,
+      "declared_radius": 0.0,
+      "achieved_radius": 0.0,
+      "metadata_alone_would_claim_no_op": true
+    },
+    {
+      "control": "D_no_op",
+      "shape": "stair",
+      "cardinality_equal": true,
+      "coordinates_equal": true,
+      "declared_radius": 0.0,
+      "achieved_radius": 0.0,
+      "metadata_alone_would_claim_no_op": true
+    }
+  ],
+  "control_e_hand_trace": {
+    "note": "The hand pair of the Phase 3 worked example: X is exactly the four-point image whose code has |T_A| = 9, and Y is its image under M with det M = 6.  Every row can be checked by hand, which is why this file exists.",
+    "x": [
+      [
+        "0",
+        "0"
+      ],
+      [
+        "2",
+        "0"
+      ],
+      [
+        "0",
+        "2"
+      ],
+      [
+        "1",
+        "1"
+      ]
+    ],
+    "matrix": [
+      [
+        2,
+        1
+      ],
+      [
+        0,
+        3
+      ]
+    ],
+    "translation": [
+      5,
+      -7
+    ],
+    "det": 6,
+    "y": [
+      [
+        "5",
+        "-7"
+      ],
+      [
+        "9",
+        "-7"
+      ],
+      [
+        "7",
+        "-1"
+      ],
+      [
+        "8",
+        "-4"
+      ]
+    ],
+    "regimes": [
+      {
+        "regime": "no_compression",
+        "affine_equivalent": true,
+        "code_definable": true,
+        "theorem_applicable": false,
+        "code_equivalent": true,
+        "has_geometric_witness": true,
+        "status": "EXACT_AFFINE_EQUIVALENT"
+      },
+      {
+        "regime": "identity",
+        "affine_equivalent": true,
+        "code_definable": true,
+        "theorem_applicable": false,
+        "code_equivalent": true,
+        "has_geometric_witness": true,
+        "status": "EXACT_AFFINE_EQUIVALENT"
+      },
+      {
+        "regime": "official_sketch_r0",
+        "affine_equivalent": true,
+        "code_definable": true,
+        "theorem_applicable": false,
+        "code_equivalent": true,
+        "has_geometric_witness": true,
+        "status": "EXACT_AFFINE_EQUIVALENT"
+      },
+      {
+        "regime": "weak_compression_r05",
+        "n_x": 4,
+        "n_y": 4,
+        "compression_ratio_x": 0.0,
+        "affine_equivalent": true,
+        "code_definable": true,
+        "theorem_applicable": false,
+        "code_equivalent": true,
+        "has_geometric_witness": true,
+        "status": "EXACT_AFFINE_EQUIVALENT"
+      },
+      {
+        "regime": "strong_compression_r20",
+        "n_x": 1,
+        "n_y": 4,
+        "compression_ratio_x": 0.75,
+        "affine_equivalent": false,
+        "code_definable": null,
+        "theorem_applicable": null,
+        "code_equivalent": null,
+        "has_geometric_witness": false,
+        "status": "INVALID_INPUT"
+      }
+    ]
+  },
+  "verdicts": {
+    "control_a_identity_preserves_100pct": true,
+    "control_a_fields_identical_100pct": true,
+    "control_b_r0_is_identity_100pct": true,
+    "control_b_r0_preserves_100pct": true,
+    "control_d_no_op_verified_on_data": true,
+    "control_e_hand_trace_complete": true,
+    "sanity_audit_passed": true
+  }
+}

@@ -1,0 +1,107 @@
+{
+  "note": "The hand pair of the Phase 3 worked example: X is exactly the four-point image whose code has |T_A| = 9, and Y is its image under M with det M = 6.  Every row can be checked by hand, which is why this file exists.",
+  "x": [
+    [
+      "0",
+      "0"
+    ],
+    [
+      "2",
+      "0"
+    ],
+    [
+      "0",
+      "2"
+    ],
+    [
+      "1",
+      "1"
+    ]
+  ],
+  "matrix": [
+    [
+      2,
+      1
+    ],
+    [
+      0,
+      3
+    ]
+  ],
+  "translation": [
+    5,
+    -7
+  ],
+  "det": 6,
+  "y": [
+    [
+      "5",
+      "-7"
+    ],
+    [
+      "9",
+      "-7"
+    ],
+    [
+      "7",
+      "-1"
+    ],
+    [
+      "8",
+      "-4"
+    ]
+  ],
+  "regimes": [
+    {
+      "regime": "no_compression",
+      "affine_equivalent": true,
+      "code_definable": true,
+      "theorem_applicable": false,
+      "code_equivalent": true,
+      "has_geometric_witness": true,
+      "status": "EXACT_AFFINE_EQUIVALENT"
+    },
+    {
+      "regime": "identity",
+      "affine_equivalent": true,
+      "code_definable": true,
+      "theorem_applicable": false,
+      "code_equivalent": true,
+      "has_geometric_witness": true,
+      "status": "EXACT_AFFINE_EQUIVALENT"
+    },
+    {
+      "regime": "official_sketch_r0",
+      "affine_equivalent": true,
+      "code_definable": true,
+      "theorem_applicable": false,
+      "code_equivalent": true,
+      "has_geometric_witness": true,
+      "status": "EXACT_AFFINE_EQUIVALENT"
+    },
+    {
+      "regime": "weak_compression_r05",
+      "n_x": 4,
+      "n_y": 4,
+      "compression_ratio_x": 0.0,
+      "affine_equivalent": true,
+      "code_definable": true,
+      "theorem_applicable": false,
+      "code_equivalent": true,
+      "has_geometric_witness": true,
+      "status": "EXACT_AFFINE_EQUIVALENT"
+    },
+    {
+      "regime": "strong_compression_r20",
+      "n_x": 1,
+      "n_y": 4,
+      "compression_ratio_x": 0.75,
+      "affine_equivalent": false,
+      "code_definable": null,
+      "theorem_applicable": null,
+      "code_equivalent": null,
+      "has_geometric_witness": false,
+      "status": "INVALID_INPUT"
+    }
+  ]
+}
