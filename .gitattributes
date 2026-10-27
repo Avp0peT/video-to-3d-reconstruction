@@ -7,5 +7,10 @@
 
 *.png binary
 *.jpg binary
+*.gif binary
+*.mp4 binary
+*.blend binary
+*.FCStd binary
+*.step binary
 *.pdf binary
 *.gguf binary

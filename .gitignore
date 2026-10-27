@@ -46,3 +46,6 @@ integrations/sam3/src/
 *.mkv
 *.blend1
 *.tmp
+
+# Small, reviewed demonstration media used by the repository homepage.
+!docs/media/*.mp4

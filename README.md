@@ -9,6 +9,29 @@ Kozlov Vision Reconstruction 将两个相关但独立验收的方向放在同一
 
 两条路线共享输入身份、证据记录和可视化基础设施，但不会把成熟的 SfM/MVS 工程结果冒充为论文算法证明，也不会把数学等价判定冒充为通用语义分割。
 
+## 实际效果
+
+### 视频对象掩膜
+
+[![手套视频对象掩膜预览](docs/media/glove-mask-preview.gif)](docs/media/glove-mask-demo.mp4)
+
+上图来自真实手套视频的对象掩膜与时序融合结果。**点击动画可打开压缩后的完整 MP4 演示。** 下图按原视频时间顺序展示了不同角度、遮挡和快速运动下的关键帧：
+
+![手套视频关键帧与对象掩膜](docs/media/glove-mask-contact-sheet.jpg)
+
+### 生成的三维模型
+
+| 闭合骰子模型（Blender/CAD 示例） | 手套实验表面（开放且仍较粗糙） |
+|---|---|
+| ![骰子模型渲染](docs/media/dice-model-preview.png) | ![手套实验模型渲染](docs/media/glove-model-preview.png) |
+
+可直接下载和检查真实生成文件：
+
+- 骰子：[Blender](docs/media/dice-model.blend) · [PLY](docs/media/dice-model.ply) · [FreeCAD](docs/media/dice-model.FCStd) · [STEP](docs/media/dice-model.step)
+- 手套实验表面：[Blender](docs/media/glove-model.blend) · [PLY](docs/media/glove-model.ply)
+
+骰子文件来自同一份简化后网格，适合演示 Blender 与 CAD/STEP 交付。手套模型用于展示当前视频重建的真实状态，仍能看到局部稀疏、粗糙和边界错误，因此不标作闭合 CAD。媒体来源与范围见 [`docs/media/README.md`](docs/media/README.md)。
+
 ## 主要能力
 
 - 照片目录或视频的一键任务入口（Windows PowerShell）。
