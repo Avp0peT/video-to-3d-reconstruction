@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "kozlov-lab"
 version = "0.2.0"
-description = "Interactive laboratory for V. N. Kozlov's mathematical theory of visual perception"
+description = "Object-centric 3D reconstruction and executable research on V. N. Kozlov's visual theory"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = ["numpy>=1.26"]
