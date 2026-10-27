@@ -5,10 +5,10 @@ Three layers, separated the same way the previous phases are:
 ======================  ===================================================================
 ``official/``           **SOURCE-EXACT** constructions from Kozlov 1996: the body as a finite
                         point set, the 3D code (tetrahedron volume ratios), parallel
-                        projection, a'-equivalence, and the tetrahedron correspondence
-                        principle.  ``AlgT'``/``AlgSo`` are **not** implemented — their
-                        step-by-step description has not been extracted, and the 6A gate
-                        forbids giving that name to a reconstruction procedure meanwhile.
+                        projection and labelled affine equivalence. Software summaries and
+                        numerical oracles have separate semantics. AlgT'/AlgSo assume a
+                        supplied matching; source steps are reviewed but implementation
+                        and algorithm gates remain pending (stereo_algorithms_1996.md).
 ``baseline/``           standard multi-view geometry (pinhole camera, DLT triangulation):
                         **BASELINE**, not the author's content.
 ``correspondence.py``   our own search over point correspondences: **EXPERIMENTAL**.

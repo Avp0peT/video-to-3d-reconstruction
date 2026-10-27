@@ -1,0 +1,9 @@
+# zero-error-fit-search-v1
+
+S-2025 PDF p9–11零中心误差充分证明沿用zero-error-fits-v1，不搜索非零误差互位。完整双方1..7有理点及同数至少2块；reference必须给定合法primary，source分划只需标签完整互斥。输入部分顺序保持，拒抽样与隐式删点。
+
+先在共享预算内构造并独立核验所有完整source块中心。reference中心来自primary完整证书。rank2固定source非共线三中心基，枚举全部reference有序非共线三中心anchors，唯一确定可逆M,t，复算所有中心并恢复完整块双射，然后调用given_zero_error_fits复验所有块点。每个真正零中心误差T必命中一个anchor，因此rank2域枚举是数学完备的，但预算不足UNKNOWN。rank1只枚举两中心对应并固定J可逆横向扩展；横向仿射自由度未穷尽，失败NO_SUPPORTED_WITNESS不能证明一般零误差拟合不存在。rank0意味着所有source中心相同，至少2个reference primary中心互异，零中心双射不可能，直接NO_SUPPORTED_WITNESS。
+
+TRUE保存完整given-zero-error-fits证书和M,t/块双射；独立assess仅调用该证书独立核验，不调用search/primary producer/center constructor。NO_SUPPORTED_WITNESS只限定本枚举域，不报告一般FALSE；所有结果general_fits_decided=False。search_complete只表示有限anchor候选已穷尽，rank1不包含未枚举横向自由度。
+
+所有子调用使用剩余工作/秒数并回收work_used；默认2M工作/30秒。候选given-fits复验会重构其完整源块证书，这是有限重复并计入同一预算，不缓存无来源几何或重置预算。非有理中心UNKNOWN，不使用浮点近似；最多7·6·5 rank2 anchors。未改旧模块、UI或一般fits定义。

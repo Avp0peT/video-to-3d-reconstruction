@@ -3,8 +3,7 @@
 **《视觉感知的数学理论》交互式实验与识别系统**
 **Козлов：Математическая теория зрительного восприятия — 可视化数学实验室**
 
-一个实现 В. Н. Козлов 教材数学思想的交互式实验环境。
-它**不是** CNN/YOLO 项目，而是回答一个数学问题：
+项目包含两个分别验收的部分：照片/视频到三维几何的工程流程（SAM3、COLMAP、OpenMVS、Blender/FreeCAD），以及 В. Н. Козлов 理论的数学实验。工程流程生成模型，并不自动证明论文算法完成或对重建产生收益。研究部分讨论：
 
 $$\text{机器如何从数学意义上判断两幅发生几何变化的图像属于同一个视觉对象？}$$
 
@@ -17,6 +16,16 @@ $$
 
 ## 当前状态
 
+**2026-10-11 当前状态：照片到 Blender 的系统流程已有两组真实整链成果，项目仍在实施中。**
+[统一入口](docs/PHOTO_DEMO_USAGE.md) 已将颅骨 66 张照片中的 42 个有效视图、骰子 33 张照片中的 31 个有效视图分别生成表面和 `.blend`，Blender 独立回读通过；两次总状态均为 PARTIAL，未补齐缺失掩膜。骰子可辨认，颅骨仍有粗糙和跨缺口大三角片；视频目前只有外形不足的局部结果。
+
+骰子真实照片网格另经固定 quadric 简化和 FreeCAD 转换，得到 2000 面有效闭合单实体，FCStd 重开与 STEP 重导入通过。它是**任意尺度的分面实体**，没有实测尺寸、照片精度或参数化设计验收。证据：[照片整链](outputs/delegation/GENERAL_PIPELINE/20261011_dice_e2e/ACCEPTANCE_EVIDENCE.json)、[CAD 对照结果](outputs/delegation/GENERAL_PIPELINE/20261011_dice_cad_quadric/CONTRAST_RESULT.json)。完整范围仍以[项目完成清单](docs/PROJECT_COMPLETION_CHECKLIST.md)为准；下方历史数学测试不代表整个项目完成。
+
+下表与历史测试数保留原阶段范围。立体视觉的数值仿射对应判定已修正点重编号错误，
+最新说明见[研究纠错记录](outputs/delegation/RESEARCH_CORRESPONDENCE/20261006T151710Z/CORRECTIONS.md)。
+`is_a_equivalent` 是几何仿射双射数值判定器；当前三维比例袋不是原文带索引代码的完整实现。
+2026-10-07新增独立[小规模精确三维索引代码](docs/INDEXED_CODE3D_USAGE.md)：完整四元组比值、全局标签双射核验及有界搜索已有50项测试和真实来源六点受控对照；旧比例袋与几何oracle保持原有职责，真实立体恢复与AlgT'/AlgSo仍未完成。
+
 | Phase | 内容 | 状态 |
 |---|---|---|
 | 0 | 数学规格（Theory Agent 输出） | ✅ 完成 |
@@ -25,13 +34,13 @@ $$
 | 3 | 图像代码（正式，`coding/`） | ✅ **完成**（Phase 3 已解锁 2026-10-01） |
 | 4 | 仿射等价识别（正式，`recognition.py`） | ✅ **完成**（Gate G4.1–G4.10 全通过） |
 | 5 | 信息压缩（`compression/`） | ✅ **完成**（G5.1–G5.10 全通过；见 `docs/reports/phase5_gate.md`） |
-| 6 | 立体视觉（`stereo/`） | ✅ **完成**（G6 Gate 通过；`AlgT'`/`AlgSo` 未实现，已登记；见 `docs/reports/phase6_gate.md`） |
+| 6 | 立体视觉（`stereo/`） | 部分完成：几何模型、数值实验及有界精确索引代码已有实现；`AlgT'`/`AlgSo` 与真实对应恢复尚未完成，历史 G6 结论受后续纠错限制 |
 | 7 | Streamlit Web UI（M1–M8） | ✅ 完成 9 页（含编码、识别、压缩实验室、立体视觉实验室） |
 | 8 | 多形状不变量验证 + 统一可复现产物 | ✅ 完成 |
 | 9 | 完整报告 + 答辩 Demo | ⏳ 阶段报告 |
 | 10 | 2026 扩展模块 E1–E5 | ⛔ 未开始 |
 
-**测试**：561 passed ｜ **实验**：10 个可复现实验全部通过 ｜ **教学型编码 / 正式编码 / 正式识别**：✅✅✅
+**历史阶段记录**：561 passed、10 个实验通过；这些数字不是当前代码全套复验结果，也不包含照片/视频到 CAD 的最终验收。
 
 ### ★ Phase 4 结果
 
@@ -48,8 +57,8 @@ $$
 | G4.9 | 性能报告完成并记录 $O(n^6)$ | ✅ [`docs/theory/complexity.md`](docs/theory/complexity.md) |
 | G4.10 | UI 可展示实际 affine witness | ✅ `07_Official_Recognition.py`：`M`、`t`、`det M`、点对应 ψ、X / T(X) / Y 三联图 |
 
-**Phase 4 ✅ ⇒ Phase 5 ✅ ⇒ Phase 6 ✅**（各阶段 Gate 报告在 `docs/reports/`；
-Phase 6 的 `AlgT'`/`AlgSo` 算法层未通过 Gate，已显式登记，见 `docs/reports/phase6_gate.md` §5）。
+Phase 4/5 的历史 Gate 报告在 `docs/reports/`。Phase 6 的算法层尚未完成；
+其原报告及数字保留作历史证据，涉及点对应和比例袋判别的现行解释以上述研究纠错记录为准。
 
 ### ★ Q1 已结案：Phase 3 解锁
 
@@ -92,6 +101,88 @@ $$\text{代码是否可定义}\ \ne\ \text{定理 1 的 iff 是否成立}\ \ne\ 
 
 ## 快速开始
 
+### 照片或视频一键建模
+
+Windows PowerShell 统一入口为 `scripts/run_photo_demo.ps1`。输入可以是照片目录或视频文件；
+入口会依次执行输入整理、SAM3 对象分割、SfM、视图与几何诊断、表面生成、
+Blender 导出、研究侧支和报告。建议先执行计划检查，确认依赖和阶段计划后再运行真实任务。
+
+```powershell
+Set-Location '<project-root>'
+
+# 只检查输入、依赖和执行计划，不运行模型
+.\scripts\run_photo_demo.ps1 `
+  -Source '<path-to-video>' `
+  -Prompt 'glove' `
+  -Frames 24 `
+  -Target blender `
+  -PlanOnly
+```
+
+视频到 Blender 的一键执行示例：
+
+```powershell
+.\scripts\run_photo_demo.ps1 `
+  -Source '<path-to-video>' `
+  -Prompt 'glove' `
+  -Frames 24 `
+  -Target blender `
+  -Output '.\outputs\photo_demo\glove_demo01'
+```
+
+照片目录到 Blender 的一键执行示例：
+
+```powershell
+.\scripts\run_photo_demo.ps1 `
+  -Source 'C:\data\object_photos' `
+  -Prompt 'beverage can' `
+  -Target blender `
+  -Output '.\outputs\photo_demo\can_demo01'
+```
+
+继续生成 CAD 时，将目标改为 `cad`，并绑定已有 FreeCAD Python：
+
+```powershell
+.\scripts\run_photo_demo.ps1 `
+  -Source 'C:\data\object_photos' `
+  -Prompt 'object' `
+  -Target cad `
+  -FreecadPython 'C:\path\to\FreeCAD\bin\python.exe' `
+  -Output '.\outputs\photo_demo\cad_demo01'
+```
+
+任务结束后可查询状态或只重新生成报告，不重新运行模型：
+
+```powershell
+$python='.\outputs\delegation\T02A\envs\20261002T190239Z_9b9b5ddb\venv\Scripts\python.exe'
+
+& $python -B -X utf8 .\scripts\run_photo_demo.py status `
+  --run '.\outputs\photo_demo\glove_demo01'
+
+& $python -B -X utf8 .\scripts\run_photo_demo.py report `
+  --run '.\outputs\photo_demo\glove_demo01'
+```
+
+主要参数：`Source` 为照片目录或视频，`Prompt` 为目标物体描述，`Frames` 为视频抽帧数
+（2–96），`Target` 可选 `blender`、`report` 或 `cad`。`Output` 必须是尚不存在的新目录。
+最终结果查看 `<输出目录>/report/index.html`，机器可读状态查看 `<输出目录>/pipeline.json`。
+
+退出码：`0` 表示所选目标阶段完成；`1` 表示保留了部分成果；`2` 表示输入或准备错误；
+`3` 表示分割环境或前置条件不满足；`4` 表示运行、证据、回收或报告错误；
+`5` 表示资源限制拒绝；`130` 表示用户取消。
+
+### 系统生成 Blender 文件
+
+交互界面的侧栏新增 **Blender Export / 生成 Blender 文件**。选择本地 PLY，或点击
+“使用当前已验收样例”，再点击“生成 Blender 文件”。系统在后台创建 `.blend`，
+用独立 Blender 进程回读核对几何，通过后提供下载；无需手工打开 Blender 导入。
+孔洞和面顺序保留，尺度未知的模型继续标注尺度未知。
+
+也可通过 `scripts/export_blender.py --spec <场景清单> --output <新输出目录>` 调用同一后端。
+需要本机已安装 Blender；不会自动安装或下载。具体参数和范围见
+[Blender 导出说明](docs/BLENDER_EXPORT_USAGE.md)。这一功能消费已有 PLY，
+不代表照片/视频的稠密重建已全部接入通用演示入口。
+
 ```bash
 # 环境（已建好的隔离 venv）
 PY=C:/Users/13944/.workbuddy/binaries/python/envs/kozlov/Scripts/python.exe
@@ -117,6 +208,16 @@ $PY -m streamlit run app/Home.py
 ```bash
 pip install -e .[dev]
 ```
+
+照片与人工 mask CLI 使用独立的 `io` 可选依赖。需要照片 IO 时，在隔离环境安装：
+
+```bash
+python -m pip install -e ".[io]"
+# 同时开发和运行 IO 定向测试时使用 ".[dev,io]"
+python -m kozlov_lab.io --help
+```
+
+Pillow 暂固定为已验证的 `12.3.0`；未承诺其他版本兼容。R1 已在既有环境通过 213 项定向测试与合成 CLI，干净安装验证另列待办。运行照片任务前请读 [photo-io-v1 契约](docs/contracts.md)；当前接收状态和证据见 [R1 主线复核](docs/delegation/T01A_R1_REVIEW.md)。合成 IO 验收不等于真实照片或三维重建验收。
 
 ---
 

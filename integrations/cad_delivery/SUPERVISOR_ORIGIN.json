@@ -1,0 +1,6 @@
+{
+  "source": "outputs/delegation/CAD_FULL66/20261006T153820Z_full66/supervise.py",
+  "sha256": "077a4a021741d1b432d6312bcedbab1bc31696cc6621b66d61dc65dda0d7e4be",
+  "copy_policy": "Byte-identical reuse of the existing Windows Job supervisor; no lifecycle rewrite.",
+  "measurement_boundary": "This wrapper does not reinterpret the legacy raw peak-memory field as a validated peak measurement. Job limit and lifecycle evidence are retained separately."
+}

@@ -1,10 +1,10 @@
 """SOURCE-EXACT constructions from Kozlov 1996 — see ``docs/specs/stereo_kozlov.md``.
 
-Only what the primary text states lives here: the body, the 3D code of tetrahedron volume ratios,
-parallel projection, ``a'``-equivalence, and the tetrahedron correspondence principle.
-``AlgT'`` and ``AlgSo`` are **deliberately absent**: their step-by-step description has not been
-extracted from the source, and the 6A gate forbids attaching the author's name to a reconstruction
-procedure meanwhile.
+Source definitions and their numerical/exact software representations are distinguished.
+AlgT'/AlgSo take already labelled projections. Their source steps have been reviewed in
+docs/specs/stereo_algorithms_1996.md, but implementation and algorithm gates remain pending.
+The legacy tetrahedron-named helper only counts single-view triangles and reports prerequisites;
+it neither recovers correspondence nor verifies the source's two-view coplanarity predicate.
 """
 
 from __future__ import annotations

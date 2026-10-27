@@ -1,4 +1,4 @@
-"""The 3D body, its code, parallel projection and ``a'``-equivalence — **SOURCE-EXACT**.
+"""Source 3D definitions, numerical code summaries and an affine geometric oracle.
 
 Quoted definitions (Kozlov 1996, «Математическое моделирование зрительного восприятия»,
 Математические вопросы кибернетики 6, 321–338) are in ``docs/specs/stereo_kozlov.md``:
@@ -6,14 +6,17 @@ Quoted definitions (Kozlov 1996, «Математическое моделиро
 * the body is a finite set of points in ``R^3``;
 * the code is ``rho = V_mnuv / V_kspq`` over pairs of **quadruples**, with ``V`` the tetrahedron
   volume — the verbatim lift of the 2D triangle-area construction;
-* projections are **parallel** (the paper says «проекции по разным направлениям», and the word for
-  central/perspective projection never occurs);
-* théorème 3: two bodies are code-equivalent **iff** they are 3D affinely equivalent;
-* théorème 4: a body rebuilt from two differently-directed projections is ``a'``-equivalent to the
-  original.
+* projections are **parallel**, defined directly on S-1996 printed page 331;
+* théorème 3 concerns the source's *volume images*, which exclude sets contained in one plane
+  or in two parallel planes: code-equivalence **iff** 3D affine equivalence on that domain;
+* theorem 4 concerns compatible, already labelled, a'-different parallel projections and
+  AlgT' construction; it does not recover unknown correspondences or metric dimensions.
 
 Degeneracy note that the source makes explicit: a quadruple with zero volume (four coplanar
 points) cannot serve as a denominator, exactly as a collinear triple cannot in 2D.
+
+``is_a_equivalent`` is a floating-point geometric search with a bijection witness. It does not
+compare the indexed source codes, and its numerical outcomes are not proofs of théorème 3.
 """
 
 from __future__ import annotations
@@ -61,10 +64,11 @@ def tetrahedron_volumes(points: Any) -> dict[tuple[int, int, int, int], float]:
 
 
 def kozlov_body_code(points: Any, *, decimals: int = 9, degeneracy_tol: float = 1e-9) -> dict[str, Any]:
-    """The body's code ``<M_A, T_A>``: indexed ratios of tetrahedron volumes.
+    """Legacy numerical summary of the body's tetrahedron-volume ratios.
 
-    Returns the counts and the set of quantised ratio values.  The **indexing is preserved** for
-    the same reason as in 2D: the equivalence relation acts on it.
+    Returns counts and a deduplicated set of quantised values, NOT indexed records.
+    For a complete bounded exact code use ``indexed_code3d.indexed_body_code``.
+    ``is_a_equivalent`` remains a separate floating geometric oracle.
 
     Scale: quadruples grow like ``C(n,4)``, so the ratio set grows like ``C(n,4)^2`` — i.e.
     ``O(n^8)``, two orders above the 2D code's ``O(n^6)``.  That is a property of the definition
@@ -142,27 +146,76 @@ def parallel_project(points: Any, direction: Sequence[float], *, basis: Sequence
     return np.column_stack([body @ e1, body @ e2])
 
 
-def is_a_equivalent(first: Any, second: Any, *, tol: float = 1e-9) -> dict[str, Any]:
-    """Whether two bodies are 3D affinely equivalent — the equivalence of théorème 3.
+def _point_bijection(moved: np.ndarray, target: np.ndarray, atol: float) -> list[int] | None:
+    """Match every source row to a distinct target row within coordinate tolerance.
 
-    Decided by solving for the affine map from four non-coplanar control points and checking the
-    remaining points, the 3D lift of the Phase 3 geometric oracle.  Returns the map when it exists,
-    so the caller gets a witness rather than a bare ``True``.
+    Nearest neighbours (even in both directions) need not form a bijection. Augmenting paths
+    also avoid rejecting a valid matching just because an earlier row consumed its only target.
+    """
+    admissible = np.max(np.abs(moved[:, None, :] - target[None, :, :]), axis=2) <= atol
+    if not admissible.any(axis=1).all() or not admissible.any(axis=0).all():
+        return None
+    neighbours = [np.flatnonzero(row).tolist() for row in admissible]
+    owners = [-1] * len(target)
+
+    def augment(source_index: int, seen: set[int]) -> bool:
+        for target_index in neighbours[source_index]:
+            if target_index in seen:
+                continue
+            seen.add(target_index)
+            if owners[target_index] == -1 or augment(owners[target_index], seen):
+                owners[target_index] = source_index
+                return True
+        return False
+
+    for source_index in range(len(moved)):
+        if not augment(source_index, set()):
+            return None
+    permutation = [-1] * len(moved)
+    for target_index, source_index in enumerate(owners):
+        permutation[source_index] = target_index
+    return permutation
+
+
+def is_a_equivalent(first: Any, second: Any, *, tol: float = 1e-9) -> dict[str, Any]:
+    """Numerically test affine equivalence of small unordered 3D point sets.
+
+    Fix one non-coplanar source quadruple, enumerate ordered target quadruples, solve their affine
+    maps, and verify a bijection of *all* points. ``permutation[i]`` identifies the row of ``second``
+    matched to ``first[i]`` by the returned matrix and translation. This is an exhaustive geometric
+    oracle for small full-rank inputs, not an indexed-code comparison or an exact arithmetic proof.
+
+    ``tol`` is a numerical strategy: controls require absolute sextuple volume greater than it,
+    and matched coordinate residuals must be at most ``tol * max(max(abs(second)), 1)``. Near
+    degeneracy and poorly conditioned data therefore remain tolerance dependent. If neither body
+    has an admissible control, return ``equivalent=None, undecided=True`` rather than a positive
+    claim; lower-dimensional affine equivalence is outside this oracle's scope.
     """
     a = np.asarray(first, dtype=float).reshape(-1, 3)
     b = np.asarray(second, dtype=float).reshape(-1, 3)
+    if not np.isfinite(tol) or tol < 0:
+        raise ValueError("tol must be finite and non-negative")
+    if not np.isfinite(a).all() or not np.isfinite(b).all():
+        raise ValueError("body coordinates must be finite")
     if a.shape != b.shape:
         return {"equivalent": False, "reason": f"shapes differ: {a.shape} vs {b.shape}"}
-    control = None
-    for quad in itertools.combinations(range(a.shape[0]), 4):
-        if abs(_sextuple_volume(*(a[i] for i in quad))) > tol:
-            control = quad
-            break
-    if control is None:
-        return {"equivalent": True, "undecided": True, "reason": "every quadruple of A is coplanar"}
-    source = np.array([a[i] for i in control])
-    target_all = list(itertools.permutations(range(b.shape[0]), 4))
-    for ordered in target_all:
+
+    def find_control(body: np.ndarray) -> tuple[int, ...] | None:
+        return next((quad for quad in itertools.combinations(range(len(body)), 4)
+                     if abs(_sextuple_volume(*(body[i] for i in quad))) > tol), None)
+
+    control = find_control(a)
+    target_control = find_control(b)
+    if control is None and target_control is None:
+        return {"equivalent": None, "undecided": True,
+                "reason": "neither body has a non-coplanar control at this tolerance"}
+    if control is None or target_control is None:
+        return {"equivalent": False,
+                "reason": "only one body has a non-coplanar control at this tolerance"}
+    source = a[list(control)]
+    design = np.hstack([source, np.ones((4, 1))])
+    tolerance = tol * max(float(np.abs(b).max()), 1.0)
+    for ordered in itertools.permutations(range(b.shape[0]), 4):
         target = np.array([b[i] for i in ordered])
         if abs(_sextuple_volume(*target)) <= tol:
             continue
@@ -170,30 +223,31 @@ def is_a_equivalent(first: Any, second: Any, *, tol: float = 1e-9) -> dict[str, 
         # design = [s_i | 1] (4x4) and solution = [[A^T], [t]] (4x3), so A = solution[:3].T.
         # A first version built the wrong system and produced a 3x4 "matrix"; the shape error
         # surfaced immediately, which is why the solve is done in one explicit step here.
-        design = np.hstack([source, np.ones((4, 1))])
         try:
             solution = np.linalg.solve(design, target)
         except np.linalg.LinAlgError:
             continue
+        if not np.isfinite(solution).all():
+            continue
         matrix = solution[:3].T
         translation = solution[3]
         moved = a @ matrix.T + translation
-        if np.abs(moved - b).max() <= 1e-9 * max(float(np.abs(b).max()), 1.0):
-            return {"equivalent": True, "matrix": matrix.tolist(), "translation": translation.tolist()}
-    return {"equivalent": False, "reason": "no affine map reproduces B from A"}
+        permutation = _point_bijection(moved, b, tolerance)
+        if permutation is not None:
+            residual = float(np.abs(moved - b[permutation]).max())
+            return {"equivalent": True, "matrix": matrix.tolist(),
+                    "translation": translation.tolist(), "permutation": permutation,
+                    "max_residual": residual, "tolerance": tolerance}
+    return {"equivalent": False, "reason": "no affine bijection found at this tolerance"}
 
 
 def correspondence_tetrahedron_principle(points_2d: Any, *, tol: float = 1e-9) -> dict[str, Any]:
-    """The source's correspondence principle: a **tetrahedron** (triangle + off-plane point).
+    """Legacy name: count single-view noncollinear triples and describe prerequisites.
 
-    > «Выберем на S1 и S2 точки a1,b1,c1,e1 и a2,b2,c2,e2 такие, что a1b1c1 и a2b2c2 —
-    > треугольники и точка e1 лежит вне плоскости треугольника a1b1c1.»
-
-    In a projection this is a quadruple of 2D points whose pre-images are **not coplanar**; the
-    projection cannot detect that directly, so the principle is reported here as the structure the
-    source requires, and the *detection* of such quadruples in a real pair of projections is the
-    correspondence problem itself (6E).  Returning the requirement explicitly is more useful than
-    pretending it is automatic.
+    This does not establish correspondence or certify source anchors. S-1996 p332 defines
+    off-plane using TWO already matched views: align abc and compare the matched fourth point.
+    That point may lie inside the drawn 2D triangle. AlgT'/AlgSo assume the matching is given;
+    unknown-label acceptance is a separate procedure on p338. See stereo_algorithms_1996.md.
     """
     image = np.asarray(points_2d, dtype=float).reshape(-1, 2)
     n = image.shape[0]
@@ -207,9 +261,10 @@ def correspondence_tetrahedron_principle(points_2d: Any, *, tol: float = 1e-9) -
         "n_points": n,
         "n_non_degenerate_triples": len(non_degenerate_triples),
         "requires": (
-            "a quadruple whose 2D projection is a triangle plus a point outside it, AND whose "
-            "pre-image quadruple is non-coplanar; the second condition is not checkable from one "
-            "projection alone, which is why the source calls correspondence the main problem"
+            "two compatible labelled parallel projections with abc noncollinear in both; "
+            "after aligning matched abc, the fourth matched point e must not coincide. "
+            "This two-view condition is not checked by this single-view triangle counter; "
+            "e need not lie outside the drawn triangle and correspondence is not recovered"
         ),
         "source": SOURCE_3D,
     }

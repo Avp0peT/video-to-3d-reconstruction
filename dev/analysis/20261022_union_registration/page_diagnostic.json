@@ -1,0 +1,395 @@
+{
+  "schema": "union-registration-diagnostic-v1",
+  "status": "READ_ONLY_DIAGNOSTIC",
+  "counts": {
+    "inputs": 64,
+    "registered": 15,
+    "features": 14849,
+    "raw_matches": 5140,
+    "verified_pair_rows": 116,
+    "verified_correspondences": 4233,
+    "pairs_ge15": 116,
+    "images_ge15_neighbor": 38,
+    "points3D": 300
+  },
+  "registered_indices": [
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    45,
+    46,
+    51,
+    52,
+    53,
+    54,
+    62,
+    63
+  ],
+  "unregistered_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    39,
+    40,
+    41,
+    42,
+    43,
+    44,
+    47,
+    48,
+    49,
+    50,
+    55,
+    56,
+    57,
+    58,
+    59,
+    60,
+    61
+  ],
+  "no_ge15_neighbor_indices": [
+    4,
+    5,
+    8,
+    9,
+    10,
+    11,
+    12,
+    26,
+    27,
+    28,
+    29,
+    30,
+    37,
+    40,
+    41,
+    42,
+    48,
+    49,
+    50,
+    55,
+    56,
+    57,
+    58,
+    59,
+    60,
+    61
+  ],
+  "match_concentration": {
+    "registered_registered_pairs": 88,
+    "registered_registered_correspondences": 3656,
+    "other_pairs": 28,
+    "other_correspondences": 577
+  },
+  "group_statistics": {
+    "registered": {
+      "frames": 15,
+      "registered": 15,
+      "feature_total": 6615,
+      "feature_median": 491,
+      "no_verified_neighbor": 0
+    },
+    "unregistered": {
+      "frames": 49,
+      "registered": 0,
+      "feature_total": 8234,
+      "feature_median": 145,
+      "no_verified_neighbor": 26
+    },
+    "clear_opposite_visual": {
+      "frames": 21,
+      "registered": 0,
+      "feature_total": 3030,
+      "feature_median": 131,
+      "no_verified_neighbor": 11
+    },
+    "sport_label_visual": {
+      "frames": 27,
+      "registered": 15,
+      "feature_total": 9394,
+      "feature_median": 328,
+      "no_verified_neighbor": 3
+    }
+  },
+  "verified_graph_components": [
+    [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      43,
+      44,
+      45,
+      46,
+      47,
+      51,
+      52,
+      53,
+      54,
+      62,
+      63
+    ],
+    [
+      2,
+      3,
+      31,
+      32,
+      33,
+      34
+    ],
+    [
+      13,
+      14,
+      15,
+      25
+    ],
+    [
+      0,
+      1
+    ],
+    [
+      6,
+      7
+    ],
+    [
+      35,
+      36
+    ],
+    [
+      38,
+      39
+    ],
+    [
+      4
+    ],
+    [
+      5
+    ],
+    [
+      8
+    ],
+    [
+      9
+    ],
+    [
+      10
+    ],
+    [
+      11
+    ],
+    [
+      12
+    ],
+    [
+      26
+    ],
+    [
+      27
+    ],
+    [
+      28
+    ],
+    [
+      29
+    ],
+    [
+      30
+    ],
+    [
+      37
+    ],
+    [
+      40
+    ],
+    [
+      41
+    ],
+    [
+      42
+    ],
+    [
+      48
+    ],
+    [
+      49
+    ],
+    [
+      50
+    ],
+    [
+      55
+    ],
+    [
+      56
+    ],
+    [
+      57
+    ],
+    [
+      58
+    ],
+    [
+      59
+    ],
+    [
+      60
+    ],
+    [
+      61
+    ]
+  ],
+  "mapper_log_facts": [
+    "Database loaded 64 frames; only 38 connected images and 116 match pairs.",
+    "Initial image IDs 19/18 (input indices18/17) succeeded.",
+    "Remaining models: repeated no-good-initial-pair; ID15/14 (indices14/13) and ID17/25 (indices16/24) discarded as bad initial pair.",
+    "The native mapper itself relaxes initialization constraints within this single invocation; this is not an additional orchestration/SfM retry."
+  ],
+  "geometry_audit": {
+    "native_tracks": 300,
+    "selected_tracks": 256,
+    "not_sampled_tracks": 44,
+    "registered_views": 15,
+    "track_statuses": {
+      "WITHIN_DIAGNOSTIC_LINE_NOT_VERIFIED": 165,
+      "OBSERVATION_INCONSISTENCY_DETECTED": 74,
+      "INCOMPLETE_AMBIGUOUS_VIEWS": 2,
+      "PAIR_ONLY_NOT_VERIFIED": 15
+    },
+    "with_ambiguous_views": 8,
+    "pair_changed": 224
+  },
+  "visual_annotations": {
+    "method": "Human-readable visual inspection by assistant of frames_contact.jpg; side labels are visual inference, not independently calibrated physical normals.",
+    "sport_label_side_indices": [
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      62,
+      63
+    ],
+    "clear_opposite_side_indices": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      55,
+      56,
+      57
+    ],
+    "registered_clear_opposite_side": [],
+    "registered_sport_label_side": [
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      45,
+      46,
+      51,
+      52,
+      53,
+      54,
+      62,
+      63
+    ],
+    "no_claim": "All registered sampled images visibly expose SPORT-label side; this does not prove zero opposite surface is visible at oblique edges or assign physical camera hemisphere."
+  },
+  "page_diagnostic_zh": {
+    "headline": "64张图都进入特征提取，但只有带SPORT字样侧的15张进入同一个三维分量。",
+    "facts": [
+      "64图共14849特征；5140原始对应经几何验证剩4233对应，分布于116图对。对应数可在多个图对重复使用同一特征，不能当作4233个三维点。",
+      "38图具有至少一组验证配对，26图无验证配对；38图中仍有23图未注册，说明有两图匹配也不足以完成稳定初始化/多视图注册。",
+      "验证匹配图的最大连通分量仅20图，最终15图全部来自该分量；另一侧清楚可见图像分散于2图/6图小分量或孤立点，没有验证匹配边连接到主分量。",
+      "最终15张之间占3656/4233（86.37%）验证对应、88/116验证图对；其余49图仅涉及577对应。注册图特征中位数491，未注册图145；低特征/弱连通是证据支持的限制。",
+      "最终注册零基索引：17–23、45–46、51–54、62–63；其余49图未注册。",
+      "最终300条原生三维轨迹；现有几何审计只覆盖前256条，74条检测到观测不一致，44条未审计；不能据此宣布形状正确。"
+    ],
+    "visual_inference": [
+      "接触表显示两侧都已拍摄；清楚展示另一侧的0–10、28–34、55–57均未注册。所有15张注册图都可见SPORT字样所在侧。因此当前模型的侧面覆盖不完整。",
+      "无字样侧大块黑色区域的可重复纹理较少，图像间局部形变、遮挡和视角变化也可见；这些是匹配不稳的合理视觉解释，尚未通过受控实验分离因果。"
+    ],
+    "limits": [
+      "不能把未注册统一归因于漏拍、SAM失败或某一个单独参数；掩膜非空且进入特征提取不保证可辨识对应。",
+      "SPORT侧进入同一component不是两侧闭环或真实几何验收。",
+      "已核验的来源仅为列出的源文件与既有采用掩膜验证子集，未声称逐项复核所有生产者START_BINDINGS冻结来源。"
+    ]
+  },
+  "source_validation_scope": "This analysis hashes only the explicitly listed source artifacts. Reconstruction derivation validation checks adopted masks/images and selected lineage bindings; not every producer START_BINDINGS input was revalidated. No claim of complete source-chain revalidation.",
+  "source_unchanged": true
+}

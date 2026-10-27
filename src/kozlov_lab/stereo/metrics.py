@@ -105,14 +105,15 @@ def volume_ratio_profile(points: Any, *, degeneracy_tol: float = 1e-9) -> tuple[
 
     Read the caveats, they matter:
 
-    * this is a **measurement**, not the code and not an equivalence test.  The code is indexed
-      (``official.kozlov_body_code``) precisely because equivalence acts on the indexing; a sorted
+    * this is a **measurement**, not the code and not an equivalence test.  The complete code is
+      indexed (``official.indexed_code3d.indexed_body_code``); ``kozlov_body_code`` is also only a
+      numerical summary. Equivalence acts on one global labelling bijection; a sorted
       bag cannot decide equivalence and must never be promoted to a criterion (the Phase 3 rule).
-      Call :func:`~kozlov_lab.stereo.is_a_equivalent` for the decision;
+      :func:`~kozlov_lab.stereo.is_a_equivalent` is a numerical geometric oracle, not this code;
     * ``V_ref`` is the first admissible quadruple, so the profile is anchored; that is fine for a
       distance between two profiles but it is *not* invariant under a relabelling of the points
-      that changes which quadruple is first.  For a relabelled body, compare the **sorted** values
-      of the profile — which is what this function already returns.
+      that changes which quadruple is first. Sorting the values does not repair a changed
+      reference denominator; relabelled bodies require an actual global correspondence test.
     """
     body = _as3(points, "points")
     volumes: dict[tuple[int, int, int, int], float] = {}

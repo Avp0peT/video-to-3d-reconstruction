@@ -242,11 +242,16 @@ def test_only_official_may_use_the_authors_name():
     assert not offenders, f"baseline must not borrow the author's name: {offenders}"
 
 
-def test_alg_t_and_alg_so_are_not_implemented():
-    """The 6A gate: the reconstruction algorithms were not extracted, so they must not appear."""
+def test_legacy_code3d_does_not_define_alg_t_or_alg_s0():
+    """Keep the later source-exact constructions out of the legacy numeric module.
+
+    AlgT' and AlgS0 are now implemented in ``official.parallel_construction``.  This regression
+    guard preserves the module boundary instead of retaining the obsolete Phase-6A claim that the
+    algorithms do not exist anywhere in the project.
+    """
     text = (SRC / "official" / "kozlov_code3d.py").read_text(encoding="utf-8")
-    for forbidden in ("def alg_t", "def algt", "def alg_so", "def algso", "AlgT", "AlgSo"):
-        assert forbidden not in text, f"{forbidden!r} appears: the 6A algorithm gate is not passed"
+    for forbidden in ("def alg_t", "def algt", "def alg_s0", "def alg_so", "def algso"):
+        assert forbidden not in text, f"{forbidden!r} must remain in parallel_construction.py"
 
 
 # --------------------------------------------------------------------------- #
@@ -352,9 +357,9 @@ def test_agreement_flags_a_genuinely_wrong_answer():
 def test_zero_reprojection_does_not_imply_a_correct_correspondence():
     """The phase's sharpest stereo finding, stated as a property of the **optimum set**.
 
-    On an axis-aligned cube the pixel evidence admits 96 zero-cost bijections: one of them is the
-    truth and 95 reconstruct a body that is **not** affine-equivalent to the cube.  A pipeline that
-    reports only the reprojection error therefore reports success on a wrong answer.
+    On an axis-aligned cube the pixel evidence admits multiple zero-cost bijections. Some recover
+    an affine-equivalent unordered body and some do not. A pipeline that reports only the
+    reprojection error therefore cannot distinguish all wrong answers from valid ones.
 
     The assertion is about the set, not about which member an engine returns — that choice is
     floating-point noise (see :func:`test_a_tie_is_not_a_disagreement`), and the set is the fact
@@ -381,7 +386,7 @@ def test_zero_reprojection_does_not_imply_a_correct_correspondence():
     )
 
 
-def test_recovery_outcome_separates_symmetry_from_error():
+def test_recovery_outcome_separates_symmetry_from_error(record_testsuite_property):
     """Three outcomes that a boolean would merge, each produced by a real configuration.
 
     ``EXACT_MATCH`` (the truth), ``EQUIVALENT_VIA_SYMMETRY`` (a different mapping that still
@@ -405,14 +410,19 @@ def test_recovery_outcome_separates_symmetry_from_error():
 
     cube_body, lc, rc, ilc, irc, cube_truth = _case("cube")
     cube_oracle = oracle_correspondence(lc, rc, ilc, irc)
-    cube_outcomes = {
+    cube_outcomes = collections.Counter(
         reconstruction_outcome(
             _with_mapping(cube_oracle, p), lc, rc, ilc, irc, cube_body, true_mapping=cube_truth
         )
         for p in cube_oracle.good_mappings
-    }
+    )
+    record_testsuite_property("cube_recovery_outcomes", repr({
+        outcome.value: count for outcome, count in cube_outcomes.items()
+    }))
     assert RecoveryOutcome.INVALID_RECONSTRUCTION in cube_outcomes
-    assert RecoveryOutcome.EQUIVALENT_VIA_SYMMETRY not in cube_outcomes
+    # The body is an unordered set: non-truth mappings can still reconstruct the same body.
+    # The previous row-order comparison incorrectly excluded these witnesses.
+    assert RecoveryOutcome.EQUIVALENT_VIA_SYMMETRY in cube_outcomes
 
 
 def test_invariant_profile_separates_what_reprojection_cannot():
@@ -479,9 +489,9 @@ def test_an_abstention_is_not_reported_as_a_positive_result():
     """``is_a_equivalent`` abstains when every quadruple is coplanar; that must not read as success.
 
     A planar body has no control quadruple, so the equivalence test returns
-    ``{"equivalent": True, "undecided": True}``.  Taking only the ``equivalent`` flag would turn an
-    **abstention into a positive result** — the same failure the 2D phases guard against when they
-    refuse to render ``vacuous`` as a pass.  Measured: this really does happen for a planar body.
+    ``{"equivalent": None, "undecided": True}``. Historically it returned ``equivalent=True``;
+    that flag could turn an abstention into a positive result. The reconstruction outcome must
+    still explicitly distinguish an abstention from both a positive and a negative decision.
     """
     planar = np.array([
         [0.0, 0.0, 0.0], [2.0, 0.0, 0.0], [4.0, 0.0, 0.0],
@@ -504,45 +514,55 @@ def test_an_abstention_is_not_reported_as_a_positive_result():
     assert RecoveryOutcome.UNDECIDED not in positive
 
 
-def test_the_sorted_profile_is_a_detector_not_a_criterion():
-    """The project's rule, measured: a sorted invariant bag must never decide equivalence.
+def test_the_sorted_profile_is_a_detector_not_a_criterion(record_testsuite_property):
+    """Compare the profile with geometric bijection witnesses on the cube's optimum set.
 
-    On the cube's optimum set, of the 95 zero-cost but **wrong** reconstructions the sorted
-    volume-ratio profile separates 92 (structure loss, ``inf``) and **misses 3**.  A detector with
-    a measurable miss rate cannot be promoted to a decision procedure — the decision is
-    :func:`~kozlov_lab.stereo.is_a_equivalent`, which uses the *indexed* code.
-
-    The assertion that the miss set is non-empty is deliberate: if the profile ever separates all
-    of them, this test fails and the stronger claim can then be made explicitly instead of
-    appearing silently.
+    The historical positive miss count came from a row-order bug in the geometric oracle:
+    relabelled affine-equivalent bodies were counted as wrong reconstructions. Retain the actual
+    sample counts without requiring a miss. Zero misses on this sample would not establish that
+    a sorted volume-ratio bag is a complete criterion for arbitrary point sets. Equivalence here
+    is checked by an affine map and a full point bijection, not by an indexed-code comparison.
     """
     body, left, right, image_left, image_right, _ = _case("cube")
     oracle = oracle_correspondence(left, right, image_left, image_right)
     reference = volume_ratio_profile(body)
-    separated = missed = 0
-    examples: list[float] = []
+    counts = collections.Counter({name: 0 for name in (
+        "triangulation_failed", "undecided", "equivalent_same_profile",
+        "equivalent_different_profile", "inequivalent_same_profile",
+        "inequivalent_different_profile",
+    )})
     for permutation in oracle.good_mappings:
         points, failed = triangulate_many(
             left.projection, image_left, right.projection, image_right[list(permutation)]
         )
-        if failed or is_a_equivalent(points, body)["equivalent"]:
+        if failed:
+            counts["triangulation_failed"] += 1
+            continue
+        result = is_a_equivalent(points, body)
+        if result.get("undecided"):
+            counts["undecided"] += 1
             continue
         try:
             difference = profile_relative_difference(volume_ratio_profile(points), reference)
         except ValueError:
-            separated += 1
-            continue
-        if difference > 1e-6:
-            separated += 1
+            difference = float("inf")
+        profile_agrees = difference <= 1e-6
+        if result["equivalent"]:
+            # Validate the geometric witness independently of the invariant summary.
+            bijection = result["permutation"]
+            assert sorted(bijection) == list(range(len(body)))
+            moved = points @ np.asarray(result["matrix"]).T + result["translation"]
+            assert np.abs(moved - body[bijection]).max() <= result["tolerance"]
+            counts["equivalent_same_profile" if profile_agrees else
+                   "equivalent_different_profile"] += 1
         else:
-            missed += 1
-            examples.append(difference)
-    assert separated + missed > 0, "no wrong reconstruction found to test the detector against"
-    assert missed > 0, (
-        "the sorted profile now separates every wrong answer; the detector claim can be "
-        "strengthened, but the report must not keep saying it has a miss rate"
-    )
-    assert max(examples) < 1e-12
+            counts["inequivalent_same_profile" if profile_agrees else
+                   "inequivalent_different_profile"] += 1
+    record_testsuite_property("cube_profile_comparison_counts", repr(dict(counts)))
+    assert sum(counts.values()) == len(oracle.good_mappings)
+    assert counts["equivalent_same_profile"] > 1, "expected relabelled affine witnesses"
+    assert counts["equivalent_different_profile"] == 0, "the profile violated affine invariance"
+    assert counts["inequivalent_different_profile"] > 0, "expected a detectable wrong body"
 
 
 # --------------------------------------------------------------------------- #

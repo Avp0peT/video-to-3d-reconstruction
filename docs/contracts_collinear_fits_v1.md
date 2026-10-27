@@ -1,0 +1,9 @@
+# collinear-fits-v1
+
+S-2025 PDF p9–11：最优互位与稳定性由collinear-center-alignment-v1双方向primal/dual证书证明，不复制零中心误差证明。再验source所有完整块在对应reference primary截断圆域严格内部。允许非零最优误差；仍只是wholeblock严格fits充分子域。
+
+输入双方各完整1..7有理互异标签点、同数至少2个非空完整标签互斥块，reference必须独立覆盖且primary合法；source块不要求凸包独立。有理或正规化代数常数的精确中心支持，非有理未知。两完整中心集合须互异共线，按块索引作中心标签，GLOBAL_OPTIMAL_STABLE提供双射M,t。完整source点变换后到所属中心平方距离严格<R²且严格小于对所有其它中心距离。主圆相等边界或Voronoi等距不属于本充分域。
+
+成功COLLINEAR_FITS_SUFFICIENT_WITNESS保存reference primary、每完整source块中心、两方向LP alignment及全point检查。独立assess重验全部数学证书和输入绑定，不调用primary/center/alignment producer；缓存int/Fraction严格类型拒bool。最优中心对齐的横向延拓固定，所以NO_SUPPORTED_WITNESS不证明一般不fits，尤其可改变横向自由度让wholeblocks入域。亦未搜索所有分划、所有稳定最优互位或所有primary。
+
+单一2M工作/30秒预算贯穿producer及独立verify，子调用只传剩余值并回收计费。UNKNOWN不等于不fits；域外UNSUPPORTED。全数据无抽样、坐标身份保留，未接UI或高层完整群。示例reference singleton centers0,1,3与source singleton centers0,1,2得到非零最优误差平方1/16且完整点严格包含。

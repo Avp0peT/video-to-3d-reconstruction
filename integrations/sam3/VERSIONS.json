@@ -1,0 +1,78 @@
+{
+  "schema": "sam3-integration-versions-v1",
+  "frozen_utc": "2026-10-07",
+  "python": {
+    "distribution": "astral-sh/python-build-standalone via uv",
+    "version": "3.12.13",
+    "interpreter": "C:\\Users\\13944\\Desktop\\train\\kozlov-visual-lab\\integrations\\sam3\\python\\cpython-3.12-windows-x86_64-none\\python.exe",
+    "venv": "C:\\Users\\13944\\Desktop\\train\\kozlov-visual-lab\\integrations\\sam3\\env\\Scripts\\python.exe",
+    "isolation": "separate from the project Python 3.13 / NumPy 2.5.3 SFM environment"
+  },
+  "sam3_code": {
+    "repository": "https://github.com/facebookresearch/sam3",
+    "commit": "2345a4ad109ac29c569da749c91d84f10dc08c40",
+    "checked_out_at": "integrations/sam3/src/sam3-repo",
+    "version_note": "pinned to the commit above; SAM 3.1 checkpoints are NOT used and must not be reported as base SAM 3",
+    "license": "SAM License (src/sam3-repo/LICENSE)"
+  },
+  "sam3_weights": {
+    "repo_id": "facebook/sam3",
+    "checkpoint_file": "sam3.pt",
+    "config_file": "config.json",
+    "checkpoint_sha256": null,
+    "config_sha256": null,
+    "status": "AUTH_REQUIRED",
+    "official_entry": "https://huggingface.co/facebook/sam3",
+    "auth_docs": "https://huggingface.co/docs/huggingface_hub/en/quick-start#authentication"
+  },
+  "installed_packages": {
+    "torch": {
+      "installed": false,
+      "attempt": "uv pip install torch torchvision --index-url https://download.pytorch.org/whl/cu128",
+      "resolved": "torch==2.11.0+cu128 (2.6 GiB downloaded)",
+      "failure": "failed to rename file in the uv cache archive: 拒绝访问 (os error 5)",
+      "retries_used": 0
+    },
+    "torchvision": {
+      "installed": false
+    },
+    "pillow": "12.3.0",
+    "huggingface_hub": "2.1.1",
+    "pytest": "9.1.1",
+    "numpy": {
+      "installed": false,
+      "reason": "not needed by the interface layer or its tests"
+    },
+    "timm_iopath_ftfy": {
+      "installed": false,
+      "reason": "SAM 3 inference deps; blocked with torch"
+    }
+  },
+  "host": {
+    "gpu": "NVIDIA GeForce RTX 5060 Laptop GPU",
+    "driver_version": "582.05",
+    "gpu_memory_total_mib": 8151,
+    "cuda_driver_api": "13.0",
+    "nvidia_smi_ok": true,
+    "cuda_torch_probe": "NOT_RUN (torch not installed)"
+  },
+  "cpu_threads": 2,
+  "r1_repair": {
+    "date_utc": "2026-10-06",
+    "task": "A_R1_OFFLINE_REPAIR",
+    "run": "outputs/delegation/SAM3_A_R1/20261006T171557Z",
+    "installs": 0,
+    "downloads": 0,
+    "network_auth_calls": 0,
+    "real_model_forwards": 0,
+    "gpu_kernel_runs": 0,
+    "torch_retry_consumed": false,
+    "test_suite": "tests/test_sam3_adapter.py (66 cases; project 3.13.14 and isolated 3.12.13 both 66 passed)",
+    "negative_control": "probes/MUTATION_PROBE_R1.json (5/5 mutations detected, sources restored byte-identical)",
+    "added_adapter_files": ["binding.py", "deadline.py", "worker.py"],
+    "environment_unchanged": "no dependency was installed or removed by this repair",
+    "still_blocked": ["gated weights (AUTH_REQUIRED)", "torch/torchvision not installed",
+                      "CUDA torch-kernel probe NOT_RUN"],
+    "corrections": "outputs/delegation/SAM3_A_R1/20261006T171557Z/ERRATA.md"
+  }
+}

@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src 'none'">
+<title>Kozlov Lab · 三维成果查看器</title><style>/*VIEWER_CSS*/</style></head>
+<body><header><span class="eyebrow">KOZLOV VISUAL LAB</span><h1>三维成果查看器</h1><p>单文件离线预览 · 拖动旋转，滚轮缩放 · 原始坐标保留</p></header>
+<main><aside><label for="scene">选择成果</label><select id="scene"></select>
+<div id="badge" class="badge"></div><h2 id="scene-title"></h2><p id="note"></p>
+<dl id="facts"></dl><div class="divider"></div>
+<label for="mode">显示方式</label><select id="mode"><option value="points">点</option><option value="surface">表面</option><option value="wire">线框</option></select>
+<label for="point-size">点大小 <output id="point-size-value">4</output> px</label><input id="point-size" type="range" min="1" max="12" value="4">
+<div class="controls"><button id="left">左转</button><button id="right">右转</button><button id="up">俯视</button><button id="down">仰视</button><button id="zoom-in">放大</button><button id="zoom-out">缩小</button><button id="reset" class="wide">重置视角</button></div>
+<div class="divider"></div><label for="vertex-index">查看顶点行索引</label><div class="index-row"><input id="vertex-index" type="number" min="0" step="1" value="0"><button id="inspect">定位</button></div><p class="hint">PLY 中从 0 开始的行索引；不是 COLMAP 点 ID。</p><pre id="vertex-info">尚未选择顶点</pre>
+<details><summary>来源与证据</summary><pre id="provenance"></pre></details>
+</aside><section class="stage"><canvas id="viewport" aria-label="三维模型交互视图" tabindex="0"></canvas><div class="stage-top"><span id="geometry-label"></span><span id="camera-state"></span></div><div id="render-status" role="status">正在初始化显示…</div><div id="axis-key">X 红 · Y 绿 · Z 蓝 · 等比例正交投影</div></section></main>
+<footer>查看成功只表示几何数据可显示。来源与单位来自导入说明；本页不判断物理精度、不补全表面，也不导入 STEP / FCStd。</footer>
+<script id="scene-data" type="application/json">/*SCENE_DATA*/</script><script>/*VIEWER_JS*/</script></body></html>

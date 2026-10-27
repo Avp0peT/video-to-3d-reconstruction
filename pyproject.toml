@@ -13,6 +13,7 @@ dependencies = ["numpy>=1.26"]
 [project.optional-dependencies]
 dev = ["pytest>=8", "hypothesis>=6"]
 app = ["streamlit>=1.36", "plotly>=5.20", "matplotlib>=3.8"]
+io = ["Pillow==12.3.0"]
 
 [tool.setuptools.packages.find]
 where = ["src"]

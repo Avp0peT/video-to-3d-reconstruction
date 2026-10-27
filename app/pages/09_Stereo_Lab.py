@@ -16,8 +16,8 @@ labelled explicitly on screen because they must never be confused:
   *not* the author's content);
 * ``EXPERIMENTAL`` — the correspondence search in this project.
 
-``AlgT'``/``AlgSo`` are **not** implemented: the 6A gate found their step-by-step description was
-never extracted, so nothing here is allowed to carry that name.
+AlgT'/AlgSo are not implemented. Source steps and labelled-input assumptions are now reviewed;
+executable branch completion and algorithm gates remain pending. This page uses baseline DLT.
 """
 
 from __future__ import annotations
@@ -124,7 +124,7 @@ columns[1].metric("四元组数 C(n,4)", f"{len(list(itertools.combinations(rang
 code: dict | None = None
 try:
     code = kozlov_body_code(body)
-    columns[2].metric("|T_A| 上界（3D 代码）", f"{code['n_entries']:,}")
+    columns[2].metric("|T_A| 数值策略计数（摘要）", f"{code['n_entries']:,}")
     columns[3].metric("共面（退化）四元组", code["n_degenerate_coplanar_quadruples"])
 except Exception as exc:  # noqa: BLE001
     columns[2].metric("|T_A|", "—")
@@ -375,7 +375,8 @@ st.caption(
 st.caption(
     f"不变量（按序的四面体体积比摘要）识别出 {separated} 个错误重建、漏掉 {missed} 个，"
     f"对正确重建误报 {false_alarm} 次。**它是有漏检率的检测器，不是判据**——"
-    "判据是 `is_a_equivalent`（使用**带索引**的代码）。这正是本项目「有序袋不得作判据」那条规则。"
+    "此页的 `is_a_equivalent` 使用浮点仿射拟合与点双射见证，并未比较带索引代码。"
+    "独立的精确索引模块及规模边界见 docs/INDEXED_CODE3D_USAGE.md；本页结果不替代该模块的验收。"
 )
 
 # --------------------------------------------------------------------------- #
@@ -392,12 +393,13 @@ if not failed_rec:
     columns = st.columns(4)
     columns[0].metric("坐标 RMSE", f"{rmse_3d(recovered, body):.3f}")
     columns[1].metric("相对 3D 误差", f"{relative_3d_error(recovered, body):.2e}")
-    columns[2].metric("3D 仿射等价？", "✓" if equivalent["equivalent"] else "✗")
-    columns[3].metric("3D 代码 |T_A|", f"{code['n_entries']:,}" if isinstance(code, dict) else "—")
+    columns[2].metric("3D 仿射等价？", "未判定" if equivalent["equivalent"] is None else
+                      ("✓" if equivalent["equivalent"] else "✗"))
+    columns[3].metric("3D 比值摘要记录数", f"{code['n_entries']:,}" if isinstance(code, dict) else "—")
 st.caption(
-    "**坐标本身不是目标。** Тhеорема 3 说 3D 代码在**三维仿射等价**意义下决定体，"
-    "所以「重建正确」只能表述为 $\\hat X \\sim_{aff,3D} X$，不能表述为 $\\hat X = X$。"
-    "这与 2D 阶段只能比较 $a$-等价、以及 Phase 5 只能比较代码等价，是同一条纪律。"
+    "Тhеорема 3 的适用域排除一平面或两个平行平面能覆盖的点集；满3D秩并不充分。"
+    "本页显示的是数值仿射几何oracle结果，未在此运行精确代码比较或域核验。"
+    "仿射等价不能替代相机、尺度、物体外形或CAD验收；未判定不会显示成不等价。"
 )
 
 with st.expander("来源与命名隔离（G6 命名规则）"):
@@ -405,13 +407,14 @@ with st.expander("来源与命名隔离（G6 命名规则）"):
         {
             "内容": [
                 "те́ло = R³ 有限点集", "3D 代码 ρ = V/V（四元组）", "平行（方向）投影",
-                "a'-等价（三维仿射等价）", "四面体（三角+面外点）确定对应",
+                "a'-等价（保持给定标记）", "已匹配四锚点；单图助手仅计三角形",
                 "AlgT' / AlgSo", "pinhole P=K[R|t]、DLT 三角化、重投影代价",
                 "基于重投影代价的 correspondence 搜索",
             ],
             "标签": [
-                "SOURCE-EXACT", "SOURCE-EXACT", "SOURCE-EXACT", "SOURCE-EXACT", "SOURCE-EXACT",
-                "**未实现**（步骤未提取）", "BASELINE", "EXPERIMENTAL",
+                "定义SOURCE-EXACT", "定义SOURCE-EXACT；旧函数为摘要", "SOURCE-EXACT",
+                "定义SOURCE-EXACT；旧oracle另作无序双射搜索", "SOURCE-DERIVED条件提示",
+                "**未实现**（来源已核对，算法Gate待验）", "BASELINE", "EXPERIMENTAL",
             ],
             "落点": [
                 "`stereo/model.py`", "`stereo/official/kozlov_code3d.py`",
@@ -424,8 +427,8 @@ with st.expander("来源与命名隔离（G6 命名规则）"):
         hide_index=True,
     )
     st.caption(
-        "6A Gate：模型层通过，**算法层未通过**。`AlgT'`/`AlgSo` 的逐步描述未从一手文献中提取，"
-        "因此在读清之前**不得**以 «Kozlov stereo reconstruction» 命名任何重建过程。"
+        "来源已纠正：AlgT'/AlgSo先给定匹配；a'-不同不等于方向不同。"
+        "步骤已核对，交线映射/退化补足、实现与算法Gate仍待验证。"
         "本页的重建一律标注为 BASELINE 的 DLT 三角化。"
     )
 

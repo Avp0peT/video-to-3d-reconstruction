@@ -1,4 +1,4 @@
-"""Author-derived compression: the эскиз, the остов, the distance, and Теорема 4.
+"""Source-defined sketches and skeletons, with explicitly bounded legacy distance helpers.
 
 Everything in this module is **from the primary text** — V. N. Kozlov, «Об одном подходе к
 сжатию информации при обработке и распознавании изображений», ЖВМиМФ 42:2 (2002) 256–268 —
@@ -42,7 +42,9 @@ The theorem's own proof, recovered from the text, gives the two-sided bound
 i.e. ``|R_{sketch} - R_true| <= max(r1, r2)``: the sketch distance approximates the true
 distance to within the coarser cover radius.  The source's *use* of it is a certified nearest
 neighbour test: if the interval for one candidate does not overlap the others', that candidate
-is provably the nearest.  :func:`certified_nearest` implements exactly that.
+is provably the nearest when the source metric and cover hypotheses are verified.
+The legacy distance helper does not verify that metric; :func:`certified_nearest` therefore
+fails closed for source nearest-neighbour certification.
 """
 
 from __future__ import annotations
@@ -211,20 +213,14 @@ def kozlov_image_distance(
     n_rotations: int = 24,
     n_scales: int = 5,
 ) -> dict[str, Any]:
-    """The source's distance ``B(A,B)``: Hausdorff minimized over the similarity class.
+    """Legacy distance helper; neither mode computes the author's quotient metric.
 
-    > «Расстоянием $B(A,B)$ между изображениями А и В назовем наименьшую из величин $l(B')$,
-    > полученных для всех $B'$ из $B^*$.»
-
-    $B^*$ is the class of images similar to $B$ (the paper's section heading is
-    «...ЗАДАННЫХ С ТОЧНОСТЬЮ ДО ПОДОБИЯ»), so the quantity is **similarity-invariant**: the
-    minimum is taken over the placement of the two images relative to one another.
-
-    Honest limitation: minimizing over the whole similarity group is a non-convex search, and
-    this implementation approximates it by aligning centroids and sweeping a **discrete grid**
-    of rotations and scales.  The grid is returned in the result so the approximation is
-    visible; ``align=False`` gives the plain (placement-sensitive) Hausdorff distance, which is
-    what the equivariance experiment needs.
+    ``align=False`` computes fixed-placement Hausdorff distance in input units.
+    ``align=True`` preserves the historical normalized grid heuristic: independently
+    centre/RMS-normalize both inputs, then sweep rotations and scales with no reflection
+    or optimization of translation. Its output is dimensionless (normalized units).
+    This is not S-2002's exact isometry or similarity minimization, and is not a verified
+    sketch metric for theorem 4. The author's section 4 instead fixes A's measurement unit.
     """
     first = np.asarray(a, dtype=float).reshape(-1, 2)
     second = np.asarray(b, dtype=float).reshape(-1, 2)
@@ -233,6 +229,10 @@ def kozlov_image_distance(
             "distance": hausdorff(first, second),
             "aligned": False,
             "grid": None,
+            "metric_kind": "fixed_placement_hausdorff",
+            "units": "input_coordinate_units",
+            "source_metric_verified": False,
+            "author_exact": False,
         }
 
     def _place(points: np.ndarray) -> np.ndarray:
@@ -262,11 +262,17 @@ def kozlov_image_distance(
     return {
         "distance": float(best),
         "aligned": True,
+        "metric_kind": "normalized_grid_heuristic",
+        "units": "normalized",
+        "source_metric_verified": False,
+        "author_exact": False,
+        "reflection_search": False,
+        "optimal_translation_search": False,
         "grid": best_grid,
         "grid_resolution": {"n_rotations": n_rotations, "n_scales": n_scales},
         "note": (
-            "the true minimum over the similarity group is approximated by a discrete search; "
-            "the grid is reported so the approximation is visible rather than implied"
+            "legacy normalized grid heuristic; no certified bound on the source metric, "
+            "no reflection search, and no optimal translation search"
         ),
     }
 
@@ -283,6 +289,10 @@ def kozlov_sketch_distance_bounds(
     hence ``R_0 ∈ [R_{r1r2} - max(r1,r2), R_{r1r2} + max(r1,r2)]``, where ``R_{r1r2}`` is the
     distance between the sketches and ``R_0 = B(A,B)`` the distance between the originals.
 
+    Requires a verified S-2002 isometry quotient sketch distance in the same units as
+    the verified covering radii. This scalar helper does not verify those hypotheses;
+    passing a fixed-placement or normalized grid value does not establish a source bound.
+
     The bound is *tight in the direction the source emphasises*: as the cover radii shrink the
     interval narrows, which is what makes the sketch distance a usable substitute.
     """
@@ -295,14 +305,13 @@ def kozlov_sketch_distance_bounds(
 def certified_nearest(
     query: Any, candidates: Sequence[Any], radii: Sequence[float], *, r_query: float
 ) -> dict[str, Any]:
-    """The source's certified nearest neighbour from sketch distances.
+    """Legacy placement comparison, failing closed for Kozlov nearest certification.
 
-    > «...пусть интервал для $B_1$ **не пересекается** с интервалами для остальных $B_i$.
-    > Тогда **заведомо** ... расстояние $B(A,B_1)$ наименьшее.»
-
-    Computes each candidate's interval from :func:`kozlov_sketch_distance_bounds` and reports
-    whether one candidate is *provably* the nearest.  When intervals overlap the answer is
-    ``certified=False`` — the honest outcome, and the one a plain "argmin" would hide.
+    Theorem 4 and its interval test require a verified source quotient distance.
+    This routine has only fixed-placement Hausdorff values, so its historical source
+    certification is withdrawn. ``placement_candidate_index`` retains the placement
+    argmin for inspection; ``rows`` retain legacy arithmetic intervals, explicitly
+    marked as uncertified for the source metric. Cover hypotheses are not verified here.
     """
     if len(candidates) != len(radii):
         raise ValueError("one cover radius is required per candidate")
@@ -315,20 +324,19 @@ def certified_nearest(
         )
 
     best_index = int(np.argmin([row["sketch_distance"] for row in rows])) if rows else -1
-    certified = False
-    if best_index >= 0:
-        best_high = rows[best_index]["interval"][1]
-        others_low = [row["interval"][0] for position, row in enumerate(rows) if position != best_index]
-        certified = all(best_high < low for low in others_low) if others_low else True
     return {
-        "nearest_index": best_index if certified else None,
-        "certified": certified,
+        "nearest_index": None,
+        "certified": False,
+        "placement_candidate_index": best_index if best_index >= 0 else None,
         "rows": rows,
+        "metric_kind": "fixed_placement_hausdorff",
+        "source_metric_verified": False,
+        "intervals_source_certified": False,
+        "reason": "SOURCE_QUOTIENT_METRIC_NOT_VERIFIED",
         "note": (
-            "intervals overlap, so no candidate is *proven* nearest; a plain argmin would have "
-            "returned an answer with no guarantee behind it"
-            if not certified
-            else "intervals are disjoint, so the nearest is certified by the theorem"
+            "source nearest-neighbour certification withdrawn: fixed-placement Hausdorff "
+            "values do not establish the S-2002 isometry quotient metric required by theorem 4; "
+            "legacy certified=True results from this routine are not valid source certificates"
         ),
     }
 

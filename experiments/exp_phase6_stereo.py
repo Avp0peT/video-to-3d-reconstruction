@@ -640,7 +640,8 @@ def main(argv: list[str] | None = None) -> int:
     print(f"    the sorted profile separated {len(s8_separated)}/{len(s8_invalid)} invalid ones "
           f"and raised {len(s8_false_alarm)} false alarms on valid ones")
     print("    => a detector with a measurable miss rate, not a decision procedure "
-          "(the decision is is_a_equivalent, which uses the indexed code)")
+          "(is_a_equivalent uses numerical affine fitting and a point bijection; "
+          "the exact indexed-code module is a separate experiment)")
 
     target, meta = write_csv("phase6_stereo", rows, fieldnames=FIELDNAMES, seed=args.seed,
                              config={"quick": args.quick, "scenes": scenes, "sigmas": sigmas,

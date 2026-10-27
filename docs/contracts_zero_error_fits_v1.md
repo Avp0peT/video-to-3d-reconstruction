@@ -1,0 +1,15 @@
+# zero-error-fits-v1
+
+来源S-2025 PDF p.9–10 / 期刊154–155的искомое最优互位及稳定性；p.11 / 156的给定m分划入primary футляр。本文仅实现给定可逆仿射见证的严格充分子域，不搜索所有分划/互位，不决定一般m-вместимость。
+
+当前profile两边各完整1..7互异标签有理点、2..7块；输入坐标int/Fraction约分256位，标签64位int，拒float/bool/原始重复坐标，不合并或采样。给定仿射见证有理参数至多8192位。输入域/partition/矩阵不可逆或非双射等返回UNSUPPORTED与原因。parts每块标签规范排序，块顺序保留。
+
+数学证明：若给定可逆T将source各块精确中心经给定双射映为reference primary的对应中心，则中心图像最大配对误差L=0。所有其它仿射像及任意双射的L均非负，故T处处达到最小值。对两中心图像共同作用任何可逆H，匹配点仍相等，L仍0。于是原文同一双射、局部最小与共同整体仿射变换后的稳定性同时成立，可明确取epsilon1=epsilon2=1；证明不需要采样扰动，也不需要浮点优化。给定source整块的所有点仍须另验其T像位于对应reference截断圆域严格内部；仅匹配中心不足。
+
+reference必须完整给定A和给定独立覆盖Aparts，且primary producer TRUE和独立证书合法。source完整B的Bparts只要求非空块标签互斥、并集等于所有B标签；按原文p11不要求source块凸包独立。两侧每块最小外接椭圆中心须以完整块精确证书独立核验；点/线退化按已冻结中心合同。圆域条件以完整点平方距离严格小于R²且严格小于对其余每个中心的距离表示，边界点不在本充分子域。
+
+给定matrix为2×2有理可逆矩阵、translation为2有理向量，part_bijection为source块零基索引到reference块零基索引的完整双射。固定输入parts顺序决定这些索引；不得以排序静默换序。source中心的仿射协变性来自原文定理1和精确椭圆最优证书，不能用质心替代。
+
+`given_zero_error_fits`输出TRUE、FALSE_GIVEN_WITNESS、UNSUPPORTED或UNKNOWN。非零中心误差/外点/错误对应只能否定给定见证及本充分子域，不是一般fits不存在。非有理代数中心或非有理primary半径平方为UNKNOWN；证书已验证的代数常数在精确正规化后可识别为Fraction。未知不升级高层结论。
+
+`assess_zero_error_fits_certificate`独立重验完整外部输入绑定、reference primary证书、source块精确证书、可逆矩阵、块双射、所有0中心误差和全部变换点截断域。它不调用fits producer、primary producer或center constructor。`verify_zero_error_fits_certificate`为其bool封装；UNKNOWN不得混同INVALID。共享剩余工作和时间预算覆盖所有子构造、证书和Fraction复算，不重置预算。输出epsilon证据是数学恒等式，不是数值扰动试验。

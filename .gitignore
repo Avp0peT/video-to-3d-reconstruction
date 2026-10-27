@@ -15,3 +15,34 @@ dist/
 
 # local run logs (the full suite takes ~15 min here, so these accumulate)
 *.log
+
+# Local datasets and generated run artefacts.  These are reproducible inputs or
+# evidence bundles, not source files, and may contain large videos/models.
+data/
+outputs/
+snapshot_before/
+START_FREEZE.json
+.workbuddy/
+%SystemDrive%/
+docs/evidence/
+docs/delegation/
+
+# The SAM3 integration keeps only this repository's adapter and version notes in
+# Git.  The pinned upstream checkout, standalone Python, virtual environment,
+# and uv cache are reconstructed locally (see integrations/sam3/README.md).
+integrations/sam3/.uv-cache/
+integrations/sam3/env/
+integrations/sam3/python/
+integrations/sam3/src/
+
+# Machine-local heavyweight assets.
+*.pt
+*.pth
+*.ckpt
+*.onnx
+*.mp4
+*.mov
+*.avi
+*.mkv
+*.blend1
+*.tmp
