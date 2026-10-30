@@ -34,18 +34,34 @@ Kozlov Vision Reconstruction 将两个相关但独立验收的方向放在同一
 
 ## 样例：点阵与点位追踪
 
-**三维点阵（point cloud）预览**——直接从上面两份 PLY 抽点渲染，不做任何表面重建，方便看清点密度和空洞：
+**三维点阵（point cloud）预览**——用 `scripts/render_readme_pointcloud.py` 把 PLY 的**全部顶点**按文件顺序投影渲染，只画点、不画面（面数只做来源统计），源几何不改写：
 
-| 骰子点阵（1002 点） | 手套点阵（63710 点） |
+| 骰子点阵（1002 顶点 / 2000 面） | 手套点阵（127420 顶点 / 251948 面） |
 |---|---|
-| ![骰子点阵](docs/media/dice-pointcloud.png) | ![手套点阵](docs/media/glove-pointcloud.png) |
+| ![骰子点阵](docs/samples/pointcloud/dice/preview.png) | ![手套点阵](docs/samples/pointcloud/glove/preview.png) |
 
-点云原文件：[dice-model.ply](docs/media/dice-model.ply) · [glove-model.ply](docs/media/glove-model.ply)
+绑定与可复现：每份预览都要求输入 PLY 的 sha256 与产物目录全新，运行后会写一份 `RESULT.json`（记录输入哈希、顶点/面数、投影参数、实现哈希）：
+
+```powershell
+python scripts/render_readme_pointcloud.py --input docs/media/dice-model.ply `
+  --sha256 ea6674a3b6c603be81633660324a3f508460ae6299cf103aa091eb53f75dfb61 `
+  --output docs/samples/pointcloud/dice
+```
+
+骰子预览证据：[`RESULT.json`](docs/samples/pointcloud/dice/RESULT.json)；手套同一套流程（输入 `docs/media/glove-model.ply`）。渲染是单视角正交投影，遮挡与重叠会藏住部分顶点，`quality_status` 与 `geometry_accepted` 都保持未通过状态。
 
 **点位追踪交互报告**——来自 `PPP_VIDEO` 的真实增量追踪证据，可直接在浏览器里拖时间轴看每一帧的候选点、相邻帧光流边和跨帧重识别：
 
 - [打开追踪报告](docs/samples/tracks_demo_index.html)（2 MB 单文件，离线可看）
 - 统计：[`tracks_demo_result.json`](docs/samples/tracks_demo_result.json)
+
+复现命令（输入目录里必须同时有 `INPUTS.json` 与 `COVERAGE.json`）：
+
+```powershell
+python scripts/report_incremental_tracks.py `
+  --coverage outputs/delegation/PPP_VIDEO/20261014_object_first01/incremental_tracks_20261016/real01/coverage `
+  --output outputs/samples/tracks_demo
+```
 
 该样例的规模：192 帧、14626 条候选轨迹、43488 次观测、28862 条相邻帧光流边；其中 5225 个点获得支持、992 个为暂定点、1579 个面、4 个独立连通分量。注意报告里 `quality_status` 是 `NOT_EVALUATED`、`independently_verified_physical_point_ids` 是 0，也就是说这些是**候选追踪**，不是经过物理验证的同一点身份，不能当作精度结论引用。
 

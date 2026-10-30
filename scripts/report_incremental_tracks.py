@@ -1,33 +1,50 @@
-"""Create a local, playable report from committed incremental coverage evidence."""
+"""Create a playable report from hash-bound incremental coverage evidence."""
+from __future__ import annotations
+
 import argparse
 from collections import Counter
 import hashlib
+from io import BytesIO
 import json
 import os
 from pathlib import Path
 from urllib.parse import quote
 
 
-def read(path):
+def read(path: Path) -> dict:
     return json.loads(path.read_text(encoding='utf-8'))
 
 
-def binding(path):
+def binding(path: Path) -> dict:
     return dict(path=str(path), bytes=path.stat().st_size,
                 sha256=hashlib.sha256(path.read_bytes()).hexdigest())
 
 
-def link(path, root):
+def link(path: Path, root: Path) -> str:
     return quote(os.path.relpath(path, root).replace('\\', '/'), safe='/:')
 
 
-def build(source, output):
+def build(source: Path, output: Path, *, expected_inputs: Path | None = None,
+          publish_frames: bool = False, jpeg_quality: int = 85) -> dict:
     source = source.resolve(strict=True)
     output = output.resolve()
     if output.exists() or output.is_relative_to(source) or source.is_relative_to(output):
         raise ValueError('fresh nonoverlapping report directory required')
     paths = [source / name for name in ('INPUTS.json', 'TRACKS.json', 'RESULT.json')]
     before = [binding(p) for p in paths]
+    expected_binding = None
+    if expected_inputs is not None:
+        expected_binding = binding(expected_inputs.resolve(strict=True))
+        expected = {b['path'].replace('\\', '/').rsplit('/', 1)[-1]: b
+                    for b in read(expected_inputs)['input_bindings']}
+        for path, actual in zip(paths, before):
+            pinned = expected.get(path.name)
+            if pinned is None or any(actual[k] != pinned[k] for k in ('bytes', 'sha256')):
+                raise ValueError(f'input binding mismatch: {path.name}')
+    if publish_frames and expected_inputs is None:
+        raise ValueError('published frames require --expected-inputs')
+    if not 1 <= jpeg_quality <= 95:
+        raise ValueError('JPEG quality must be between 1 and 95')
     inputs, tracking, result = map(read, paths)
     if result['status'] != 'PARTIAL_CONDITIONAL_EXPANSION' or not result['source_unchanged']:
         raise ValueError('committed coverage evidence required')
@@ -47,22 +64,48 @@ def build(source, output):
                      'recovered' if (track['track_id'], f) in recovered else 'tracked')
             per_frame[f].append([track['track_id'], obs['identity_segment'],
                                  obs['xy'][0] - .5, obs['xy'][1] - .5, state])
+    # Validate every original before creating a report directory. Published
+    # display JPEGs keep the source pixel grid; only their encoding changes.
+    for frame in frames:
+        if hashlib.sha256(Path(frame['path']).read_bytes()).hexdigest() != frame['sha256']:
+            raise ValueError('image bytes drifted')
+    if publish_frames:
+        from PIL import Image, __version__ as pillow_version
     output.mkdir(parents=True)
+    if publish_frames:
+        (output/'frames').mkdir()
     rows = []
+    frame_bindings = []
     for i, frame in enumerate(frames):
         image = Path(frame['path'])
-        if hashlib.sha256(image.read_bytes()).hexdigest() != frame['sha256']:
+        image_bytes = image.read_bytes()
+        if hashlib.sha256(image_bytes).hexdigest() != frame['sha256']:
             raise ValueError('image bytes drifted')
+        display = image
+        if publish_frames:
+            display = output/'frames'/f'{i:06d}.jpg'
+            with Image.open(BytesIO(image_bytes)) as original:
+                if original.size != (frame['width'], frame['height']):
+                    raise ValueError('image dimensions drifted')
+                original.convert('RGB').save(display, format='JPEG', quality=jpeg_quality,
+                                             subsampling=0, optimize=False, progressive=False)
+            exported = binding(display)
+            exported['path'] = display.relative_to(output).as_posix()
+            frame_bindings.append(dict(input_index=frame['input_index'],
+                source=dict(path=str(image), bytes=len(image_bytes), sha256=frame['sha256']),
+                display=exported, width=frame['width'], height=frame['height']))
         stats = tracking['coverage'][i]
         if len(per_frame[i]) != stats['active']:
             raise ValueError('active count cannot be reproduced')
         rows.append(dict(index=frame['input_index'], time=frame['time_seconds'],
-                         status=frame['original_mask_status'], image=link(image, output),
+                         status=frame['original_mask_status'], image=link(display, output),
                          stats=stats, points=per_frame[i]))
     events = Counter(e['kind'] for e in tracking['events'])
     counts = dict(frames=len(rows), candidate_tracks=len(tracking['tracks']),
                   observations=sum(len(p) for p in per_frame),
-                  adjacent_flow_edges=sum(max(0, len(t['observations']) - 1) for t in tracking['tracks']),
+                  adjacent_flow_edges=sum(b['frame_index'] == a['frame_index'] + 1
+                      for t in tracking['tracks']
+                      for a, b in zip(t['observations'], t['observations'][1:])),
                   births_after_first_mask=sum(t['seed_frame'] > min(t['seed_frame'] for t in tracking['tracks'])
                                              for t in tracking['tracks']) if tracking['tracks'] else 0,
                   unknown_observations=sum(p[4] == 'unknown' for row in per_frame for p in row),
@@ -77,16 +120,33 @@ def build(source, output):
     links = dict(coverage=link(source/'index.html', output),
                  viewer=link(source/'viewer.html', output),
                  blend=link(source.parent/'blender/model.blend', output))
+    if publish_frames:
+        links = {}
     data = json.dumps(dict(frames=rows, counts=counts, links=links), ensure_ascii=False,
                       allow_nan=False, separators=(',', ':')).replace('<', '\\u003c')
     document = TEMPLATE.replace('__DATA__', data)
     (output/'index.html').write_text(document, encoding='utf-8')
     if before != [binding(p) for p in paths]:
         raise ValueError('source evidence changed')
+    if any(hashlib.sha256(Path(f['path']).read_bytes()).hexdigest() != f['sha256']
+           for f in frames):
+        raise ValueError('source frames changed')
+    if expected_binding is not None and expected_binding != binding(expected_inputs.resolve()):
+        raise ValueError('expected input manifest changed')
     summary = dict(status='REAL_TRACK_VISUALIZATION', counts=counts, input_bindings=before,
                    sources_unchanged=True, geometry_accepted=False, quality_status='NOT_EVALUATED',
                    scale_status='unknown', independently_verified_physical_point_ids=0,
                    report=binding(output/'index.html'), implementation=binding(Path(__file__).resolve()))
+    if publish_frames:
+        summary['report']['path'] = 'index.html'
+        summary.update(expected_inputs=expected_binding, frame_bindings=frame_bindings,
+            source_evidence={k: result[k] for k in
+                ('status', 'geometry_accepted', 'quality_status', 'scale_status')},
+            source_tracking_profile={k: tracking['profile'][k] for k in
+                ('cross_gap_identity', 'unknown_observations_eligible_for_3d')},
+            display_encoding=dict(format='JPEG', quality=jpeg_quality, subsampling=0,
+                optimize=False, progressive=False, resize=False, pillow_version=pillow_version),
+            offline_assets=True, omitted_local_links=['coverage', 'viewer', 'blend'])
     (output/'RESULT.json').write_text(json.dumps(summary, ensure_ascii=False, indent=2,
                                                 allow_nan=False)+'\n', encoding='utf-8')
     return summary
@@ -101,7 +161,7 @@ canvas{width:100%;height:auto;background:#07151e;cursor:crosshair}#slider{width:
 .legend span{display:inline-block;margin-right:15px}.stat{font-size:24px;color:#a1ecd3}pre{white-space:pre-wrap;font-size:14px}
 @media(max-width:800px){.layout{grid-template-columns:1fr}}</style>
 <h1>每帧保留旧点，补充物体内的新点</h1>
-<p id="summary"></p><p><a id="coverage">覆盖与几何记录</a> · <a id="viewer">局部三维</a> · <a id="blend">Blender 文件</a></p>
+<p id="summary"></p><p id="local-links"><a id="coverage">覆盖与几何记录</a> · <a id="viewer">局部三维</a> · <a id="blend">Blender 文件</a></p>
 <p class="notice">这里展示实际计算的候选轨迹。编号相同表示跟踪假设，不等于物理身份已经证实。黄色为轮廓缺失时的短期光流候选，不参与三维；紫色返回点另开几何段。超长缺口、已检测的光流失败或已知背景会结束旧轨迹，真实遮挡不保证能被自动识别。</p>
 <div class="layout"><div><canvas id="view" width="576" height="1024"></canvas></div><div class="panel">
 <div><button id="play">播放</button> <button id="prev">上一帧</button> <button id="next">下一帧</button> <label><input type="checkbox" id="trails" checked>短轨迹</label></div>
@@ -116,6 +176,7 @@ const frames=data.frames,c=document.getElementById('view'),ctx=c.getContext('2d'
 const colors={birth:'#56ddff',tracked:'#65ed9b',unknown:'#ffcb59',recovered:'#ec8eff'};
 let index=Math.max(0,frames.findIndex(f=>f.points.length)),serial=0,picture=null,chosen=null,playing=false,timer=null;
 slider.max=frames.length-1;for(const [k,v]of Object.entries(data.links))document.getElementById(k).href=v;
+if(!Object.keys(data.links).length)document.getElementById('local-links').textContent='此发布样例包含帧图与候选轨迹；完整覆盖记录、三维查看器及 Blender 文件保留在原始本地证据中。请下载本目录及 frames 子目录后离线打开。';
 const n=data.counts;document.getElementById('summary').textContent=`实际处理 ${n.frames} 帧，${n.candidate_tracks} 条候选轨迹；条件支持点 ${n.supported_points}（新增 ${n.added_supported_points}），${n.independent_components} 个独立局部坐标系。`;
 const maps=frames.map(f=>new Map(f.points.map(p=>[p[0],p])));
 function selectedText(){const p=chosen===null?null:maps[index].get(chosen);document.getElementById('selected').textContent=chosen===null?'尚未选择候选点。':p?`候选轨迹 ${p[0]} / 几何段 ${p[1]}\n像素位置 (${p[2].toFixed(2)}, ${p[3].toFixed(2)})\n状态 ${p[4]}\n跨段物理身份：未确认`:`候选轨迹 ${chosen} 在本帧没有有效观测；不补画预测点。`;}
@@ -140,5 +201,12 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--coverage', required=True, type=Path)
     parser.add_argument('--output', required=True, type=Path)
+    parser.add_argument('--expected-inputs', type=Path,
+                        help='existing RESULT.json whose input_bindings pin the three coverage JSON files')
+    parser.add_argument('--publish-frames', action='store_true',
+                        help='publish same-size JPEG frames for portable offline playback (requires Pillow)')
+    parser.add_argument('--jpeg-quality', type=int, default=85)
     args = parser.parse_args()
-    print(json.dumps(build(args.coverage, args.output), ensure_ascii=False))
+    print(json.dumps(build(args.coverage, args.output, expected_inputs=args.expected_inputs,
+                           publish_frames=args.publish_frames, jpeg_quality=args.jpeg_quality),
+                     ensure_ascii=False))

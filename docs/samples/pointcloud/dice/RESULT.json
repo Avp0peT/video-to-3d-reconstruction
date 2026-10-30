@@ -1,0 +1,86 @@
+{
+  "status": "PLY_VERTEX_PREVIEW",
+  "source": {
+    "path": "docs/media/dice-model.ply",
+    "bytes": 89632,
+    "sha256": "ea6674a3b6c603be81633660324a3f508460ae6299cf103aa091eb53f75dfb61"
+  },
+  "source_kind": "prepared_surface_mesh_vertices",
+  "counts": {
+    "source_vertices": 1002,
+    "source_faces": 2000,
+    "rendered_vertices": 1002,
+    "faces_drawn": 0
+  },
+  "sampling": {
+    "method": "all_vertices_in_file_order",
+    "limit": null,
+    "seed": null
+  },
+  "render": {
+    "projection": "orthographic",
+    "azimuth_degrees": -60,
+    "elevation_degrees": 25,
+    "width": 960,
+    "height": 720,
+    "point_radius_pixels": 1,
+    "fit_fraction": 0.88,
+    "depth_test": "nearest_vertex_wins",
+    "color": "presentation_depth_blue",
+    "background_rgb": [
+      12,
+      22,
+      36
+    ],
+    "source_bounds": [
+      [
+        -0.26414379477500916,
+        -0.2821892499923706,
+        -0.17707175016403198
+      ],
+      [
+        0.30584022402763367,
+        0.3137514591217041,
+        0.4428287744522095
+      ]
+    ],
+    "display_translation": [
+      0.020848214626312256,
+      0.015781104564666748,
+      0.13287851214408875
+    ],
+    "pixels_per_source_unit": 982.2417696851925
+  },
+  "sources_unchanged": true,
+  "geometry_modified": false,
+  "geometry_accepted": false,
+  "quality_status": "NOT_EVALUATED",
+  "scale_status": "unknown",
+  "independently_verified_physical_point_ids": 0,
+  "limitations": [
+    "Mesh vertex density is not independent observation coverage.",
+    "Occlusion and raster overlap hide vertices in this single projection.",
+    "No new reconstruction, metric scale, physical point identity or accuracy evaluation."
+  ],
+  "preview": {
+    "path": "docs/samples/pointcloud/dice/preview.png",
+    "bytes": 15073,
+    "sha256": "0da7fc065929fd12d42f91ade6479fc53838f18de10f41903a01a5ad89cc6161"
+  },
+  "implementation": {
+    "path": "scripts/render_readme_pointcloud.py",
+    "bytes": 8167,
+    "sha256": "68418c499829722f578e21cfde8fb5573b78401a2f30da4872d1c8a8ec301040"
+  },
+  "ply_reader": {
+    "path": "integrations/viewer/ply_data.py",
+    "bytes": 12181,
+    "sha256": "8f4c1db2e7d97eb692237aa7fc29a44a6220502268871b06c06fe48c3b9109c9"
+  },
+  "environment": {
+    "python": "3.13.7",
+    "implementation": "CPython",
+    "zlib": "1.3.1",
+    "dependencies": "Python standard library only"
+  }
+}
