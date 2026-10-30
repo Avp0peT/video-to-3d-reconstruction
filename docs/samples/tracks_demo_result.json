@@ -1,0 +1,51 @@
+{
+  "status": "REAL_TRACK_VISUALIZATION",
+  "counts": {
+    "frames": 192,
+    "candidate_tracks": 14626,
+    "observations": 43488,
+    "adjacent_flow_edges": 28862,
+    "births_after_first_mask": 14281,
+    "unknown_observations": 10543,
+    "candidate_gap_returns": 884,
+    "verified_cross_gap_reidentifications": 0,
+    "independently_verified_physical_point_ids": 0,
+    "supported_points": 5225,
+    "added_supported_points": 1994,
+    "provisional_points": 992,
+    "faces": 1579,
+    "independent_components": 4
+  },
+  "input_bindings": [
+    {
+      "path": "C:\\Users\\13944\\Desktop\\train\\kozlov-visual-lab\\outputs\\delegation\\PPP_VIDEO\\20261014_object_first01\\incremental_tracks_20261016\\real01\\coverage\\INPUTS.json",
+      "bytes": 307148,
+      "sha256": "3df2650b37790ec378dd213b389c35d8d0f90c82230e9baee2e512105f964fe3"
+    },
+    {
+      "path": "C:\\Users\\13944\\Desktop\\train\\kozlov-visual-lab\\outputs\\delegation\\PPP_VIDEO\\20261014_object_first01\\incremental_tracks_20261016\\real01\\coverage\\TRACKS.json",
+      "bytes": 27995645,
+      "sha256": "5d474210b642c937a904a66f991cb63f8a3756eddab94f3de3dc20711b2ac260"
+    },
+    {
+      "path": "C:\\Users\\13944\\Desktop\\train\\kozlov-visual-lab\\outputs\\delegation\\PPP_VIDEO\\20261014_object_first01\\incremental_tracks_20261016\\real01\\coverage\\RESULT.json",
+      "bytes": 146983,
+      "sha256": "b8ac339ceaa340a66fa2612e8d4a5554821abf40e9ed1ef0c4d4e83966fad7f3"
+    }
+  ],
+  "sources_unchanged": true,
+  "geometry_accepted": false,
+  "quality_status": "NOT_EVALUATED",
+  "scale_status": "unknown",
+  "independently_verified_physical_point_ids": 0,
+  "report": {
+    "path": "C:\\Users\\13944\\Desktop\\train\\kozlov-visual-lab\\outputs\\samples\\tracks_demo\\index.html",
+    "bytes": 2099363,
+    "sha256": "7b6f1aa2ea56e1b7ab565bb4507c7dbf84fe79ec708e728bd983b312ef0ac5e4"
+  },
+  "implementation": {
+    "path": "C:\\Users\\13944\\Desktop\\train\\kozlov-visual-lab\\scripts\\report_incremental_tracks.py",
+    "bytes": 11860,
+    "sha256": "3ff3dc26a37c7310754af149f65871de1d3b7b026799180d973b765525158103"
+  }
+}
